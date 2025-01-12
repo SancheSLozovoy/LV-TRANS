@@ -7,3 +7,10 @@ export async function addPhotoToOrder(order_id, photo) {
     );
     return result;
 }
+
+export async function getPhotosByOrderId(orderId) {
+    const [rows] = await pool.query('SELECT * FROM photos WHERE order_id = ?', [
+        orderId,
+    ]);
+    return rows;
+}
