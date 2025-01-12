@@ -23,10 +23,19 @@ export async function deleteUserById(id) {
     return result;
 }
 
-export async function updateUser(id, login, phone, password) {
+export async function updateUser(id, login, phone, password, role_id) {
+    const [roleExists] = await pool.query(
+        'SELECT COUNT(*) AS count FROM roles WHERE id = ?',
+        [role_id],
+    );
+
+    if (roleExists[0].count === 0) {
+        throw new Error(`Role with id ${role_id} does not exist`);
+    }
+    
     const [result] = await pool.query(
-        'UPDATE users SET login = ?, phone = ?, password = ? WHERE id = ?',
-        [login, phone, password, id],
+        'UPDATE users SET login = ?, phone = ?, password = ?, role_id = ? WHERE id = ?',
+        [login, phone, password, role_id, id],
     );
     return result;
 }

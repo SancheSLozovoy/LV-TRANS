@@ -62,9 +62,17 @@ export async function deleteUserById(req, res) {
 
 export async function updateUser(req, res) {
     const { id } = req.params;
-    const { login, phone, password } = req.body;
+    const { login, phone, password, role_id } = req.body;
+
     try {
-        const result = await UserModel.updateUser(id, login, phone, password);
+        const result = await UserModel.updateUser(
+            id,
+            login,
+            phone,
+            password,
+            role_id,
+        );
+
         if (result.affectedRows === 0) {
             return res.status(404).json({ message: 'User not found' });
         }
