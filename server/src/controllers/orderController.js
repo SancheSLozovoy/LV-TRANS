@@ -1,4 +1,5 @@
 import * as OrderModel from '../models/orderModel.js';
+import * as PhotoModel from '../models/photosModel.js';
 
 export async function getOrders(req, res) {
     try {
@@ -30,6 +31,12 @@ export async function getOrderById(req, res) {
 
 export async function createOrder(req, res) {
     const { info, weight, from, to, date_start, date_end, user_id } = req.body;
+    const files = req.files;
+
+    if (!files || files.length === 0) {
+        return res.status(400).json({ message: 'No photos uploaded' });
+    }
+
     try {
         const result = await OrderModel.createOrder(
             info,
@@ -40,16 +47,19 @@ export async function createOrder(req, res) {
             date_end,
             user_id,
         );
+
+        for (const file of files) {
+            await PhotoModel.addPhotoToOrder(result.insertId, file.buffer);
+        }
+
         res.status(201).json({
-            message: 'Order created',
+            message: 'Order created and photos uploaded',
             orderId: result.insertId,
         });
     } catch (err) {
         res.status(500).json({
             message: 'Error creating order',
             error: err.message,
-            date_end: date_end,
-            user_id: user_id,
         });
     }
 }

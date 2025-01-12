@@ -9,6 +9,8 @@ export async function up(knex) {
       .onDelete("CASCADE");
     table.binary("photo").notNullable();
   });
+
+  await knex.raw("ALTER TABLE photos MODIFY COLUMN photo LONGBLOB;");
 }
 
 export async function down(knex) {
