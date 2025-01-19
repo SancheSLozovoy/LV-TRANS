@@ -16,7 +16,7 @@ app.use(express.json());
 
 app.use('/users', userRoutes);
 app.use('/orders', orderRoutes);
-app.use('/photos', photosRoutes); // Подключаем отдельно
+app.use('/orders', orderRoutes, photosRoutes);
 
 app.get('/', (req, res) => {
     res.send('Сервер работает!');

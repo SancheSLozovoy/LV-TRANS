@@ -9,7 +9,7 @@ const router = express.Router();
  * /orders:
  *   get:
  *     tags:
- *       - Gets
+ *       - Orders
  *     summary: Получение всех заказов
  *     responses:
  *       200:
@@ -52,19 +52,38 @@ const router = express.Router();
  *                   user_id:
  *                     type: integer
  *                     example: 3
- *       500:
- *         description: Error getting orders
  *       404:
- *         description: No orders found
+ *         description: Заказы не найдены
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: No orders found
+ *       500:
+ *         description: Ошибка сервера
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Error getting orders
+ *                 error:
+ *                   type: string
+ *                   example: Server error
  */
 
 /**
  * @swagger
  * /orders/{id}:
- *  get:
+ *   get:
  *     tags:
- *       - Gets
- *     summary: Получение заказа
+ *       - Orders
+ *     summary: Получение заказа по ID
  *     parameters:
  *       - in: path
  *         name: id
@@ -74,6 +93,7 @@ const router = express.Router();
  *         description: ID заказа
  *     responses:
  *       200:
+ *         description: Заказ найден
  *         content:
  *           application/json:
  *             schema:
@@ -112,12 +132,39 @@ const router = express.Router();
  *                 user_id:
  *                   type: integer
  *                   example: 10
- *       500:
- *         description: Error getting orders
- *       404:
- *         description: Order not found
  *       400:
- *         description: Invalid order ID
+ *         description: Некорректный ID
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Invalid order ID
+ *       404:
+ *         description: Заказ не найден
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Order not found
+ *       500:
+ *         description: Ошибка сервера
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Error getting order
+ *                 error:
+ *                   type: string
+ *                   example: Server error
  */
 
 /**
@@ -125,8 +172,8 @@ const router = express.Router();
  * /orders:
  *   post:
  *     tags:
- *     - Posts
- *     summary: Создание заказа
+ *       - Orders
+ *     summary: Создание нового заказа
  *     requestBody:
  *       required: true
  *       content:
@@ -157,11 +204,42 @@ const router = express.Router();
  *                   format: binary
  *     responses:
  *       201:
- *         description: Order created and photos uploaded
+ *         description: Заказ создан
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Order created and photos uploaded
+ *                 orderId:
+ *                   type: integer
+ *                   example: 20
  *       400:
- *         description: Missing required fields Or No photos uploaded
+ *         description: Некорректные данные или не загружены фото
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Missing required fields
+ *
  *       500:
- *         description: Server error
+ *         description: Ошибка сервера
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Error creating order
+ *                 error:
+ *                   type: string
+ *                   example: Server error
  */
 
 /**
@@ -169,8 +247,8 @@ const router = express.Router();
  * /orders/{id}:
  *   delete:
  *     tags:
- *     - Delete
- *     summary: Удаление заказа
+ *       - Orders
+ *     summary: Удаление заказа по ID
  *     parameters:
  *       - in: path
  *         name: id
@@ -180,13 +258,48 @@ const router = express.Router();
  *         description: ID заказа
  *     responses:
  *       200:
- *         description: Order deleted
- *       404:
- *         description: Order not found
+ *         description: Заказ удален
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Order deleted
  *       400:
- *         description: Invalid order ID
+ *         description: Некорректный ID
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Invalid order ID
+ *       404:
+ *         description: Заказ не найден
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Order not found
  *       500:
- *         description: Error deleting order
+ *         description: Ошибка сервера
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Error deleting order
+ *                 error:
+ *                   type: string
+ *                   example: Server error
  */
 
 /**
@@ -194,8 +307,8 @@ const router = express.Router();
  * /orders/{id}:
  *   put:
  *     tags:
- *      - Puts
- *     summary: Обновление заказ
+ *       - Orders
+ *     summary: Обновление заказа по ID
  *     parameters:
  *       - in: path
  *         name: id
@@ -212,39 +325,66 @@ const router = express.Router();
  *             properties:
  *               info:
  *                 type: string
- *                 example: Some info
  *               weight:
  *                 type: number
- *                 example: 1000
  *               from:
  *                 type: string
- *                 example: Moscow
  *               to:
  *                 type: string
- *                 example: Erevan
  *               date_start:
  *                 type: string
  *                 format: date
- *                 example: 2025-01-10
  *               date_end:
  *                 type: string
  *                 format: date
- *                 example: 2025-01-20
  *               status_id:
- *                  type: integer
- *                  example: 1
+ *                 type: integer
  *               user_id:
  *                 type: integer
- *                 example: 3
  *     responses:
  *       200:
- *         description: Order updated
+ *         description: Зазаз обновлен
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Order updated
  *       400:
- *         description: Missing required fields or Invalid order ID
+ *         description: Некорректные данные или ID
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Missing required fields
  *       404:
- *         description: Order not found
+ *         description: Зазаз не найден
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Order not found
  *       500:
- *          description: Error updating order
+ *         description: Ошибка сервера
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Error updating order
+ *                 error:
+ *                   type: string
+ *                   example: Server error
  */
 
 router.get('/', OrderController.getOrders);
