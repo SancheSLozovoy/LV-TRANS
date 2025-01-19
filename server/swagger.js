@@ -1,4 +1,7 @@
 import swaggerJSDoc from "swagger-jsdoc";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const swaggerDefinition = {
   openapi: "3.0.0",
@@ -9,7 +12,7 @@ const swaggerDefinition = {
   },
   servers: [
     {
-      url: "http://localhost:5000",
+      url: `http://${process.env.HOST}:${process.env.PORT}`,
     },
   ],
 };
