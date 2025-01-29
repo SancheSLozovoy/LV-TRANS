@@ -3,18 +3,7 @@ import app from "../src/server.js";
 import * as UserModel from "../src/models/userModel.js";
 
 describe("User API", () => {
-  let server;
   let userId;
-
-  beforeAll((done) => {
-    server = app.listen(0, () => {
-      done();
-    });
-  });
-
-  afterAll(() => {
-    server.close();
-  });
 
   describe("POST /users", () => {
     it("should create a user and return 201", async () => {

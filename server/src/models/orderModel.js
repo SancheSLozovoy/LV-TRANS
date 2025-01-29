@@ -24,7 +24,6 @@ export async function createOrder(
         [info, weight, from, to, date_start, date_end, user_id],
     );
 
-    console.log(user_id);
     return result;
 }
 

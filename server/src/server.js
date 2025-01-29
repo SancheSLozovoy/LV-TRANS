@@ -23,8 +23,10 @@ app.get('/', (req, res) => {
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-app.listen(PORT, () => {
-    console.log(`Сервер запущен на http://localhost:${PORT}`);
-});
+if (process.env.NODE_ENV !== 'test') {
+    app.listen(PORT, () => {
+        console.log(`Сервер запущен на http://localhost:${PORT}`);
+    });
+}
 
 export default app;
