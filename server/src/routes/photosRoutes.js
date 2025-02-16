@@ -1,5 +1,6 @@
 import express from 'express';
 import * as PhotosController from '../controllers/photosController.js';
+import { authenticateToken } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
@@ -59,6 +60,10 @@ const router = express.Router();
  *                   example: Error message details
  */
 
-router.get('/:orderId/photos', PhotosController.getPhotosByOrderId);
+router.get(
+    '/:orderId/photos',
+    authenticateToken,
+    PhotosController.getPhotosByOrderId,
+);
 
 export default router;

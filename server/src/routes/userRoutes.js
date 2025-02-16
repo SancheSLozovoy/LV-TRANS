@@ -1,5 +1,6 @@
 import express from 'express';
 import * as UserController from '../controllers/userController.js';
+import { authenticateToken } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
@@ -331,10 +332,11 @@ const router = express.Router();
  *                   example: Server error
  */
 
-router.get('/', UserController.getUsers);
-router.get('/:id', UserController.getUserById);
-router.post('/', UserController.createUser);
-router.delete('/:id', UserController.deleteUserById);
-router.put('/:id', UserController.updateUser);
+router.get('/', authenticateToken, UserController.getUsers);
+router.get('/:id', authenticateToken, UserController.getUserById);
+router.post('/', UserController.register);
+router.post('/login', UserController.login);
+router.delete('/:id', authenticateToken, UserController.deleteUserById);
+router.put('/:id', authenticateToken, UserController.updateUser);
 
 export default router;

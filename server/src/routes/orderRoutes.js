@@ -1,6 +1,7 @@
 import express from 'express';
 import * as OrderController from '../controllers/orderController.js';
 import { uploadPhotos } from '../middleware/upload.js';
+import { authenticateToken } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
@@ -387,10 +388,10 @@ const router = express.Router();
  *                   example: Server error
  */
 
-router.get('/', OrderController.getOrders);
-router.get('/:id', OrderController.getOrderById);
-router.post('/', uploadPhotos, OrderController.createOrder);
-router.delete('/:id', OrderController.deleteOrderById);
-router.put('/:id', OrderController.updateOrder);
+router.get('/', authenticateToken, OrderController.getOrders);
+router.get('/:id', authenticateToken, OrderController.getOrderById);
+router.post('/', uploadPhotos, authenticateToken, OrderController.createOrder);
+router.delete('/:id', authenticateToken, OrderController.deleteOrderById);
+router.put('/:id', authenticateToken, OrderController.updateOrder);
 
 export default router;
