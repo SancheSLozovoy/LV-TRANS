@@ -1,5 +1,5 @@
 import express from 'express';
-
+import cors from 'cors';
 import dotenv from 'dotenv';
 import userRoutes from './routes/userRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
@@ -13,6 +13,12 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
+app.use(
+    cors({
+        origin: `${process.env.FRONT_URL}`,
+        credentials: true,
+    }),
+);
 
 app.use('/users', userRoutes);
 app.use('/orders', orderRoutes, photosRoutes);
