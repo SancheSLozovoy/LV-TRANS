@@ -10,7 +10,7 @@ export const handleAuth = async (
   messageApi: MessageInstance,
   navigate: NavigateFunction,
   type: string,
-) => {
+): Promise<void> => {
   const values = form.getFieldsValue();
   const regData: UserRegister = {
     login: values.login,

@@ -4,9 +4,6 @@ import { Checkbox, Flex, Form, Input, message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./form.module.scss";
 import ButtonSubmit from "../button/button.tsx";
-import instance from "../../axios/axiosSettings.ts";
-import { UserLogin, UserRegister } from "../../models/user";
-import Cookies from "js-cookie";
 import { handleAuth } from "../../api/auth";
 
 interface FormProps {
@@ -18,7 +15,7 @@ const AuthForm: React.FC<FormProps> = ({ type }) => {
   const [messageApi, contextHolder] = message.useMessage();
   const navigate = useNavigate();
 
-  const handleSubmit = () => {
+  const handleSubmit = (): void => {
     handleAuth(form, messageApi, navigate, type);
   };
 
