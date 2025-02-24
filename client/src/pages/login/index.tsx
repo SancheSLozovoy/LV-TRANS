@@ -2,11 +2,15 @@ import AuthForm from "../../components/form/Form.tsx";
 import styles from "./login.module.scss";
 import { Link } from "react-router-dom";
 import Logo from "../../assets/images/logo.png";
+import Settings from "../../assets/images/settings.svg";
 
 export const Login = () => {
   return (
     <div className={styles.login}>
       <div className={styles.login__left}>
+        <div className={styles.background__image}>
+          <img src={Settings} />
+        </div>
         <div className={styles.left__content}>
           <div className={styles.left__logo}>
             <img src={Logo} alt="Logo" />

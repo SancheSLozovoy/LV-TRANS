@@ -1,12 +1,13 @@
 @font-face {
-  font-family: 'Futura';
-  src: url('../assets/fonts/Futura PT_Medium.ttf');
-  src: url('../assets/fonts/Futura PT_Medium.woff2') format('woff2'),
-  url('../assets/fonts/Futura PT_Medium.woff') format('woff');
+  font-family: 'FuturaPTWebMedium';
+  src: url('../assets/fonts/Futura PT_Medium.eot');
+  src: url('../assets/fonts/Futura PT_Medium.eot?#iefix') format('embedded-opentype'),
+  url('../assets/fonts/Futura PT_Medium.woff2') format('woff2'),
+  url('../assets/fonts/Futura PT_Medium.woff') format('woff'),
+  url('../assets/fonts/Futura PT_Medium.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
-
 
 :root {
   --background: #DDD9D0;
@@ -19,7 +20,7 @@
 }
 
 html, body {
-  font-family: "Futura", sans-serif;
+  font-family: "FuturaPTWebMedium", sans-serif;
   background-color: var(--background);
   font-weight: 450;
   font-size: 20px;

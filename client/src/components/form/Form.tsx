@@ -20,12 +20,7 @@ const AuthForm: React.FC<FormProps> = ({ type }) => {
   };
 
   return (
-    <Form
-      form={form}
-      name="form"
-      onFinish={handleSubmit}
-      style={{ minWidth: 344 }}
-    >
+    <Form form={form} name="form" onFinish={handleSubmit}>
       <div className={styles.form}>
         {contextHolder}
         <Form.Item
