@@ -6,11 +6,11 @@ import { MessageInstance } from "antd/es/message/interface";
 import { NavigateFunction } from "react-router-dom";
 
 export const handleAuth = async (
-  form: FormInstance<any>,
+  form: FormInstance,
   messageApi: MessageInstance,
   navigate: NavigateFunction,
   type: string,
-): Promise<void> => {
+) => {
   const values = form.getFieldsValue();
   const regData: UserRegister = {
     login: values.login,
@@ -40,6 +40,7 @@ export const handleAuth = async (
           content: "Успешный вход",
         });
         setTimeout(() => navigate("/"), 3000);
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
         messageApi.open({
           type: "error",
@@ -60,7 +61,6 @@ export const handleAuth = async (
           content: "Данный логин уже существует",
         });
       }
-    } else {
     }
   }
 };

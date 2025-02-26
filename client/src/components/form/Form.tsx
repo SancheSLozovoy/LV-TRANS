@@ -10,7 +10,7 @@ interface FormProps {
   type: "login" | "register";
 }
 
-const AuthForm: React.FC<FormProps> = ({ type }) => {
+const AuthForm: React.FC<FormProps> = ({ type }): React.JSX.Element => {
   const [form] = Form.useForm();
   const [messageApi, contextHolder] = message.useMessage();
   const navigate = useNavigate();

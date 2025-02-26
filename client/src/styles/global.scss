@@ -1,11 +1,61 @@
 @font-face {
-  font-family: 'FuturaPTWebMedium';
-  src: url('../assets/fonts/Futura PT_Medium.eot');
-  src: url('../assets/fonts/Futura PT_Medium.eot?#iefix') format('embedded-opentype'),
-  url('../assets/fonts/Futura PT_Medium.woff2') format('woff2'),
-  url('../assets/fonts/Futura PT_Medium.woff') format('woff'),
-  url('../assets/fonts/Futura PT_Medium.ttf') format('truetype');
+  font-family: 'Grandis';
+  src: url('../assets/fonts/Grandis-Regular.eot');
+  src: local('Grandis Regular'), local('Grandis-Regular'),
+  url('../assets/fonts/Grandis-Regular.eot?#iefix') format('embedded-opentype'),
+  url('../assets/fonts/Grandis-Regular.woff2') format('woff2'),
+  url('../assets/fonts/Grandis-Regular.woff') format('woff'),
+  url('../assets/fonts/Grandis-Regular.ttf') format('truetype');
   font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Grandis';
+  src: url('../assets/fonts/Grandis-Medium.eot');
+  src: local('Grandis Medium'), local('Grandis-Medium'),
+  url('../assets/fonts/Grandis-Medium.eot?#iefix') format('embedded-opentype'),
+  url('../assets/fonts/Grandis-Medium.woff2') format('woff2'),
+  url('../assets/fonts/Grandis-Medium.woff') format('woff'),
+  url('../assets/fonts/Grandis-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Grandis';
+  src: url('../assets/fonts/Grandis-Bold.eot');
+  src: local('Grandis Bold'), local('Grandis-Bold'),
+  url('../assets/fonts/Grandis-Bold.eot?#iefix') format('embedded-opentype'),
+  url('../assets/fonts/Grandis-Bold.woff2') format('woff2'),
+  url('../assets/fonts/Grandis-Bold.woff') format('woff'),
+  url('../assets/fonts/Grandis-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Grandis';
+  src: url('../assets/fonts/Grandis-Light.eot');
+  src: local('Grandis Light'), local('Grandis-Light'),
+  url('../assets/fonts/Grandis-Light.eot?#iefix') format('embedded-opentype'),
+  url('../assets/fonts/Grandis-Light.woff2') format('woff2'),
+  url('../assets/fonts/Grandis-Light.woff') format('woff'),
+  url('../assets/fonts/Grandis-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+
+@font-face {
+  font-family: 'Grandis';
+  src: url('../assets/fonts/Grandis-Black.eot');
+  src: local('Grandis Black'), local('Grandis-Black'),
+  url('../assets/fonts/Grandis-Black.eot?#iefix') format('embedded-opentype'),
+  url('../assets/fonts/Grandis-Black.woff2') format('woff2'),
+  url('../assets/fonts/Grandis-Black.woff') format('woff'),
+  url('../assets/fonts/Grandis-Black.ttf') format('truetype');
+  font-weight: 900;
   font-style: normal;
 }
 
@@ -20,7 +70,7 @@
 }
 
 html, body {
-  font-family: "FuturaPTWebMedium", sans-serif;
+  font-family: "Grandis", sans-serif;
   background-color: var(--background);
   font-weight: 450;
   font-size: 20px;

@@ -6,7 +6,9 @@ interface AuthLayoutProps {
   children: React.ReactNode;
 }
 
-export const Layout: React.FC<AuthLayoutProps> = ({ children }) => {
+export const Layout: React.FC<AuthLayoutProps> = ({
+  children,
+}): React.JSX.Element => {
   return (
     <div className={styles.layout}>
       <Header />
