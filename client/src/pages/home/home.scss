@@ -3,6 +3,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-bottom: 144px;
 }
 
 .preview__company {
@@ -22,4 +23,43 @@
   font-weight: 400;
   font-size: 24px;
   line-height: 24px;
+}
+
+.prewiew__form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 21px;
+}
+
+.prewiew__form-title{
+    font-weight: 500;
+    font-size: 48px;
+    line-height: 61.54px;
+    letter-spacing: 0%;
+    text-align: center;
+}
+
+
+.advantages{
+    background-color: var(--beige);
+    padding-top: 144px;
+    width: 100vw;
+
+    .advantages__title{
+        font-weight: 600;
+        font-size: 40px;
+        line-height: 48px;
+        letter-spacing: 0%;
+        text-transform: uppercase;
+        max-width: 400px;
+        margin-bottom: 80px;
+    }
+
+    .advantages__blocks{
+        display: flex;
+        flex-wrap: wrap;
+        gap: 34px;
+    }
+
 }

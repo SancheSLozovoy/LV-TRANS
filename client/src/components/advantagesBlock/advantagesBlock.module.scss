@@ -1,0 +1,40 @@
+.block {
+    padding: 30px;
+    border-radius: 12px;
+    background-color: #f5f5f5;
+    border: 2px solid var(--yellow);
+    height: 272px;
+    position: relative;
+    
+    .content{
+        width: 100%;
+    }
+
+    &.small {
+      width: 22.861vw;
+    }
+  
+    &.medium {
+      width: 27.111vw;
+    }
+  
+    &.big {
+      width: 31.389vw;
+    }
+
+    .text {
+        font-weight: 500;
+        font-size: 24px;
+        line-height: 32px;
+        letter-spacing: 0%;    
+        color: var(--brown-1);    
+    }
+  
+    .smile {
+        position: absolute;
+        bottom: 24px;
+        right: 24px;
+        font-size: 24px;
+    }
+  }
+  

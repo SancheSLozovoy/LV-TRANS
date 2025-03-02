@@ -1,18 +1,16 @@
 import React from "react";
 import styles from "./layout.module.scss";
-import { Header } from "../header/header.tsx";
+import { Header } from "../header/header";
 
-interface AuthLayoutProps {
+interface LayoutProps {
   children: React.ReactNode;
 }
 
-export const Layout: React.FC<AuthLayoutProps> = ({
-  children,
-}): React.JSX.Element => {
+export const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div className={styles.layout}>
       <Header />
-      <div className={styles.layout__container}>{children}</div>
+      {children}
     </div>
   );
 };

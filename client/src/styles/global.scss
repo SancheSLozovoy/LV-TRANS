@@ -62,6 +62,7 @@
 :root {
   --background: #DDD9D0;
   --brown: #7A6759;
+  --brown-1: #67564A;
   --black: #000000;
   --yellow: #E4B437;
   --white: #FFFFFF;
@@ -70,6 +71,8 @@
 }
 
 html, body {
+    overflow-x: hidden;
+    scrollbar-width: thin;
   font-family: "Grandis", sans-serif;
   background-color: var(--background);
   font-weight: 450;
