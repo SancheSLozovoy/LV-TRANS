@@ -6,12 +6,14 @@ interface ButtonSubmitProps {
   text: string;
   icon?: React.JSX.Element;
   htmlType?: "button" | "submit" | "reset";
+  onClick?: () => void;
 }
 
 const ButtonSubmit: React.FC<ButtonSubmitProps> = ({
   text,
   htmlType,
   icon,
+  onClick,
 }) => {
   return (
     <Button
@@ -20,6 +22,7 @@ const ButtonSubmit: React.FC<ButtonSubmitProps> = ({
       block
       type="primary"
       htmlType={htmlType}
+      onClick={onClick}
     >
       {text}
     </Button>
