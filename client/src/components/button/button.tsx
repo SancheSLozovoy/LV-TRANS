@@ -4,12 +4,18 @@ import styles from "./button.module.scss";
 
 interface ButtonSubmitProps {
   text: string;
+  icon?: React.JSX.Element;
   htmlType?: "button" | "submit" | "reset";
 }
 
-const ButtonSubmit: React.FC<ButtonSubmitProps> = ({ text, htmlType }) => {
+const ButtonSubmit: React.FC<ButtonSubmitProps> = ({
+  text,
+  htmlType,
+  icon,
+}) => {
   return (
     <Button
+      icon={icon}
       className={styles.form__button}
       block
       type="primary"

@@ -1,4 +1,4 @@
-import AuthForm from "../../components/form/Form.tsx";
+import AuthForm from "../../components/forms/auth/authForm.tsx";
 import styles from "./register.module.scss";
 import { Link } from "react-router-dom";
 import Logo from "../../assets/images/logo.png";

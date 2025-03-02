@@ -3,8 +3,8 @@ import { LockOutlined, UserOutlined, PhoneOutlined } from "@ant-design/icons";
 import { Checkbox, Flex, Form, Input, message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./form.module.scss";
-import ButtonSubmit from "../button/button.tsx";
-import { handleAuth } from "../../api/auth";
+import ButtonSubmit from "../../button/button.tsx";
+import { handleAuth } from "../../../api/auth";
 
 interface FormProps {
   type: "login" | "register";
