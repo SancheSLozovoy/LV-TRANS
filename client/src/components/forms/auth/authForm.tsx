@@ -4,7 +4,7 @@ import { Checkbox, Flex, Form, Input, message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./form.module.scss";
 import ButtonSubmit from "../../button/button.tsx";
-import { handleAuth } from "../../../api/auth";
+import { useAuth } from "../../../composales/useAuth.ts";
 
 interface FormProps {
   type: "login" | "register";
@@ -14,6 +14,8 @@ const AuthForm: React.FC<FormProps> = ({ type }): React.JSX.Element => {
   const [form] = Form.useForm();
   const [messageApi, contextHolder] = message.useMessage();
   const navigate = useNavigate();
+
+  const { handleAuth } = useAuth();
 
   const handleSubmit = (): void => {
     handleAuth(form, messageApi, navigate, type);
