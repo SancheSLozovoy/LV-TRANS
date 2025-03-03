@@ -1,4 +1,4 @@
-import { UserLogin, UserRegister } from "../models/user";
+import { UserLogin, UserRegister } from "../models/userModels.ts";
 import Cookies from "js-cookie";
 import { FormInstance } from "antd";
 import { MessageInstance } from "antd/es/message/interface";

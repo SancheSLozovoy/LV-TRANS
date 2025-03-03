@@ -12,7 +12,11 @@ const instance = axios.create({
 instance.interceptors.request.use((config) => {
   const token = Cookies.get("token");
 
-  if (token && !config.url?.includes("/login") && !config.url?.includes("/register")) {
+  if (
+    token &&
+    !config.url?.includes("/login") &&
+    !config.url?.includes("/register")
+  ) {
     config.headers.Authorization = `Bearer ${token}`;
   }
 

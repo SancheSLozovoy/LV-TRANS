@@ -1,15 +1,16 @@
-import AuthForm from "../../components/forms/auth/authForm.tsx";
-import styles from "./login.module.scss";
+import AuthForm from "../../components/forms/auth/AuthForm.tsx";
+import styles from "./register.module.scss";
 import { Link } from "react-router-dom";
 import Logo from "../../assets/images/logo.png";
+import React from "react";
 import Settings from "../../assets/images/settings.svg";
 
-export const Login = () => {
+export const Register: React.FC = (): React.JSX.Element => {
   return (
-    <div className={styles.login}>
-      <div className={styles.login__left}>
+    <div className={styles.register}>
+      <div className={styles.register__left}>
         <div className={styles.background__image}>
-          <img src={Settings} />
+          <img src={Settings} alt="settings" />
         </div>
         <div className={styles.left__content}>
           <div className={styles.left__logo}>
@@ -29,11 +30,11 @@ export const Login = () => {
           </div>
         </div>
       </div>
-      <div className={styles.login__right}>
+      <div className={styles.register__right}>
         <div className={styles.right__title}>
-          <h1>Вход</h1>
+          <h1>Регистрация</h1>
         </div>
-        <AuthForm type="login" />
+        <AuthForm type="register" />
       </div>
     </div>
   );

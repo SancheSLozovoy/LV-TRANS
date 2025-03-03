@@ -1,10 +1,10 @@
 import { useEffect } from "react";
-import { Layout } from "../../components/layout";
-import ButtonSubmit from "../../components/button/button.tsx";
+import { Layout } from "../../components/layout/Layout.tsx";
+import ButtonSubmit from "../../components/button/Button.tsx";
 import "./home.scss";
-import { MainForm } from "../../components/forms/mainForm/mainForm.tsx";
-import { AdvantagesBlock } from "../../components/advantagesBlock/advantagesBlock.tsx";
-import { Container } from "../../components/container/container.tsx";
+import { MainForm } from "../../components/forms/mainForm/MainForm.tsx";
+import { AdvantagesBlock } from "../../components/advantagesBlock/AdvantagesBlock.tsx";
+import { Container } from "../../components/container/Container.tsx";
 import Company from "../../assets/images/compamy.jpeg";
 
 const scrollToSection = (id: string) => {

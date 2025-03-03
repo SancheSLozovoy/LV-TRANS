@@ -1,5 +1,5 @@
 import { Form, Input } from "antd";
-import ButtonSubmit from "../../button/button";
+import ButtonSubmit from "../../button/Button.tsx";
 import { CalculatorOutlined } from "@ant-design/icons";
 import styles from "./mainForm.module.scss";
 
