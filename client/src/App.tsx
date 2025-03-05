@@ -2,18 +2,20 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Login } from "./pages/login/Login.tsx";
 import { Register } from "./pages/register/Register.tsx";
 import { Home } from "./pages/home/Home.tsx";
-import "./styles/global.scss";
-import React from "react";
 import { Profile } from "./pages/profile/Profile.tsx";
+import { ProtectedRoute } from "./components/НОС/HOC.tsx";
+import "./styles/global.scss";
 
-export default function App(): React.ReactElement {
+export default function App(): JSX.Element {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path="/profile" element={<Profile />} />
+        </Route>
       </Routes>
     </Router>
   );

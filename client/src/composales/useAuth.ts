@@ -12,13 +12,13 @@ export const useAuth = () => {
   const { fetchData } = useFetch();
 
   const handleGetUser = (token: string) => {
+    if (!token) return null;
     const decode = jwtDecode(token);
-    const user = {
+    const userData = {
       login: decode.login,
       id: decode.id,
     };
-    console.log(user);
-    return user;
+    return userData;
   };
 
   const handleAuth = async (
@@ -48,7 +48,7 @@ export const useAuth = () => {
         setTimeout(() => navigate("/login"), 3000);
       } else {
         const res = await fetchData("/users/login", "POST", loginData);
-        Cookies.set("token", res.data.token, { expires: 7 });
+        Cookies.set("token", res.token, { expires: 7 });
         messageApi.open({
           type: "success",
           content: "Успешный вход",
@@ -77,5 +77,7 @@ export const useAuth = () => {
     }
   };
 
-  return { handleAuth, handleGetUser, token };
+  const user = token ? handleGetUser(token) : null;
+
+  return { handleAuth, handleGetUser, token, user };
 };
