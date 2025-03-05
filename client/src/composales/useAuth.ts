@@ -1,4 +1,4 @@
-import { UserLogin, UserRegister } from "../models/userModels.ts";
+import { User, UserLogin, UserRegister } from "../models/userModels.ts";
 import Cookies from "js-cookie";
 import { FormInstance } from "antd";
 import { MessageInstance } from "antd/es/message/interface";
@@ -13,7 +13,7 @@ export const useAuth = () => {
 
   const handleGetUser = (token: string) => {
     if (!token) return null;
-    const decode = jwtDecode(token);
+    const decode = jwtDecode<User>(token);
     const userData = {
       login: decode.login,
       id: decode.id,
@@ -55,7 +55,7 @@ export const useAuth = () => {
         });
         setTimeout(() => navigate("/"), 3000);
       }
-    } catch (e: unknown) {
+    } catch (e: any) {
       if (type === "register") {
         if (e.code === "ERR_NETWORK") {
           messageApi.open({

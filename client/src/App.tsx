@@ -5,6 +5,7 @@ import { Home } from "./pages/home/Home.tsx";
 import { Profile } from "./pages/profile/Profile.tsx";
 import { ProtectedRoute } from "./components/НОС/HOC.tsx";
 import "./styles/global.scss";
+import { JSX } from "react";
 
 export default function App(): JSX.Element {
   return (
