@@ -6,6 +6,7 @@ import { Profile } from "./pages/profile/Profile.tsx";
 import { ProtectedRoute } from "./components/НОС/HOC.tsx";
 import "./styles/global.scss";
 import { JSX } from "react";
+import { NotFoundPage } from "./pages/404/404.tsx";
 
 export default function App(): JSX.Element {
   return (
@@ -17,6 +18,7 @@ export default function App(): JSX.Element {
         <Route element={<ProtectedRoute />}>
           <Route path="/profile" element={<Profile />} />
         </Route>
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Router>
   );
