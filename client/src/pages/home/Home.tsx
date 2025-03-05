@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { Layout } from "../../components/layout/Layout.tsx";
 import ButtonSubmit from "../../components/button/Button.tsx";
 import "./home.scss";
@@ -6,6 +6,7 @@ import { MainForm } from "../../components/forms/mainForm/MainForm.tsx";
 import { AdvantagesBlock } from "../../components/advantagesBlock/AdvantagesBlock.tsx";
 import { Container } from "../../components/container/Container.tsx";
 import Company from "../../assets/images/compamy.jpeg";
+import { Footer } from "../../components/footer/Footer.tsx";
 
 const scrollToSection = (id: string) => {
   const element = document.getElementById(id);
@@ -206,6 +207,7 @@ export const Home = () => {
         </Container>
       </section>
       <div className="scroll" onClick={scrollToTop}></div>
+      <Footer />
     </Layout>
   );
 };
