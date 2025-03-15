@@ -7,6 +7,7 @@ import { ProtectedRoute } from "./components/НОС/HOC.tsx";
 import "./styles/global.scss";
 import { JSX } from "react";
 import { NotFoundPage } from "./pages/404/404.tsx";
+import { CreateOrder } from "./pages/createOrder/CreateOrder.tsx";
 
 export default function App(): JSX.Element {
   return (
@@ -17,6 +18,7 @@ export default function App(): JSX.Element {
         <Route path="/register" element={<Register />} />
         <Route element={<ProtectedRoute />}>
           <Route path="/profile" element={<Profile />} />
+          <Route path="/create" element={<CreateOrder />} />
         </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
