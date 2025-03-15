@@ -1,5 +1,6 @@
 import instance from "../api/axios/axiosSettings.ts";
 import Cookies from "js-cookie";
+import { isAxiosError } from "axios"
 
 export interface FetchOptions {
   method: "GET" | "POST" | "PUT" | "DELETE";
@@ -13,19 +14,21 @@ export default function useFetch() {
     url: string,
     method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH",
     data?: any,
-    headers: Record<string, string> | boolean = {},
+    headers?: Record<string, string>,
   ) => {
     try {
       const response = await instance({
         method,
         url,
         data,
-        headers,
+        headers: headers || {},
       });
       return response.data;
     } catch (error) {
-      if (error.response.status === 403) {
-        Cookies.remove("token");
+      if (isAxiosError(error)) {
+        if (error.response?.status === 403) {
+          Cookies.remove("token");
+        }
       }
       console.error("Ошибка при выполнении запроса:", error);
       throw error;

@@ -1,6 +1,6 @@
 import "./profile.scss";
 import { Container } from "../../components/container/Container.tsx";
-import { ProfileForm } from "../../components/forms/progileForm/ProfileForm.tsx";
+import { ProfileForm } from "../../components/forms/profileForm/ProfileForm.tsx";
 import { Layout } from "../../components/layout/Layout.tsx";
 import { UserTable } from "../../components/tables/userTable/UserTable.tsx";
 

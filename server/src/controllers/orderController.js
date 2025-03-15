@@ -153,3 +153,28 @@ export async function updateOrder(req, res) {
         });
     }
 }
+
+export async function getOrdersByUserId(req, res) {
+    const { userId } = req.params;
+
+    if (!userId || isNaN(userId)) {
+        return res.status(400).json({ message: 'Invalid user ID' });
+    }
+
+    try {
+        const orders = await OrderModel.getOrdersByUserId(userId);
+
+        if (!orders.length) {
+            return res.status(404).json({
+                message: 'No orders found for this user',
+            });
+        }
+
+        res.status(200).json(orders);
+    } catch (err) {
+        res.status(500).json({
+            message: 'Error getting orders by user ID',
+            error: err.message,
+        });
+    }
+}

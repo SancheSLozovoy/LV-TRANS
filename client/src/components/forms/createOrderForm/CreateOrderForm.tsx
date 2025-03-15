@@ -36,9 +36,13 @@ export const CreateOrderForm: React.FC = () => {
         throw new Error("No file upload");
       }
 
+      if (!user?.id) {
+        throw new Error("User not found");
+      }
+
       const formData = new FormData();
       formData.append("info", values.info);
-      formData.append("weight", values.weight);
+      formData.append("weight", values.weight.toString());
       formData.append("from", values.from);
       formData.append("to", values.to);
       formData.append(
@@ -49,7 +53,7 @@ export const CreateOrderForm: React.FC = () => {
         "date_end",
         dayjs(values.deliveryDates[1]).format("YYYY-MM-DD"),
       );
-      formData.append("user_id", user?.id.toString());
+      formData.append("user_id", user.id.toString());
 
       fileList.forEach((file) => {
         if (file.originFileObj) {
@@ -57,7 +61,9 @@ export const CreateOrderForm: React.FC = () => {
         }
       });
 
-      await fetchData("/orders", "POST", formData, true);
+      await fetchData("/orders", "POST", formData, {
+        "Content-Type": "multipart/form-data",
+      });
       messageApi.open({
         type: "success",
         content: "Заказ создан",
@@ -67,7 +73,7 @@ export const CreateOrderForm: React.FC = () => {
     } catch (error) {
       console.error("Create order error", error);
       messageApi.open({
-        type: "success",
+        type: "error",
         content: "Не удалось создать заказ",
       });
     } finally {
@@ -196,7 +202,6 @@ export const CreateOrderForm: React.FC = () => {
             icon={<LeftCircleOutlined />}
           />
           <ButtonSubmit
-            type="primary"
             htmlType="submit"
             loading={loading}
             text="Сохранить"

@@ -9,13 +9,7 @@ import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import { ConfirmModal } from "../../confirmModal/ConfirmModal.tsx";
-
-interface ModalAttributes {
-  title: string;
-  description: string;
-  confirmText: string;
-  action: () => void;
-}
+import { ModalAttributes } from "../../../models/modalAttr.ts";
 
 export const ProfileForm = () => {
   const { user } = useAuth();

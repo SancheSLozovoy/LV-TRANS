@@ -393,5 +393,6 @@ router.get('/:id', authenticateToken, OrderController.getOrderById);
 router.post('/', uploadPhotos, authenticateToken, OrderController.createOrder);
 router.delete('/:id', authenticateToken, OrderController.deleteOrderById);
 router.put('/:id', authenticateToken, OrderController.updateOrder);
+router.get('/user/:userId', OrderController.getOrdersByUserId);
 
 export default router;

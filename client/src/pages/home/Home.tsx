@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { Layout } from "../../components/layout/Layout.tsx";
 import ButtonSubmit from "../../components/button/Button.tsx";
 import "./home.scss";
