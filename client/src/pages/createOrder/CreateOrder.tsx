@@ -8,9 +8,11 @@ export const CreateOrder = () => {
     <Layout>
       <div className={styles.create}>
         <Container>
-          <h1 className={styles.create__title}>СДЕЛАТЬ ЗАКАЗ</h1>
-          <div className={styles.create__form}>
-            <CreateOrderForm />
+          <div className={styles.create__inner}>
+            <h1 className={styles.create__title}>СДЕЛАТЬ ЗАКАЗ</h1>
+            <div className={styles.create__form}>
+              <CreateOrderForm />
+            </div>
           </div>
         </Container>
       </div>

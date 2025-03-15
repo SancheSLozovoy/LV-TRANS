@@ -3,12 +3,24 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  margin-top: 2%;
 
-  &.create__title {
-
+  &__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
   }
 
-  &.create__form {
+  &__title {
+    font-weight: 600;
+    font-size: 40px;
+    line-height: 48px;
+    text-align: center;
+    vertical-align: bottom;
+  }
+
+  &__form {
 
   }
 

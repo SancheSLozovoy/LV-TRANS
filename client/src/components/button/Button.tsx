@@ -7,6 +7,7 @@ interface ButtonSubmitProps {
   icon?: React.JSX.Element;
   htmlType?: "button" | "submit" | "reset";
   onClick?: () => void;
+  loading?: boolean;
 }
 
 const ButtonSubmit: React.FC<ButtonSubmitProps> = ({

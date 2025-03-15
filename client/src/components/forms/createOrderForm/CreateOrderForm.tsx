@@ -1,20 +1,14 @@
 import React, { useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
-import {
-  Button,
-  DatePicker,
-  Form,
-  Input,
-  InputNumber,
-  Tooltip,
-  Upload,
-  message,
-} from "antd";
+import { DatePicker, Form, Input, InputNumber, Upload, message } from "antd";
 import { RangePickerProps } from "antd/es/date-picker";
 import { UploadFile } from "antd/es/upload/interface";
 import dayjs from "dayjs";
 import useFetch from "../../../composales/useFetch.ts";
 import { useAuth } from "../../../composales/useAuth.ts";
+import styles from "./createOrderForm.module.scss";
+import ButtonSubmit from "../../button/Button.tsx";
+import { LeftCircleOutlined, SaveOutlined } from "@ant-design/icons";
 
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
@@ -93,81 +87,67 @@ export const CreateOrderForm: React.FC = () => {
   return (
     <Form
       form={form}
-      labelCol={{ span: 8 }}
-      wrapperCol={{ span: 16 }}
-      layout="horizontal"
+      layout="vertical"
       onFinish={onFinish}
+      className={styles.form}
     >
       {contextHolder}
-      <Tooltip placement="top" title="Подробно опишите груз">
-        <Form.Item
-          label="Общая информация"
-          name="info"
-          rules={[
-            {
-              required: true,
-              message: "Пожалуйста, введите информацию о грузе",
-            },
-          ]}
-        >
-          <TextArea rows={6} />
-        </Form.Item>
-      </Tooltip>
-
-      <Tooltip placement="top" title="Вес груза в тоннах">
-        <Form.Item
-          label="Вес груза"
-          name="weight"
-          rules={[
-            { required: true, message: "Пожалуйста, введите вес груза" },
-            { type: "number", min: 0.01, message: "Вес должен быть больше 0" },
-          ]}
-        >
-          <InputNumber min={0.01} step={0.01} />
-        </Form.Item>
-      </Tooltip>
-
-      <Tooltip
-        placement="top"
-        title="Место загрузки (Страна, Город, район, адрес)"
+      <Form.Item
+        label="Общая информация"
+        name="info"
+        rules={[
+          {
+            required: true,
+            message: "Пожалуйста, введите информацию о грузе",
+          },
+        ]}
       >
-        <Form.Item
-          label="Откуда"
-          name="from"
-          rules={[
-            { required: true, message: "Пожалуйста, введите место загрузки" },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-      </Tooltip>
+        <TextArea rows={6} />
+      </Form.Item>
 
-      <Tooltip
-        placement="top"
-        title="Место выгрузки (Страна, Город, район, адрес)"
+      <Form.Item
+        label="Вес груза"
+        name="weight"
+        rules={[
+          { required: true, message: "Пожалуйста, введите вес груза" },
+          { type: "number", min: 0.01, message: "Вес должен быть больше 0" },
+        ]}
       >
-        <Form.Item
-          label="Куда"
-          name="to"
-          rules={[
-            { required: true, message: "Пожалуйста, введите место выгрузки" },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-      </Tooltip>
+        <InputNumber min={0.01} step={0.01} />
+      </Form.Item>
 
-      <Tooltip placement="top" title="Укажите желаемые даты загрузки/выгрузки">
-        <Form.Item
-          label="Даты доставки"
-          name="deliveryDates"
-          rules={[
-            { required: true, message: "Пожалуйста, выберите даты доставки" },
-          ]}
-        >
-          <RangePicker disabledDate={disabledDate} />
-        </Form.Item>
-      </Tooltip>
+      <Form.Item
+        label="Откуда"
+        name="from"
+        rules={[
+          { required: true, message: "Пожалуйста, введите место загрузки" },
+        ]}
+      >
+        <Input />
+      </Form.Item>
+
+      <Form.Item
+        label="Куда"
+        name="to"
+        rules={[
+          { required: true, message: "Пожалуйста, введите место выгрузки" },
+        ]}
+      >
+        <Input />
+      </Form.Item>
+
+      <Form.Item
+        label="Даты доставки"
+        name="deliveryDates"
+        rules={[
+          { required: true, message: "Пожалуйста, выберите даты доставки" },
+        ]}
+      >
+        <RangePicker
+          disabledDate={disabledDate}
+          placeholder={["Дата загрузки", "Дата выгрузки"]}
+        />
+      </Form.Item>
 
       <Form.Item
         label="Загрузить фото груза и схем"
@@ -196,29 +176,33 @@ export const CreateOrderForm: React.FC = () => {
             style={{
               color: "inherit",
               cursor: "inherit",
-              border: 0,
+              border: 1,
               background: "none",
             }}
             type="button"
           >
             <PlusOutlined />
-            <div style={{ marginTop: 8 }}>Upload</div>
+            <div style={{ marginTop: 8 }}>Загрузить</div>
           </button>
         </Upload>
       </Form.Item>
 
-      <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-        <Button
-          type="primary"
-          htmlType="submit"
-          loading={loading}
-          style={{ marginRight: 8 }}
-        >
-          Сохранить
-        </Button>
-        <Button htmlType="button" onClick={onReset}>
-          Отмена
-        </Button>
+      <Form.Item>
+        <div className={styles.form__buttons}>
+          <ButtonSubmit
+            htmlType="button"
+            onClick={onReset}
+            text="Отмена"
+            icon={<LeftCircleOutlined />}
+          />
+          <ButtonSubmit
+            type="primary"
+            htmlType="submit"
+            loading={loading}
+            text="Сохранить"
+            icon={<SaveOutlined />}
+          />
+        </div>
       </Form.Item>
     </Form>
   );
