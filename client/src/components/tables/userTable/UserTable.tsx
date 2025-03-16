@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { Space, Table } from "antd";
+import { Badge, Space, Table } from "antd";
 import useFetch from "../../../composales/useFetch.ts";
 import { useAuth } from "../../../composales/useAuth.ts";
 import { reformDate } from "../../../composales/reformDate.ts";
 import { Order } from "../../../models/orderModels.ts";
 import { ModalAttributes } from "../../../models/modalAttr.ts";
 import { ConfirmModal } from "../../confirmModal/ConfirmModal.tsx";
+import { defineStatus } from "../../../composales/defineStatus.ts";
 
 const { Column } = Table;
 
@@ -66,7 +67,17 @@ export const UserTable = () => {
         style={{ width: "709px" }}
       >
         <Column title="Номер заказа" dataIndex="id" key="id" />
-        <Column title="Статус" dataIndex="status_id" key="status_id" />
+        <Column
+          title="Статус"
+          dataIndex="status_id"
+          key="status_id"
+          render={(statusId: number) => {
+            const status = defineStatus(statusId);
+            return (
+              <Badge key={statusId} color={status.color} text={status.name} />
+            );
+          }}
+        />
         <Column
           title="Дата создания"
           dataIndex="create_at"
