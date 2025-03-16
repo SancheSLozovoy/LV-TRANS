@@ -9,7 +9,6 @@ export const CreateOrder = () => {
       <div className={styles.create}>
         <Container>
           <div className={styles.create__inner}>
-            <h1 className={styles.create__title}>СДЕЛАТЬ ЗАКАЗ</h1>
             <div className={styles.create__form}>
               <CreateOrderForm />
             </div>
