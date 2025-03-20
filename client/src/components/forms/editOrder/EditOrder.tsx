@@ -117,7 +117,9 @@ export const EditOrderForm: React.FC<{ orderId: string | undefined }> = ({
         <CreateSuccess type={Type.update} />
       ) : (
         <>
-          <h1 className={styles.create__title}>РЕДАКТИРОВАТЬ ЗАКАЗ</h1>
+          <h1 className={styles.create__title}>
+            Информация о заказе №{orderId}
+          </h1>
           <Form
             form={form}
             layout="vertical"
@@ -213,12 +215,14 @@ export const EditOrderForm: React.FC<{ orderId: string | undefined }> = ({
                     />
                   </>
                 ) : (
-                  <ButtonSubmit
-                    htmlType="button"
-                    onClick={() => setIsEditing(true)}
-                    text="Редактировать"
-                    icon={<EditOutlined />}
-                  />
+                  <>
+                    <ButtonSubmit
+                      htmlType="button"
+                      onClick={() => setIsEditing(true)}
+                      text="Редактировать"
+                      icon={<EditOutlined />}
+                    />
+                  </>
                 )}
               </div>
             </Form.Item>

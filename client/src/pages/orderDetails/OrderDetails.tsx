@@ -12,6 +12,7 @@ export const OrderDetails = () => {
           display: "flex",
           alignItems: "center",
           flexDirection: "column",
+          marginTop: "2%",
         }}
       >
         <EditOrderForm orderId={params.id} />

@@ -1,6 +1,10 @@
-import React, { useState } from "react";
-import { PlusOutlined } from "@ant-design/icons";
-import { DatePicker, Form, Input, InputNumber, Upload, message } from "antd";
+import React, { useEffect, useState } from "react";
+import {
+  LeftCircleOutlined,
+  PlusOutlined,
+  SaveOutlined,
+} from "@ant-design/icons";
+import { DatePicker, Form, Input, InputNumber, message, Upload } from "antd";
 import { RangePickerProps } from "antd/es/date-picker";
 import { UploadFile } from "antd/es/upload/interface";
 import dayjs from "dayjs";
@@ -8,8 +12,9 @@ import useFetch from "../../../composales/useFetch.ts";
 import { useAuth } from "../../../composales/useAuth.ts";
 import styles from "./createOrderForm.module.scss";
 import ButtonSubmit from "../../button/Button.tsx";
-import { LeftCircleOutlined, SaveOutlined } from "@ant-design/icons";
 import { CreateSuccess } from "../../createSuccess/CreateSuccess.tsx";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Type } from "../../../models/orderModels.ts";
 
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
@@ -29,6 +34,15 @@ export const CreateOrderForm: React.FC = () => {
   const { fetchData } = useFetch();
   const [messageApi, contextHolder] = message.useMessage();
   const [isSuccess, setIsSuccess] = useState(false);
+
+  const navigate = useNavigate();
+
+  const location = useLocation();
+  const { from, to } = location.state || { from: "", to: "" };
+
+  useEffect(() => {
+    form.setFieldsValue({ from, to });
+  }, [from, to]);
 
   const onFinish = async (values: any) => {
     setLoading(true);
@@ -85,8 +99,7 @@ export const CreateOrderForm: React.FC = () => {
   };
 
   const onReset = () => {
-    form.resetFields();
-    setFileList([]);
+    navigate("/profile");
   };
 
   const disabledDate: RangePickerProps["disabledDate"] = (current) => {
@@ -97,10 +110,10 @@ export const CreateOrderForm: React.FC = () => {
     <>
       {contextHolder}
       {isSuccess ? (
-        <CreateSuccess />
+        <CreateSuccess type={Type.create} />
       ) : (
         <>
-          <h1 className={styles.create__title}>СДЕЛАТЬ ЗАКАЗ</h1>
+          <h1 className={styles.create__title}>Сделать заказ</h1>
           <Form
             form={form}
             layout="vertical"
@@ -225,7 +238,7 @@ export const CreateOrderForm: React.FC = () => {
                 <ButtonSubmit
                   htmlType="button"
                   onClick={onReset}
-                  text="Отмена"
+                  text="Назад"
                   icon={<LeftCircleOutlined />}
                 />
                 <ButtonSubmit
