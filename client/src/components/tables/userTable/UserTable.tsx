@@ -7,6 +7,7 @@ import { Order } from "../../../models/orderModels.ts";
 import { ModalAttributes } from "../../../models/modalAttr.ts";
 import { ConfirmModal } from "../../confirmModal/ConfirmModal.tsx";
 import { defineStatus } from "../../../composales/defineStatus.ts";
+import { useNavigate } from "react-router-dom";
 
 const { Column } = Table;
 
@@ -18,6 +19,8 @@ export const UserTable = () => {
 
   const [modalData, setModalData] = useState<ModalAttributes | null>(null);
   const [orderToCancel, setOrderToCancel] = useState<number | null>(null);
+
+  const navigate = useNavigate();
 
   const fetchOrders = () => {
     if (!user?.id) return;
@@ -44,11 +47,19 @@ export const UserTable = () => {
       });
   };
 
+  const handleRowClick = (record: Order) => {
+    return {
+      onClick: () => {
+        navigate(`/orders/${record.id}`);
+      },
+    };
+  };
+
   const openCancelModal = (id: number) => {
     setOrderToCancel(id);
     setModalData({
       title: "Отмена заказа",
-      description: "Вы уверены, что хотите отменить этот заказ?",
+      description: `Вы уверены, что хотите отменить заказ №${id}?`,
       confirmText: "Удалить",
       action: () => cancelOrder(id),
     });
@@ -65,6 +76,7 @@ export const UserTable = () => {
         loading={loading}
         rowKey="id"
         style={{ width: "709px" }}
+        onRow={handleRowClick}
       >
         <Column title="Номер заказа" dataIndex="id" key="id" />
         <Column
@@ -92,7 +104,10 @@ export const UserTable = () => {
           render={(_: any, record: Order) => (
             <Space size="middle">
               <a
-                onClick={() => openCancelModal(record.id)}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  openCancelModal(record.id);
+                }}
                 style={{ color: "#8F4848" }}
               >
                 Отменить

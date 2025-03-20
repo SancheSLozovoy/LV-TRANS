@@ -3,8 +3,13 @@ import Lottie from "react-lottie";
 import { useNavigate } from "react-router-dom";
 import animationData from "../../assets/lottie/animation1.json";
 import "./createSuccess.scss";
+import { Type } from "../../models/orderModels";
 
-export const CreateSuccess = () => {
+interface CreateSuccessProps {
+  type: Type;
+}
+
+export const CreateSuccess = ({ type }: CreateSuccessProps) => {
   const defaultOptions = {
     loop: true,
     autoplay: true,
@@ -32,13 +37,14 @@ export const CreateSuccess = () => {
     };
   }, [navigate]);
 
+  const successText =
+    type === Type.create
+      ? "Заказ создан, мы свяжемся с вами в ближайшее время"
+      : "Заказ обновлён, изменения успешно сохранены";
+
   return (
     <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        flexDirection: "column",
-      }}
+      style={{ display: "flex", alignItems: "center", flexDirection: "column" }}
     >
       <Lottie
         options={defaultOptions}
@@ -47,7 +53,7 @@ export const CreateSuccess = () => {
         isClickToPauseDisabled={true}
       />
       <div className="tab">
-        <h2>Заказ создан, мы свяжемся с вами в ближайшее время</h2>
+        <h2>{successText}</h2>
         <p>Возврат на страницу профиля через: {countdown}</p>
       </div>
     </div>

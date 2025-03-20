@@ -8,6 +8,7 @@ import "./styles/global.scss";
 import { JSX } from "react";
 import { NotFoundPage } from "./pages/404/404.tsx";
 import { CreateOrder } from "./pages/createOrder/CreateOrder.tsx";
+import { OrderDetails } from "./pages/orderDetails/OrderDetails.tsx";
 
 export default function App(): JSX.Element {
   return (
@@ -16,6 +17,7 @@ export default function App(): JSX.Element {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/orders/:id" element={<OrderDetails />} />
         <Route element={<ProtectedRoute />}>
           <Route path="/profile" element={<Profile />} />
           <Route path="/create" element={<CreateOrder />} />
