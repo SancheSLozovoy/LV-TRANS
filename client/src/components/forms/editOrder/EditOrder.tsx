@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  EditOutlined,
-  CheckOutlined,
-  CloseOutlined,
-} from "@ant-design/icons";
+import { EditOutlined, CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import { DatePicker, Form, Input, InputNumber, message } from "antd";
 import { RangePickerProps } from "antd/es/date-picker";
 import dayjs from "dayjs";
@@ -35,7 +31,6 @@ export const EditOrderForm: React.FC<{ orderId: string | undefined }> = ({
       try {
         const response = await fetchData(`/orders/${orderId}`, "GET");
         setOrderData(response);
-
         form.setFieldsValue({
           user_id: 0,
           date_end: dayjs(response.date_end),
@@ -66,7 +61,6 @@ export const EditOrderForm: React.FC<{ orderId: string | undefined }> = ({
       if (!user?.id) {
         throw new Error("User not found");
       }
-      console.log(values);
 
       const dto: OrderDto = {
         info: values.info,
@@ -80,7 +74,6 @@ export const EditOrderForm: React.FC<{ orderId: string | undefined }> = ({
         date_end: values.deliveryDates?.[1]
           ? dayjs(values.deliveryDates[1]).format("YYYY-MM-DD")
           : "",
-
         user_id: user.id,
       };
 
@@ -215,14 +208,12 @@ export const EditOrderForm: React.FC<{ orderId: string | undefined }> = ({
                     />
                   </>
                 ) : (
-                  <>
-                    <ButtonSubmit
-                      htmlType="button"
-                      onClick={() => setIsEditing(true)}
-                      text="Редактировать"
-                      icon={<EditOutlined />}
-                    />
-                  </>
+                  <ButtonSubmit
+                    htmlType="button"
+                    onClick={() => setIsEditing(true)}
+                    text="Редактировать"
+                    icon={<EditOutlined />}
+                  />
                 )}
               </div>
             </Form.Item>

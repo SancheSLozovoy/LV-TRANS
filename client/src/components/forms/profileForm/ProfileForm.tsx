@@ -90,7 +90,7 @@ export const ProfileForm = () => {
           </Form.Item>
           <Form.Item className={styles.form__edit}>
             <Button
-              onClick={() => navigate(`/user/${user?.id}`)}
+              onClick={() => navigate(`/user`)}
               type="link"
               className={styles.form__edit}
             >

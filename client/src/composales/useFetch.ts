@@ -29,7 +29,7 @@ export default function useFetch() {
       return response.data;
     } catch (error) {
       if (isAxiosError(error)) {
-        if (error.response?.status === 403) {
+        if (error.response?.message === "Invalid token") {
           Cookies.remove("token");
           navigate("/login");
         }

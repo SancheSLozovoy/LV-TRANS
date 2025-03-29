@@ -19,7 +19,7 @@ export default function App(): JSX.Element {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/orders/:id" element={<OrderDetails />} />
-        <Route path="/user/:id" element={<EditProfile />} />
+        <Route path="/user" element={<EditProfile />} />
         <Route element={<ProtectedRoute />}>
           <Route path="/profile" element={<Profile />} />
           <Route path="/create" element={<CreateOrder />} />
