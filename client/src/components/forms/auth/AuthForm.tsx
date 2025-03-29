@@ -19,7 +19,7 @@ const AuthForm: React.FC<FormProps> = ({ type }): React.JSX.Element => {
   const { handleAuth } = useAuth();
 
   const handleSubmit = (): void => {
-    if (!agreement) {
+    if (!agreement && type === "register") {
       messageApi.error(
         "Пожалуйста, примите согласие на обработку персональных данных",
       );
