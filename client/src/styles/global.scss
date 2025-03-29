@@ -68,11 +68,12 @@
   --white: #FFFFFF;
   --beige: #F5F5ED;
   --red: #8F4848;
+  --hover: #8a6d1f;
 }
 
 html, body {
-    overflow-x: hidden;
-    scrollbar-width: thin;
+  overflow-x: hidden;
+  scrollbar-width: thin;
   font-family: "Grandis", sans-serif;
   background-color: var(--background);
   font-weight: 450;

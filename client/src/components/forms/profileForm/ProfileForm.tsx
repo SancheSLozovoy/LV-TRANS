@@ -1,4 +1,4 @@
-import { Form, Input } from "antd";
+import { Button, Form, Input } from "antd";
 import ButtonSubmit from "../../button/Button.tsx";
 import { LogoutOutlined, DeleteOutlined } from "@ant-design/icons";
 import styles from "./profileForm.module.scss";
@@ -89,7 +89,13 @@ export const ProfileForm = () => {
             ></Input>
           </Form.Item>
           <Form.Item className={styles.form__edit}>
-            <p>Редактировать</p>
+            <Button
+              onClick={() => navigate(`/user/${user?.id}`)}
+              type="link"
+              className={styles.form__edit}
+            >
+              Редактировать
+            </Button>
           </Form.Item>
         </div>
         <div className={styles.form__button__container}>

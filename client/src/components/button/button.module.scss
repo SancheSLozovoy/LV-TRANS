@@ -8,4 +8,8 @@
   border: none;
   background-color: var(--yellow);
   color: var(--brown);
+
+  &:hover {
+    background-color: var(--hover) !important;
+  }
 }

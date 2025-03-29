@@ -16,6 +16,9 @@
 }
 
 .form__item {
+  &:focus {
+    box-shadow: 0 0 0 2px var(--yellow);
+  }
 }
 
 .form__input {
@@ -41,6 +44,10 @@
 
 .form__link {
   color: #ab812a;
+
+  &:hover {
+    color: var(--hover);
+  }
 }
 
 .form__button {
