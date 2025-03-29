@@ -49,3 +49,10 @@ export async function updateOrder(
     );
     return result;
 }
+
+export async function getOrdersByUserId(userId) {
+    const [rows] = await pool.query('SELECT * FROM orders WHERE user_id = ?', [
+        userId,
+    ]);
+    return rows;
+}

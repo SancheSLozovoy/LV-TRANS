@@ -52,10 +52,10 @@ export async function login(req, res) {
         }
 
         const token = jwt.sign(
-            { id: user.id, login: user.login },
+            { id: user.id, login: user.login, role_id: user.role_id },
             process.env.JWT_SECRET,
             {
-                expiresIn: '1h',
+                expiresIn: '7d',
             },
         );
         res.json({ message: 'Login successful', token });
@@ -69,6 +69,9 @@ export async function login(req, res) {
 
 export async function getUsers(req, res) {
     try {
+        if (req.user.role_id !== 1) {
+            return res.status(403).json({ message: 'Users not found' });
+        }
         const users = await UserModel.getUsers();
         if (users.length === 0) {
             return res.status(404).json({ message: 'Users not found' });
@@ -84,15 +87,22 @@ export async function getUsers(req, res) {
 
 export async function getUserById(req, res) {
     const { id } = req.params;
+
     if (!id || isNaN(id)) {
         return res.status(400).json({ message: 'Invalid user ID' });
     }
 
     try {
         const user = await UserModel.getUserById(id);
+
         if (!user || user.length === 0) {
             return res.status(404).json({ message: 'User not found' });
         }
+
+        if (req.user.role_id !== 1 && req.user.id !== parseInt(id)) {
+            return res.status(403).json({ message: 'Access denied' });
+        }
+
         res.status(200).json(user[0]);
     } catch (err) {
         res.status(500).json({
@@ -109,10 +119,16 @@ export async function deleteUserById(req, res) {
     }
 
     try {
+        if (req.user.role_id !== 1 && req.user.id !== parseInt(id)) {
+            return res.status(403).json({ message: 'Access denied' });
+        }
+
         const result = await UserModel.deleteUserById(id);
+
         if (result.affectedRows === 0) {
             return res.status(404).json({ message: 'User not found' });
         }
+
         res.status(200).json({ message: 'User deleted' });
     } catch (err) {
         res.status(500).json({
@@ -125,11 +141,16 @@ export async function deleteUserById(req, res) {
 export async function updateUser(req, res) {
     const { id } = req.params;
     const { login, phone, password, role_id } = req.body;
+
     if (!id || isNaN(id) || !login || !phone || !password || !role_id) {
         return res.status(400).json({ message: 'Missing required fields' });
     }
 
     try {
+        if (req.user.role_id !== 1 && req.user.id !== parseInt(id)) {
+            return res.status(403).json({ message: 'Access denied' });
+        }
+
         const result = await UserModel.updateUser(
             id,
             login,
@@ -137,9 +158,11 @@ export async function updateUser(req, res) {
             password,
             role_id,
         );
+
         if (result.affectedRows === 0) {
             return res.status(404).json({ message: 'User not found' });
         }
+
         res.status(200).json({ message: 'User updated' });
     } catch (err) {
         res.status(500).json({

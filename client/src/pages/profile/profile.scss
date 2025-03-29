@@ -1,0 +1,35 @@
+.profile {
+  margin-top: 2%;
+}
+
+.profile__form {
+  width: max-content;
+}
+
+.profile__form-title {
+  font-weight: 500;
+  font-size: 48px;
+  line-height: 48px;
+  text-align: center;
+  margin-bottom: 21px;
+}
+
+.profile__table {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.profile__crete-order {
+  width: max-content;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 100%;
+  text-align: center;
+  vertical-align: bottom;
+}
+
+.profile__inner {
+  display: flex;
+  justify-content: space-between;
+}

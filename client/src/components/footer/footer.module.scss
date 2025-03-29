@@ -1,0 +1,33 @@
+.footer {
+  background-color: var(--brown);
+  height: 156px;
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  &__inner {
+    width: 100%;
+  }
+
+  &__content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--white);
+  }
+
+  &__contacts {
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 22px;
+    text-decoration: underline;
+    display: flex;
+    gap: 40px;
+  }
+
+  &__year {
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 48px;
+  }
+}

@@ -10,10 +10,10 @@ const router = express.Router();
  *   get:
  *     tags:
  *       - Users
- *     summary: Получение всех пользователей
+ *     summary: Получение всех пользователей (доступно только администратору)
  *     responses:
  *       200:
- *         description: Получение всех пользователей
+ *         description: Успешно получены все пользователи
  *         content:
  *           application/json:
  *             schema:
@@ -26,7 +26,7 @@ const router = express.Router();
  *                     example: 3
  *                   login:
  *                     type: string
- *                     example: Login
+ *                     example: user123
  *                   phone:
  *                     type: string
  *                     example: 89381000000
@@ -34,8 +34,18 @@ const router = express.Router();
  *                     type: string
  *                     example: 432rewfds432sdDsdsad!dew
  *                   role_id:
- *                      type: integer
- *                      example: 1
+ *                     type: integer
+ *                     example: 1
+ *       403:
+ *         description: Доступ запрещен (если не администратор)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Users not found
  *       404:
  *         description: Пользователи не найдены
  *         content:
@@ -55,10 +65,69 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Error getting orders
+ *                   example: Error getting users
  *                 error:
  *                   type: string
- *                   example: Error getting users
+ *                   example: Server error
+ */
+
+/**
+ * @swagger
+ * /users/login:
+ *   post:
+ *     tags:
+ *       - Users
+ *     summary: Логин пользователя
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               login:
+ *                 type: string
+ *                 description: Логин пользователя
+ *               password:
+ *                 type: string
+ *                 description: Пароль пользователя
+ *     responses:
+ *       200:
+ *         description: Успешный вход
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Login successful
+ *                 token:
+ *                   type: string
+ *                   example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *       400:
+ *         description: Некорректный логин или пароль
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Invalid login or password
+ *       500:
+ *         description: Ошибка сервера
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Error logging in
+ *                 error:
+ *                   type: string
+ *                   example: Server error
  */
 
 /**
@@ -67,7 +136,7 @@ const router = express.Router();
  *   get:
  *     tags:
  *       - Users
- *     summary: Получение пользователя по ID
+ *     summary: Получение пользователя по ID (пользователь может получить только себя, админ — любого)
  *     parameters:
  *       - in: path
  *         name: id
@@ -108,6 +177,16 @@ const router = express.Router();
  *                 message:
  *                   type: string
  *                   example: Invalid user ID
+ *       403:
+ *         description: Доступ запрещен (если пользователь пытается получить данные другого пользователя без прав администратора)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Access denied
  *       404:
  *         description: Пользователь не найден
  *         content:
@@ -139,7 +218,7 @@ const router = express.Router();
  *   post:
  *     tags:
  *       - Users
- *     summary: Создание нового пользователя
+ *     summary: Создание нового пользователя (регистрация)
  *     requestBody:
  *       required: true
  *       content:
@@ -158,7 +237,7 @@ const router = express.Router();
  *                  example: 432rewfds432sdDsdsad!dew
  *     responses:
  *       201:
- *         description: Пользователь создан
+ *         description: Пользователь успешно создан
  *         content:
  *           application/json:
  *             schema:
@@ -171,7 +250,7 @@ const router = express.Router();
  *                   type: integer
  *                   example: 20
  *       400:
- *         description: Некорректные данные
+ *         description: Некорректные данные (отсутствуют обязательные поля или пользователь уже существует)
  *         content:
  *           application/json:
  *             schema:
@@ -179,10 +258,9 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Missing required fields
- *
+ *                   example: Missing required fields or User already exists
  *       500:
- *         description: Ошибка сервера
+ *         description: Ошибка сервера при создании пользователя
  *         content:
  *           application/json:
  *             schema:
@@ -231,6 +309,16 @@ const router = express.Router();
  *                 message:
  *                   type: string
  *                   example: Invalid user ID
+ *       403:
+ *         description: Отказано в доступе (пользователь может удалять только себя, администратор - любого)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Access denied
  *       404:
  *         description: Пользователь не найден
  *         content:
@@ -286,6 +374,9 @@ const router = express.Router();
  *               password:
  *                  type: string
  *                  example: 432rewfds432sdDsdsad!dew
+ *               role_id:
+ *                  type: integer
+ *                  example: 1
  *     responses:
  *       200:
  *         description: Пользователь обновлен
@@ -307,6 +398,16 @@ const router = express.Router();
  *                 message:
  *                   type: string
  *                   example: Missing required fields
+ *       403:
+ *         description: Отказано в доступе (пользователь может обновлять только себя, администратор - любого)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Access denied
  *       404:
  *         description: Пользователь не найден
  *         content:
@@ -326,7 +427,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Error updating order
+ *                   example: Error updating user
  *                 error:
  *                   type: string
  *                   example: Server error

@@ -1,0 +1,28 @@
+.header {
+  background-color: var(--brown);
+  height: 108px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+
+  &__container {
+    width: 100%;
+  }
+
+  &__content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--white);
+  }
+
+  &__logo {
+    width: 286px;
+    height: 70px;
+  }
+
+  &__nav_list {
+    display: flex;
+    gap: 43px;
+  }
+}
