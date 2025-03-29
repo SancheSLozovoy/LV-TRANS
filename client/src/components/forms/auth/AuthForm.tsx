@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { LockOutlined, UserOutlined, PhoneOutlined } from "@ant-design/icons";
 import { Checkbox, Flex, Form, Input, message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
@@ -12,12 +12,20 @@ interface FormProps {
 
 const AuthForm: React.FC<FormProps> = ({ type }): React.JSX.Element => {
   const [form] = Form.useForm();
+  const [agreement, setAgreement] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
   const navigate = useNavigate();
 
   const { handleAuth } = useAuth();
 
   const handleSubmit = (): void => {
+    if (!agreement) {
+      messageApi.error(
+        "Пожалуйста, примите согласие на обработку персональных данных",
+      );
+      return;
+    }
+
     handleAuth(form, messageApi, navigate, type);
   };
 
@@ -85,7 +93,9 @@ const AuthForm: React.FC<FormProps> = ({ type }): React.JSX.Element => {
               },
             ]}
           >
-            <Checkbox>Согласие на обработку персональных данных</Checkbox>
+            <Checkbox onChange={() => setAgreement(!agreement)}>
+              Согласие на обработку персональных данных
+            </Checkbox>
           </Form.Item>
         ) : null}
       </div>
@@ -105,7 +115,7 @@ const AuthForm: React.FC<FormProps> = ({ type }): React.JSX.Element => {
             </p>
           ) : (
             <p className={styles.form__text}>
-              Нет аккаутна?{" "}
+              Нет аккаунта?{" "}
               <Link to="/register" className={styles.form__link}>
                 Зарегестрироваться
               </Link>

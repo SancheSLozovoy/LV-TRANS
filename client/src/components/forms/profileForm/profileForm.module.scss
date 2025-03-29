@@ -57,6 +57,18 @@
   height: 50px;
   border-radius: 10px;
   border: none;
+
+  .button__delete button {
+    font-size: 16px;
+    height: 35px;
+    color: var(--white);
+    background-color: var(--red);
+    padding: 7px 17px;
+
+    &:hover {
+      background-color: var(--redHover) !important;
+    }
+  }
 }
 
 @media (max-width: 1800px) {
@@ -128,5 +140,17 @@
     color: var(--white);
     background-color: var(--red);
     padding: 7px 17px;
+  }
+
+  .button__delete button {
+    font-size: 16px;
+    height: 35px;
+    color: var(--white);
+    background-color: var(--red);
+    padding: 7px 17px;
+
+    &:hover {
+      background-color: var(--redHover) !important;
+    }
   }
 }
