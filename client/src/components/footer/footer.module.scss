@@ -5,30 +5,29 @@
   align-items: center;
   width: 100%;
 
-
-  .footer__inner {
-    display: flex;
+  &__inner {
     width: 100%;
-    align-items: center;
-    justify-content: space-between;
-    margin: 0 133px;
-    color: var(--white);
-
-    .footer__contacts {
-      font-weight: 400;
-      font-size: 20px;
-      line-height: 22px;
-      text-decoration: underline;
-      display: flex;
-      gap: 40px;
-    }
-
-    .footer__year {
-      font-weight: 400;
-      font-size: 20px;
-      line-height: 48px;
-    }
   }
 
+  &__content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--white);
+  }
 
+  &__contacts {
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 22px;
+    text-decoration: underline;
+    display: flex;
+    gap: 40px;
+  }
+
+  &__year {
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 48px;
+  }
 }

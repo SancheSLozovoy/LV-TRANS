@@ -2,34 +2,27 @@
   background-color: var(--brown);
   height: 108px;
   width: 100%;
-}
-
-.header__container {
-  color: var(--white);
-  line-height: 12px;
-  text-align: center;
   display: flex;
-  height: 100%;
   align-items: center;
-  justify-content: space-between;
-  margin: 0 133px;
-}
 
-.header__logo {
-  width: 286px;
-  height: 70px;
-  margin-bottom: 10px;
-}
+  &__container {
+    width: 100%;
+  }
 
-.header__nav {
+  &__content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--white);
+  }
 
-}
+  &__logo {
+    width: 286px;
+    height: 70px;
+  }
 
-.header__nav_list {
-  display: flex;
-  gap: 43px;
-}
-
-.header__profile {
-
+  &__nav_list {
+    display: flex;
+    gap: 43px;
+  }
 }
