@@ -29,11 +29,15 @@ export default function useFetch() {
       return response.data;
     } catch (error) {
       if (isAxiosError(error)) {
-        if (error.response?.message === "Invalid token") {
+        const errorMessage = error.response?.data?.message || error.message;
+        
+        if (errorMessage === "Invalid token" || error.response?.status === 401) {
           Cookies.remove("token");
           navigate("/login");
         }
-      }
+        
+        throw new Error(errorMessage);
+      }  
       console.error("Ошибка при выполнении запроса:", error);
       throw error;
     }

@@ -1,4 +1,5 @@
 export interface Order {
+  id: number;
   info: string;
   weight: number;
   from: string;

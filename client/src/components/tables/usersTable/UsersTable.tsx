@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Table, Button, message, Tag, Pagination } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { ConfirmModal } from "../../confirmModal/ConfirmModal.tsx";

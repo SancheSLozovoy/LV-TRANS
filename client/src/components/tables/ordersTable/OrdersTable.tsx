@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Table, Button, message, Tag, Pagination, Select, Space } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import { ConfirmModal } from "../../confirmModal/ConfirmModal.tsx";
 import useFetch from "../../../composales/useFetch.ts";
 import { Order } from "../../../models/orderModels.ts";
-import { User } from "../../../models/userModels.ts";
 import { defineStatus } from "../../../composales/defineStatus.ts";
 
 export const OrdersTable = () => {
@@ -27,7 +26,7 @@ export const OrdersTable = () => {
       setLoading(true);
       const data = await fetchData(
         `/orders?page=${currentPage}&limit=${pageSize}`,
-        "GET",
+        "GET"
       );
       setOrders(data.orders);
       setTotal(data.total);
@@ -46,7 +45,6 @@ export const OrdersTable = () => {
 
       message.success("Статус заказа изменён");
 
-      // После изменения статуса, перезагружаем заказы
       fetchOrders();
     } catch (error) {
       message.error("Ошибка при изменении статуса");
@@ -77,7 +75,7 @@ export const OrdersTable = () => {
       title: "Статус",
       dataIndex: "status_id",
       key: "status_id",
-      render: (statusId) => {
+      render: (statusId: number) => {
         const status = defineStatus(statusId);
         return <Tag color={status.color}>{status.name}</Tag>;
       },
@@ -86,7 +84,7 @@ export const OrdersTable = () => {
     {
       title: "Статус заказа",
       key: "status_actions",
-      render: (_, record) => (
+      render: (_: any, record: Order) => (
         <Select
           defaultValue={record.status_id}
           onChange={(value) => handleStatusChange(record.id, value)}
@@ -102,7 +100,7 @@ export const OrdersTable = () => {
     {
       title: "Действия",
       key: "actions",
-      render: (_, record) => (
+      render: (_: any, record: Order) => (
         <Space size="middle">
           <Button
             danger
