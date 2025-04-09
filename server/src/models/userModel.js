@@ -1,9 +1,19 @@
 import { pool } from '../db.js';
 import bcrypt from 'bcryptjs';
 
-export async function getUsers() {
-    const [rows] = await pool.query('SELECT * FROM users');
-    return rows;
+export async function getUsers(page = 1, limit = 10) {
+    const offset = (page - 1) * limit;
+
+    const [rows] = await pool.query('SELECT * FROM users LIMIT ? OFFSET ?', [
+        limit,
+        offset,
+    ]);
+
+    const [[{ total }]] = await pool.query(
+        'SELECT COUNT(*) as total FROM users',
+    );
+
+    return { users: rows, total };
 }
 
 export async function getUserById(id) {
@@ -50,5 +60,23 @@ export async function updateUser(id, login, phone, password, role_id) {
         'UPDATE users SET login = ?, phone = ?, password = ?, role_id = ? WHERE id = ?',
         [login, phone, hashedPassword, role_id, id],
     );
+    return result;
+}
+
+export async function updateUserRole(id, role_id) {
+    const [roleExists] = await pool.query(
+        'SELECT COUNT(*) AS count FROM roles WHERE id = ?',
+        [role_id],
+    );
+
+    if (roleExists[0].count === 0) {
+        throw new Error(`Role with id ${role_id} does not exist`);
+    }
+
+    const [result] = await pool.query(
+        'UPDATE users SET role_id = ? WHERE id = ?',
+        [role_id, id],
+    );
+
     return result;
 }

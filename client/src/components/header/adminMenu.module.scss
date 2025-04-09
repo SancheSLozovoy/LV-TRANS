@@ -1,0 +1,27 @@
+.header {
+  background-color: var(--brown);
+  width: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 15px 0;
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    color: var(--white);
+  }
+
+  &__logo {
+    width: 286px;
+    height: 70px;
+  }
+
+  &__nav_list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+}

@@ -4,19 +4,26 @@ import { login } from './userController.js';
 
 export async function getOrders(req, res) {
     try {
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const offset = (page - 1) * limit;
+
         if (req.user.role_id !== 1) {
             return res.status(403).json({ message: 'Access denied' });
         }
 
-        const orders = await OrderModel.getOrders();
+        const { orders, total } = await OrderModel.getOrders(limit, offset);
 
-        if (!orders.length) {
+        if (orders.length === 0) {
             return res.status(404).json({
                 message: 'No orders found',
             });
         }
 
-        res.status(200).json(orders);
+        res.status(200).json({
+            orders,
+            total,
+        });
     } catch (err) {
         res.status(500).json({
             message: 'Error getting orders',
@@ -206,6 +213,30 @@ export async function getOrdersByUserId(req, res) {
     } catch (err) {
         res.status(500).json({
             message: 'Error getting orders by user ID',
+            error: err.message,
+        });
+    }
+}
+
+export async function updateOrderStatus(req, res) {
+    try {
+        const { id } = req.params;
+        const { status_id } = req.body;
+
+        if (req.user.role_id !== 1) {
+            return res.status(403).json({ message: 'Access denied' });
+        }
+
+        const result = await OrderModel.updateStatus(id, status_id);
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'Order not found' });
+        }
+
+        res.status(200).json({ message: 'Status updated successfully' });
+    } catch (err) {
+        res.status(500).json({
+            message: 'Error updating order status',
             error: err.message,
         });
     }

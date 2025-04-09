@@ -14,9 +14,11 @@ export const useAuth = () => {
   const handleGetUser = (token: string) => {
     if (!token) return null;
     const decode = jwtDecode<User>(token);
+    console.log(decode);
     const userData = {
       login: decode.login,
       id: decode.id,
+      role_id: decode.role_id,
     };
     return userData;
   };

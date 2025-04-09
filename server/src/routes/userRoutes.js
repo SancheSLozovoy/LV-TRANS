@@ -433,11 +433,92 @@ const router = express.Router();
  *                   example: Server error
  */
 
+/**
+ * @swagger
+ * /users/{id}/role:
+ *   put:
+ *     tags:
+ *       - Users
+ *     summary: Обновление роли пользователя по ID
+ *     description: Доступно только администраторам. Позволяет изменить роль пользователя.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID пользователя
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               role_id:
+ *                 type: integer
+ *                 example: 2
+ *     responses:
+ *       200:
+ *         description: Роль обновлена
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Role updated
+ *       400:
+ *         description: Некорректные данные или ID
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Invalid request data
+ *       403:
+ *         description: Отказано в доступе (только администратор может обновлять роли)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Access denied
+ *       404:
+ *         description: Пользователь не найден
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: User not found
+ *       500:
+ *         description: Ошибка сервера
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Error updating role
+ *                 error:
+ *                   type: string
+ *                   example: Server error
+ */
+
 router.get('/', authenticateToken, UserController.getUsers);
 router.get('/:id', authenticateToken, UserController.getUserById);
 router.post('/', UserController.register);
 router.post('/login', UserController.login);
 router.delete('/:id', authenticateToken, UserController.deleteUserById);
 router.put('/:id', authenticateToken, UserController.updateUser);
-
+router.put('/:id/role', authenticateToken, UserController.updateUserRole);
 export default router;

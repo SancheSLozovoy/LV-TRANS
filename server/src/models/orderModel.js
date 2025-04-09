@@ -1,8 +1,16 @@
 import { pool } from '../db.js';
 
-export async function getOrders() {
-    const [rows] = await pool.query('SELECT * FROM orders');
-    return rows;
+export async function getOrders(limit = 10, offset = 0) {
+    const [rows] = await pool.query('SELECT * FROM orders LIMIT ? OFFSET ?', [
+        limit,
+        offset,
+    ]);
+
+    const [[{ total }]] = await pool.query(
+        'SELECT COUNT(*) as total FROM orders',
+    );
+
+    return { orders: rows, total };
 }
 
 export async function getOrderById(id) {
@@ -55,4 +63,12 @@ export async function getOrdersByUserId(userId) {
         userId,
     ]);
     return rows;
+}
+
+export async function updateStatus(id, status_id) {
+    const [result] = await pool.query(
+        'UPDATE orders SET status_id = ? WHERE id = ?',
+        [status_id, id],
+    );
+    return result;
 }

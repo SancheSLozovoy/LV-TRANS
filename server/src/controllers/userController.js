@@ -72,11 +72,17 @@ export async function getUsers(req, res) {
         if (req.user.role_id !== 1) {
             return res.status(403).json({ message: 'Users not found' });
         }
-        const users = await UserModel.getUsers();
+
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+
+        const { users, total } = await UserModel.getUsers(page, limit);
+
         if (users.length === 0) {
             return res.status(404).json({ message: 'Users not found' });
         }
-        res.status(200).json(users);
+
+        res.status(200).json({ users, total });
     } catch (err) {
         res.status(500).json({
             message: 'Error getting users',
@@ -167,6 +173,34 @@ export async function updateUser(req, res) {
     } catch (err) {
         res.status(500).json({
             message: 'Error updating user',
+            error: err.message,
+        });
+    }
+}
+
+export async function updateUserRole(req, res) {
+    const { id } = req.params;
+    const { role_id } = req.body;
+
+    if (!id || isNaN(id) || !role_id) {
+        return res.status(400).json({ message: 'Invalid request data' });
+    }
+
+    try {
+        if (req.user.role_id !== 1) {
+            return res.status(403).json({ message: 'Access denied' });
+        }
+
+        const result = await UserModel.updateUserRole(id, role_id);
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.status(200).json({ message: 'Role updated' });
+    } catch (err) {
+        res.status(500).json({
+            message: 'Error updating role',
             error: err.message,
         });
     }
