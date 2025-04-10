@@ -206,7 +206,7 @@ export const CreateOrderForm: React.FC = () => {
                   const isImage = file.type.startsWith("image/");
                   if (!isImage) {
                     message.error("Можно загружать только изображения!");
-                    return false; // Отменяет загрузку, если файл не изображение
+                    return false;
                   }
 
                   setFileList((prev) => [
@@ -218,7 +218,7 @@ export const CreateOrderForm: React.FC = () => {
                 onRemove={(file) => {
                   setFileList((prev) => prev.filter((f) => f.uid !== file.uid));
                 }}
-                accept="image/*" // Разрешает только изображения
+                accept="image/*"
               >
                 <button
                   style={{

@@ -100,6 +100,9 @@ export const OrdersTable = () => {
           defaultValue={record.status_id}
           onChange={(value) => handleStatusChange(record.id, value)}
           style={{ width: 120 }}
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
         >
           <Select.Option value={1}>Не принят</Select.Option>
           <Select.Option value={2}>Принят</Select.Option>
