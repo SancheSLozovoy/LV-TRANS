@@ -69,7 +69,8 @@ export const ProfileForm = () => {
   }, []);
 
   return (
-    <>
+    <div>
+      <h1 className={styles.form__title}>Профиль</h1>
       <Form>
         <div className={styles.form}>
           <Form.Item>
@@ -90,7 +91,7 @@ export const ProfileForm = () => {
           </Form.Item>
           <Form.Item className={styles.form__edit}>
             <Button
-              onClick={() => navigate(`/user`)}
+              onClick={() => navigate(`/admin/user`)}
               type="link"
               className={styles.form__edit}
             >
@@ -129,6 +130,6 @@ export const ProfileForm = () => {
           confirmText={modalData.confirmText}
         />
       )}
-    </>
+    </div>
   );
 };
