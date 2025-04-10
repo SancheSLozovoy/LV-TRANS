@@ -95,7 +95,10 @@ export const UsersTable = () => {
           <Button
             type="primary"
             onClick={() => toggleRole(user)}
-            className={`role-button ${user.role_id === 1 ? "admin" : "user"}`}
+            style={{
+              backgroundColor: user.role_id === 1 ? "#D9D9D9" : "#5686E1",
+              color: user.role_id === 1 ? "#5686E1" : "#D9D9D9",
+            }}
           >
             {user.role_id === 1 ? "Сделать пользователем" : "Сделать админом"}
           </Button>

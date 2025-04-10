@@ -10,26 +10,27 @@ import ButtonSubmit from "../../button/Button.tsx";
 import { CreateSuccess } from "../../createSuccess/CreateSuccess.tsx";
 import { Order, OrderDto } from "../../../models/orderModels.ts";
 import { Type } from "../../../models/orderModels.ts";
+import { useParams } from "react-router-dom";
 
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 
-export const EditOrderForm: React.FC<{ orderId: string | undefined }> = ({
-  orderId,
-}) => {
-  const { user } = useAuth();
+export const EditOrderForm: React.FC = () => {
   const [form] = Form.useForm<Order>();
   const [loading, setLoading] = useState(false);
-  const { fetchData } = useFetch();
   const [messageApi, contextHolder] = message.useMessage();
   const [isSuccess, setIsSuccess] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [orderData, setOrderData] = useState<any>(null);
 
+  const params = useParams();
+  const { user } = useAuth();
+  const { fetchData } = useFetch();
+
   useEffect(() => {
     const fetchOrderData = async () => {
       try {
-        const response = await fetchData(`/orders/${orderId}`, "GET");
+        const response = await fetchData(`/orders/${params.id}`, "GET");
         setOrderData(response);
         form.setFieldsValue({
           user_id: 0,
@@ -77,7 +78,7 @@ export const EditOrderForm: React.FC<{ orderId: string | undefined }> = ({
         user_id: user.id,
       };
 
-      await fetchData(`/orders/${orderId}`, "PUT", dto);
+      await fetchData(`/orders/${params.id}`, "PUT", dto);
       messageApi.open({
         type: "success",
         content: "Заказ обновлен",
@@ -109,9 +110,9 @@ export const EditOrderForm: React.FC<{ orderId: string | undefined }> = ({
       {isSuccess ? (
         <CreateSuccess type={Type.update} />
       ) : (
-        <>
+        <div>
           <h1 className={styles.create__title}>
-            Информация о заказе №{orderId}
+            Информация о заказе №{params.id}
           </h1>
           <Form
             form={form}
@@ -218,7 +219,7 @@ export const EditOrderForm: React.FC<{ orderId: string | undefined }> = ({
               </div>
             </Form.Item>
           </Form>
-        </>
+        </div>
       )}
     </>
   );

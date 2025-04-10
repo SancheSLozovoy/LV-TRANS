@@ -13,6 +13,7 @@ import { EditProfile } from "./pages/editProfile/EditProfile.tsx";
 import { AdminPanel } from "./pages/admin/Admin.tsx";
 import { UsersTable } from "./components/tables/usersTable/UsersTable.tsx";
 import { OrdersTable } from "./components/tables/ordersTable/OrdersTable.tsx";
+import { EditOrderForm } from "./components/forms/editOrder/EditOrder.tsx";
 
 export default function App(): JSX.Element {
   return (
@@ -31,6 +32,7 @@ export default function App(): JSX.Element {
           <Route path="/admin" element={<AdminPanel />}>
             <Route path="users" element={<UsersTable />} />
             <Route path="orders" element={<OrdersTable />} />
+            <Route path="orders/:id" element={<EditOrderForm />} />
           </Route>
         </Route>
 

@@ -5,6 +5,7 @@ import { ConfirmModal } from "../../confirmModal/ConfirmModal.tsx";
 import useFetch from "../../../composales/useFetch.ts";
 import { Order } from "../../../models/orderModels.ts";
 import { defineStatus } from "../../../composales/defineStatus.ts";
+import { useNavigate } from "react-router-dom";
 
 export const OrdersTable = () => {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -17,6 +18,8 @@ export const OrdersTable = () => {
 
   const { fetchData } = useFetch();
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     fetchOrders();
   }, [currentPage, pageSize]);
@@ -26,7 +29,7 @@ export const OrdersTable = () => {
       setLoading(true);
       const data = await fetchData(
         `/orders?page=${currentPage}&limit=${pageSize}`,
-        "GET"
+        "GET",
       );
       setOrders(data.orders);
       setTotal(data.total);
@@ -35,6 +38,14 @@ export const OrdersTable = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleRowClick = (record: Order) => {
+    return {
+      onClick: () => {
+        navigate(`/admin/orders/${record.id}`);
+      },
+    };
   };
 
   const handleStatusChange = async (orderId: number, statusId: number) => {
@@ -97,6 +108,17 @@ export const OrdersTable = () => {
         </Select>
       ),
     },
+
+    {
+      title: "Пользователь",
+      dataIndex: "user_login",
+      key: "user_login",
+    },
+    {
+      title: "Номер телефона",
+      dataIndex: "user_phone",
+      key: "user_phone",
+    },
     {
       title: "Действия",
       key: "actions",
@@ -124,6 +146,7 @@ export const OrdersTable = () => {
         rowKey="id"
         loading={loading}
         pagination={false}
+        onRow={handleRowClick}
       />
 
       <Pagination

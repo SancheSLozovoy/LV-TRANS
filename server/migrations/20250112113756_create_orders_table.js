@@ -1,7 +1,7 @@
 export async function up(knex) {
   await knex.schema.createTable("orders", function (table) {
     table.increments("id").primary();
-    table.string("info").notNullable();
+    table.text("info").notNullable();
     table.float("weight").notNullable();
     table.string("from").notNullable();
     table.string("to").notNullable();

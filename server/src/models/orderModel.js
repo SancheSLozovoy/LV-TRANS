@@ -1,10 +1,18 @@
 import { pool } from '../db.js';
 
 export async function getOrders(limit = 10, offset = 0) {
-    const [rows] = await pool.query('SELECT * FROM orders LIMIT ? OFFSET ?', [
-        limit,
-        offset,
-    ]);
+    const [rows] = await pool.query(
+        `
+        SELECT 
+            orders.*, 
+            users.login AS user_login, 
+            users.phone AS user_phone
+        FROM orders
+        JOIN users ON orders.user_id = users.id
+        LIMIT ? OFFSET ?
+        `,
+        [limit, offset],
+    );
 
     const [[{ total }]] = await pool.query(
         'SELECT COUNT(*) as total FROM orders',

@@ -1,4 +1,7 @@
 import bcrypt from "bcryptjs";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 export async function up(knex) {
   await knex.schema.createTable("users", (table) => {
