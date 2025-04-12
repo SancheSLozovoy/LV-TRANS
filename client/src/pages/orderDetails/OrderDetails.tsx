@@ -1,5 +1,4 @@
 import { Layout } from "../../components/layout/Layout.tsx";
-import { EditOrderForm } from "../../components/forms/editOrder/EditOrder.tsx";
 import { OrderTabs } from "../../components/tabs/OrderTabs.tsx";
 
 export const OrderDetails = () => {

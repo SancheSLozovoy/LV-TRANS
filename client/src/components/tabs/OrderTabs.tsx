@@ -1,6 +1,5 @@
 import { Tabs } from "antd";
 import { OrderFiles } from "../documents/OrderFiles.tsx";
-import React from "react";
 import { EditOrderForm } from "../forms/editOrder/EditOrder.tsx";
 
 export const OrderTabs = () => {
