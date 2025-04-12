@@ -1,15 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { List, Button, Spin, message } from "antd";
+import { List, Button, Spin } from "antd";
 import { FileOutlined, DownloadOutlined } from "@ant-design/icons";
 import useFetch from "../../composales/useFetch.ts";
 import { useParams } from "react-router-dom";
-import axios from "axios";
-
-interface FileData {
-  id: number;
-  file_name: string;
-  file_type: string;
-}
+import { FileData } from "../../models/file.ts";
 
 export const OrderFiles: React.FC = () => {
   const [files, setFiles] = useState<FileData[]>([]);
@@ -34,13 +28,9 @@ export const OrderFiles: React.FC = () => {
 
   if (loading) return <Spin size="large" />;
 
-  const handleDownload = async (
-    fileId: number,
-    fileName: string,
-    fileType: string,
-  ) => {
+  const handleDownload = async (file: FileData) => {
     try {
-      const response = await fetchData(`/orders/files/${fileId}`, "GET");
+      const response = await fetchData(`/orders/files/${file.id}`, "GET");
 
       if (!response?.file_base64) {
         throw new Error("Файл не найден или произошла ошибка");
@@ -54,18 +44,17 @@ export const OrderFiles: React.FC = () => {
       }
 
       const byteArray = new Uint8Array(byteNumbers);
-      const blob = new Blob([byteArray], { type: fileType });
+      const blob = new Blob([byteArray], { type: file.file_type });
 
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = fileName;
+      link.download = file.file_name;
       link.style.display = "none";
 
       document.body.appendChild(link);
       link.click();
 
-      // 4. Очистка
       setTimeout(() => {
         document.body.removeChild(link);
         window.URL.revokeObjectURL(url);
@@ -74,11 +63,6 @@ export const OrderFiles: React.FC = () => {
       console.error("Download error:", error);
       alert("Ошибка при скачивании файла");
     }
-  };
-
-  // Использование:
-  const downloadFile = (fileData) => {
-    handleDownload(fileData.id, fileData.file_name, fileData.file_type);
   };
 
   return (
@@ -93,7 +77,7 @@ export const OrderFiles: React.FC = () => {
           <Button
             type="link"
             icon={<DownloadOutlined />}
-            onClick={() => downloadFile(file)}
+            onClick={() => handleDownload(file)}
           >
             Скачать
           </Button>

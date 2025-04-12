@@ -4,9 +4,16 @@ import {
   PlusOutlined,
   SaveOutlined,
 } from "@ant-design/icons";
-import { DatePicker, Form, Input, InputNumber, message, Upload } from "antd";
-import { RangePickerProps } from "antd/es/date-picker";
-import { UploadFile } from "antd/es/upload/interface";
+import {
+  DatePicker,
+  Form,
+  Input,
+  InputNumber,
+  message,
+  Upload,
+  UploadFile,
+  UploadProps,
+} from "antd";
 import dayjs from "dayjs";
 import useFetch from "../../../composales/useFetch.ts";
 import { useAuth } from "../../../composales/useAuth.ts";
@@ -14,7 +21,8 @@ import styles from "./createOrderForm.module.scss";
 import ButtonSubmit from "../../button/Button.tsx";
 import { CreateSuccess } from "../../createSuccess/CreateSuccess.tsx";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Type } from "../../../models/orderModels.ts";
+import { OrderFormData, Type } from "../../../models/orderModels.ts";
+import { RangePickerProps } from "antd/es/date-picker/index";
 
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
@@ -26,24 +34,29 @@ const normFile = (e: any) => {
   return e?.fileList;
 };
 
+const disabledDate: RangePickerProps["disabledDate"] = (current) => {
+  return current && current < dayjs().startOf("day");
+};
+
 export const CreateOrderForm: React.FC = () => {
-  const { user } = useAuth();
-  const [form] = Form.useForm();
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [loading, setLoading] = useState(false);
-  const { fetchData } = useFetch();
-  const [messageApi, contextHolder] = message.useMessage();
   const [isSuccess, setIsSuccess] = useState(false);
+  const [messageApi, contextHolder] = message.useMessage();
+  const [form] = Form.useForm<OrderFormData>();
 
   const navigate = useNavigate();
   const location = useLocation();
+  const { fetchData } = useFetch();
+  const { user } = useAuth();
+
   const { from, to } = location.state || { from: "", to: "" };
 
   useEffect(() => {
     form.setFieldsValue({ from, to });
-  }, [from, to]);
+  }, [form, from, to]);
 
-  const onFinish = async (values: any) => {
+  const handleSubmit = async (values: OrderFormData) => {
     setLoading(true);
 
     try {
@@ -55,212 +68,201 @@ export const CreateOrderForm: React.FC = () => {
         throw new Error("User not found");
       }
 
-      const formData = new FormData();
-      formData.append("info", values.info);
-      formData.append("weight", values.weight.toString());
-      formData.append("from", values.from);
-      formData.append("to", values.to);
-      formData.append(
-        "date_start",
-        dayjs(values.deliveryDates[0]).format("YYYY-MM-DD"),
-      );
-      formData.append(
-        "date_end",
-        dayjs(values.deliveryDates[1]).format("YYYY-MM-DD"),
-      );
-      formData.append("user_id", user.id.toString());
+      const formData = createFormData(values);
+      await submitOrder(formData);
 
-      fileList.forEach((file) => {
-        if (file.originFileObj) {
-          formData.append("files", file.originFileObj);
-        }
-      });
-
-      await fetchData("/orders", "POST", formData, {
-        "Content-Type": "multipart/form-data",
-      });
-      messageApi.open({
-        type: "success",
-        content: "Заказ создан",
-      });
+      messageApi.success("Заказ создан");
       setIsSuccess(true);
       form.resetFields();
       setFileList([]);
     } catch (error) {
       console.error("Create order error", error);
-      messageApi.open({
-        type: "error",
-        content: "Не удалось создать заказ",
-      });
+      messageApi.error("Не удалось создать заказ");
     } finally {
       setLoading(false);
     }
   };
 
-  const onReset = () => {
-    navigate("/profile");
+  const createFormData = (values: OrderFormData): FormData => {
+    const formData = new FormData();
+    const [dateStart, dateEnd] = values.deliveryDates;
+
+    formData.append("info", values.info);
+    formData.append("weight", values.weight.toString());
+    formData.append("from", values.from);
+    formData.append("to", values.to);
+    formData.append("date_start", dayjs(dateStart).format("YYYY-MM-DD"));
+    formData.append("date_end", dayjs(dateEnd).format("YYYY-MM-DD"));
+    formData.append("user_id", user!.id.toString());
+
+    fileList.forEach((file) => {
+      if (file.originFileObj) {
+        formData.append("files", file.originFileObj);
+      }
+    });
+
+    return formData;
   };
 
-  const disabledDate: RangePickerProps["disabledDate"] = (current) => {
-    return current && current < dayjs().startOf("day");
+  const submitOrder = async (formData: FormData) => {
+    await fetchData("/orders", "POST", formData, {
+      "Content-Type": "multipart/form-data",
+    });
   };
+
+  const handleBack = () => navigate("/profile");
+
+  const handleBeforeUpload: UploadProps["beforeUpload"] = (file) => {
+    const isImage = file.type.startsWith("image/");
+    const isDocument = file.type.startsWith("application/");
+
+    if (!isImage && !isDocument) {
+      message.error("Можно загружать только изображения и документы!");
+      return Upload.LIST_IGNORE;
+    }
+
+    setFileList((prev) => [...prev, { ...file, originFileObj: file }]);
+    return false;
+  };
+
+  const handleRemove: UploadProps["onRemove"] = (file) => {
+    setFileList((prev) => prev.filter((f) => f.uid !== file.uid));
+  };
+
+  if (isSuccess) {
+    return <CreateSuccess type={Type.create} />;
+  }
 
   return (
     <>
       {contextHolder}
-      {isSuccess ? (
-        <CreateSuccess type={Type.create} />
-      ) : (
-        <>
-          <h1 className={styles.create__title}>Сделать заказ</h1>
-          <Form
-            form={form}
-            layout="vertical"
-            onFinish={onFinish}
-            className={styles.form}
+      <h1 className={styles.create__title}>Сделать заказ</h1>
+      <Form<OrderFormData>
+        form={form}
+        layout="vertical"
+        onFinish={handleSubmit}
+        className={styles.form}
+      >
+        <Form.Item
+          tooltip="Опишите тип груза, габариты, особые условия доставки и т.д"
+          label="Общая информация"
+          name="info"
+          rules={[
+            {
+              required: true,
+              message: "Пожалуйста, введите информацию о грузе",
+            },
+          ]}
+        >
+          <TextArea rows={6} />
+        </Form.Item>
+
+        <Form.Item
+          label="Вес груза"
+          tooltip="Вес груза в тоннах"
+          name="weight"
+          rules={[
+            { required: true, message: "Пожалуйста, введите вес груза" },
+            {
+              type: "number",
+              min: 0.01,
+              message: "Вес должен быть больше 0",
+            },
+          ]}
+        >
+          <InputNumber min={0.01} step={0.01} addonAfter="тонн" />
+        </Form.Item>
+
+        <Form.Item
+          label="Откуда"
+          tooltip="Место, откуда начинается перевозка груза(Страна, город, адрес)"
+          name="from"
+          rules={[
+            {
+              required: true,
+              message: "Пожалуйста, введите место загрузки",
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+
+        <Form.Item
+          label="Куда"
+          tooltip="Место, куда нужно отвезти груз(Страна, город, адрес)"
+          name="to"
+          rules={[
+            {
+              required: true,
+              message: "Пожалуйста, введите место выгрузки",
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+
+        <Form.Item
+          tooltip="Укажите желаемые даты доставки(Дата загрузки - Дата выгрузки)"
+          label="Даты доставки"
+          name="deliveryDates"
+          rules={[
+            {
+              required: true,
+              message: "Пожалуйста, выберите даты доставки",
+            },
+          ]}
+        >
+          <RangePicker
+            disabledDate={disabledDate}
+            placeholder={["Дата загрузки", "Дата выгрузки"]}
+          />
+        </Form.Item>
+
+        <Form.Item
+          label="Загрузить файлы (фото, документы и т.д.)"
+          name="files"
+          valuePropName="fileList"
+          getValueFromEvent={normFile}
+          rules={[{ required: true, message: "Пожалуйста, загрузите файлы" }]}
+        >
+          <Upload
+            listType="picture-card"
+            fileList={fileList}
+            beforeUpload={handleBeforeUpload}
+            onRemove={handleRemove}
           >
-            <Form.Item
-              tooltip="Опишите тип груза, габариты, особые условия доставки и т.д"
-              label="Общая информация"
-              name="info"
-              rules={[
-                {
-                  required: true,
-                  message: "Пожалуйста, введите информацию о грузе",
-                },
-              ]}
+            <button
+              style={{
+                color: "inherit",
+                cursor: "inherit",
+                border: 1,
+                background: "none",
+              }}
+              type="button"
             >
-              <TextArea rows={6} />
-            </Form.Item>
+              <PlusOutlined />
+              <div style={{ marginTop: 8 }}>Загрузить</div>
+            </button>
+          </Upload>
+        </Form.Item>
 
-            <Form.Item
-              label="Вес груза"
-              tooltip="Вес груза в тоннах"
-              name="weight"
-              rules={[
-                { required: true, message: "Пожалуйста, введите вес груза" },
-                {
-                  type: "number",
-                  min: 0.01,
-                  message: "Вес должен быть больше 0",
-                },
-              ]}
-            >
-              <InputNumber min={0.01} step={0.01} addonAfter="тонн" />
-            </Form.Item>
-
-            <Form.Item
-              label="Откуда"
-              tooltip="Место, откуда начинается перевозка груза(Страна, город, адрес)"
-              name="from"
-              rules={[
-                {
-                  required: true,
-                  message: "Пожалуйста, введите место загрузки",
-                },
-              ]}
-            >
-              <Input />
-            </Form.Item>
-
-            <Form.Item
-              label="Куда"
-              tooltip="Место, куда нужно отвезти груз(Страна, город, адрес)"
-              name="to"
-              rules={[
-                {
-                  required: true,
-                  message: "Пожалуйста, введите место выгрузки",
-                },
-              ]}
-            >
-              <Input />
-            </Form.Item>
-
-            <Form.Item
-              tooltip="Укажите желаемые даты доставки(Дата загрузки - Дата выгрузки)"
-              label="Даты доставки"
-              name="deliveryDates"
-              rules={[
-                {
-                  required: true,
-                  message: "Пожалуйста, выберите даты доставки",
-                },
-              ]}
-            >
-              <RangePicker
-                disabledDate={disabledDate}
-                placeholder={["Дата загрузки", "Дата выгрузки"]}
-              />
-            </Form.Item>
-
-            <Form.Item
-              label="Загрузить файлы (фото, документы и т.д.)"
-              name="files"
-              valuePropName="fileList"
-              getValueFromEvent={normFile}
-              rules={[
-                { required: true, message: "Пожалуйста, загрузите файлы" },
-              ]}
-            >
-              <Upload
-                listType="picture-card"
-                fileList={fileList}
-                beforeUpload={(file) => {
-                  const isImage = file.type.startsWith("image/");
-                  const isDocument = file.type.startsWith("application/");
-
-                  if (!isImage && !isDocument) {
-                    message.error(
-                      "Можно загружать только изображения и документы!",
-                    );
-                    return false;
-                  }
-
-                  setFileList((prev) => [
-                    ...prev,
-                    { ...file, originFileObj: file },
-                  ]);
-                  return false;
-                }}
-                onRemove={(file) => {
-                  setFileList((prev) => prev.filter((f) => f.uid !== file.uid));
-                }}
-              >
-                <button
-                  style={{
-                    color: "inherit",
-                    cursor: "inherit",
-                    border: 1,
-                    background: "none",
-                  }}
-                  type="button"
-                >
-                  <PlusOutlined />
-                  <div style={{ marginTop: 8 }}>Загрузить</div>
-                </button>
-              </Upload>
-            </Form.Item>
-
-            <Form.Item>
-              <div className={styles.form__buttons}>
-                <ButtonSubmit
-                  htmlType="button"
-                  onClick={onReset}
-                  text="Назад"
-                  icon={<LeftCircleOutlined />}
-                />
-                <ButtonSubmit
-                  htmlType="submit"
-                  loading={loading}
-                  text="Сохранить"
-                  icon={<SaveOutlined />}
-                />
-              </div>
-            </Form.Item>
-          </Form>
-        </>
-      )}
+        <Form.Item>
+          <div className={styles.form__buttons}>
+            <ButtonSubmit
+              htmlType="button"
+              onClick={handleBack}
+              text="Назад"
+              icon={<LeftCircleOutlined />}
+            />
+            <ButtonSubmit
+              htmlType="submit"
+              loading={loading}
+              text="Сохранить"
+              icon={<SaveOutlined />}
+            />
+          </div>
+        </Form.Item>
+      </Form>
     </>
   );
 };

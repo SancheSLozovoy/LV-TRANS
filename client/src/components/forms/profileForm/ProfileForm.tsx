@@ -7,7 +7,7 @@ import { useAuth } from "../../../composales/useAuth.ts";
 import useFetch from "../../../composales/useFetch.ts";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { ConfirmModal } from "../../confirmModal/ConfirmModal.tsx";
 import { ModalAttributes } from "../../../models/modalAttr.ts";
 
@@ -15,9 +15,8 @@ export const ProfileForm = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const { fetchData } = useFetch();
-
+  const location = useLocation();
   const [userData, setUserData] = useState<User | null>(null);
-
   const [modalData, setModalData] = useState<ModalAttributes | null>(null);
 
   const getUser = () => {
@@ -65,7 +64,12 @@ export const ProfileForm = () => {
     if (user) {
       getUser();
     }
-  }, []);
+  }, [user]);
+
+  const handleEditClick = () => {
+    const path = location.pathname.includes("/admin") ? "/admin/user" : "/user";
+    navigate(path);
+  };
 
   return (
     <div>
@@ -90,7 +94,7 @@ export const ProfileForm = () => {
           </Form.Item>
           <Form.Item className={styles.form__edit}>
             <Button
-              onClick={() => navigate(`/user`)}
+              onClick={handleEditClick}
               type="link"
               className={styles.form__edit}
             >

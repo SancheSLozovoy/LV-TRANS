@@ -6,6 +6,7 @@ import useFetch from "../../../composales/useFetch.ts";
 import { Order } from "../../../models/orderModels.ts";
 import { defineStatus } from "../../../composales/defineStatus.ts";
 import { useNavigate } from "react-router-dom";
+import { reformDate } from "../../../composales/reformDate.ts";
 
 export const OrdersTable = () => {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -110,6 +111,13 @@ export const OrdersTable = () => {
           <Select.Option value={4}>Доставлен</Select.Option>
         </Select>
       ),
+    },
+
+    {
+      title: "Создан",
+      dataIndex: "create_at",
+      key: "create_at",
+      render: (date: string) => reformDate(date),
     },
 
     {

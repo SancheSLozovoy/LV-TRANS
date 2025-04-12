@@ -54,7 +54,7 @@ export const EditUserForm: React.FC = () => {
   };
 
   return (
-    <>
+    <div>
       {contextHolder}
       <h1 className={styles.create__title}>Редактировать профиль</h1>
       <Form
@@ -129,6 +129,6 @@ export const EditUserForm: React.FC = () => {
         onClose={() => setPasswordModalOpen(false)}
         onSuccess={setUserData}
       />
-    </>
+    </div>
   );
 };

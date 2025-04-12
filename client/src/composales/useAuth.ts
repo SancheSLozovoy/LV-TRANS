@@ -1,4 +1,4 @@
-import { User, UserLogin, UserRegister } from "../models/userModels.ts";
+import { User, UserAuth, UserDecodeJWT } from "../models/userModels.ts";
 import Cookies from "js-cookie";
 import { FormInstance } from "antd";
 import { MessageInstance } from "antd/es/message/interface";
@@ -13,12 +13,15 @@ export const useAuth = () => {
 
   const handleGetUser = (token: string) => {
     if (!token) return null;
+
     const decode = jwtDecode<User>(token);
-    const userData = {
+
+    const userData: UserDecodeJWT = {
       login: decode.login,
       id: decode.id,
       role_id: decode.role_id,
     };
+
     return userData;
   };
 
@@ -29,12 +32,14 @@ export const useAuth = () => {
     type: "register" | "login",
   ) => {
     const values = form.getFieldsValue();
-    const regData: UserRegister = {
+
+    const regData: UserAuth = {
       login: values.login,
       password: values.password,
       phone: values.phone,
     };
-    const loginData: UserLogin = {
+
+    const loginData: UserAuth = {
       login: values.login,
       password: values.password,
     };

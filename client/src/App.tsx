@@ -13,9 +13,9 @@ import { EditProfile } from "./pages/editProfile/EditProfile.tsx";
 import { AdminPanel } from "./pages/admin/Admin.tsx";
 import { UsersTable } from "./components/tables/usersTable/UsersTable.tsx";
 import { OrdersTable } from "./components/tables/ordersTable/OrdersTable.tsx";
-import { EditOrderForm } from "./components/forms/editOrder/EditOrder.tsx";
 import { ProfileForm } from "./components/forms/profileForm/ProfileForm.tsx";
-import { EditAdminForm } from "./components/forms/editProfileForn/EditAdminForm.tsx";
+import { OrderTabs } from "./components/tabs/OrderTabs.tsx";
+import { EditUserForm } from "./components/forms/editProfileForn/EditUserForm.tsx";
 
 export default function App(): JSX.Element {
   return (
@@ -35,8 +35,8 @@ export default function App(): JSX.Element {
             <Route path="users" element={<UsersTable />} />
             <Route path="orders" element={<OrdersTable />} />
             <Route path="profile" element={<ProfileForm />} />
-            <Route path="user" element={<EditAdminForm />} />
-            <Route path="orders/:id" element={<EditOrderForm />} />
+            <Route path="user" element={<EditUserForm />} />
+            <Route path="orders/:id" element={<OrderTabs />} />
           </Route>
         </Route>
 
