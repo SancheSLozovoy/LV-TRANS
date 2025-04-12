@@ -53,6 +53,11 @@ const AuthForm: React.FC<FormProps> = ({ type }): React.JSX.Element => {
                 required: true,
                 message: "Пожалуйста, введите номер телефона!",
               },
+              {
+                pattern:
+                  /^(\+7|8|7)\s?\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{2}[\s-]?\d{2}$/,
+                message: "Введите корректный номер телефона",
+              },
             ]}
           >
             <Input
@@ -74,7 +79,7 @@ const AuthForm: React.FC<FormProps> = ({ type }): React.JSX.Element => {
             },
           ]}
         >
-          <Input
+          <Input.Password
             rootClassName={styles.form__input}
             prefix={<LockOutlined />}
             type="password"

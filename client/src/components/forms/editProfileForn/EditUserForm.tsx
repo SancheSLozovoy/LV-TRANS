@@ -41,7 +41,9 @@ export const EditUserForm: React.FC = () => {
       messageApi.success("Профиль успешно обновлен");
     } catch (error) {
       console.error("Update user error", error);
-      messageApi.error("Не удалось обновить профиль");
+      messageApi.error(
+        "Не удалось обновить профиль, данный логин уже существует",
+      );
     } finally {
       setLoading(false);
     }
@@ -65,7 +67,7 @@ export const EditUserForm: React.FC = () => {
           <Form.Item
             label="Логин"
             name="login"
-            rules={[{ required: true, message: "Введите логин" }]}
+            rules={[{ required: true, message: "Пожалуйста, введите логин" }]}
           >
             <Input className={styles.form__input} />
           </Form.Item>
@@ -73,7 +75,17 @@ export const EditUserForm: React.FC = () => {
           <Form.Item
             label="Номер телефона"
             name="phone"
-            rules={[{ required: true, message: "Введите номер телефона" }]}
+            rules={[
+              {
+                required: true,
+                message: "Пожалуйста, введите номер телефона!",
+              },
+              {
+                pattern:
+                  /^(\+7|8|7)\s?\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{2}[\s-]?\d{2}$/,
+                message: "Введите корректный номер телефона",
+              },
+            ]}
           >
             <Input className={styles.form__input} />
           </Form.Item>

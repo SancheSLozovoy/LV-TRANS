@@ -121,6 +121,7 @@ export const EditOrderForm: React.FC = () => {
             className={styles.form}
           >
             <Form.Item
+              tooltip="Опишите тип груза, габариты, особые условия доставки и т.д"
               label="Общая информация"
               name="info"
               rules={[
@@ -135,6 +136,7 @@ export const EditOrderForm: React.FC = () => {
 
             <Form.Item
               label="Вес груза"
+              tooltip="Вес груза в тоннах"
               name="weight"
               rules={[
                 { required: true, message: "Пожалуйста, введите вес груза" },
@@ -145,11 +147,17 @@ export const EditOrderForm: React.FC = () => {
                 },
               ]}
             >
-              <InputNumber min={0.01} step={0.01} disabled={!isEditing} />
+              <InputNumber
+                min={0.01}
+                step={0.01}
+                disabled={!isEditing}
+                addonAfter="тонн"
+              />
             </Form.Item>
 
             <Form.Item
               label="Откуда"
+              tooltip="Место, откуда начинается перевозка груза(Страна, город, адрес)"
               name="from"
               rules={[
                 {
@@ -163,6 +171,7 @@ export const EditOrderForm: React.FC = () => {
 
             <Form.Item
               label="Куда"
+              tooltip="Место, куда нужно отвезти груз(Страна, город, адрес)"
               name="to"
               rules={[
                 {
@@ -175,6 +184,7 @@ export const EditOrderForm: React.FC = () => {
             </Form.Item>
 
             <Form.Item
+              tooltip="Укажите желаемые даты доставки(Дата загрузки - Дата выгрузки)"
               label="Даты доставки"
               name="deliveryDates"
               rules={[
