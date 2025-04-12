@@ -1,16 +1,9 @@
 import React from "react";
 import Logo from "../../assets/images/logo.png";
-import Profile from "../../assets/images/profile.svg";
 import { Link } from "react-router-dom";
 import styles from "./header.module.scss";
 import { Container } from "../container/Container.tsx";
-
-const scrollToSection = (id: string) => {
-  const element = document.getElementById(id);
-  if (element) {
-    element.scrollIntoView({ behavior: "smooth" });
-  }
-};
+import { UserOutlined } from "@ant-design/icons";
 
 export const Header = (): React.JSX.Element => {
   return (
@@ -19,21 +12,29 @@ export const Header = (): React.JSX.Element => {
         <Container>
           <div className={styles.header__content}>
             <div className={styles.header__logo}>
-              <img src={Logo} alt="Logo" />
+              <Link to="/">
+                <img src={Logo} alt="Logo" />
+              </Link>
             </div>
             <nav>
               <ul className={styles.header__nav_list}>
-                <li onClick={() => scrollToSection("main")}>Главная</li>
-                <li onClick={() => scrollToSection("advantages")}>
-                  Преимущества
+                <li>
+                  <Link to="/#main">Главная</Link>
                 </li>
-                <li onClick={() => scrollToSection("about")}>О нас</li>
-                <li onClick={() => scrollToSection("contact")}>Связь</li>
+                <li>
+                  <Link to="/#advantages">Преимущества</Link>
+                </li>
+                <li>
+                  <Link to="/#about">О нас</Link>
+                </li>
+                <li>
+                  <Link to="/#contact">Связь</Link>
+                </li>
               </ul>
             </nav>
             <div>
               <Link to="/profile">
-                <img src={Profile} alt="Profile" />
+                <UserOutlined style={{ fontSize: "30px" }} />
               </Link>
             </div>
           </div>
