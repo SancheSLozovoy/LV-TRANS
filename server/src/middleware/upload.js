@@ -4,4 +4,4 @@ const storage = multer.memoryStorage();
 
 const upload = multer({ storage: storage });
 
-export const uploadPhotos = upload.array('photos');
+export const uploadFiles = upload.array('files');

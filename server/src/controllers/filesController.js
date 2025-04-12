@@ -1,9 +1,9 @@
-import * as PhotosModel from '../models/photosModel.js';
+import * as FilesModel from '../models/filesModel.js';
 
 export async function getPhotosByOrderId(req, res) {
     const { orderId } = req.params;
     try {
-        const photos = await PhotosModel.getPhotosByOrderId(orderId);
+        const photos = await FilesModel.getFilesByOrderId(orderId);
 
         if (photos.length === 0) {
             return res
@@ -13,7 +13,7 @@ export async function getPhotosByOrderId(req, res) {
 
         const photoData = photos.map((photo) => ({
             id: photo.id,
-            photo: photo.photo.toString('base64'),
+            file: photo.file.toString('base64'),
         }));
 
         res.status(200).json(photoData);

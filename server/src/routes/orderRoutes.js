@@ -1,6 +1,6 @@
 import express from 'express';
 import * as OrderController from '../controllers/orderController.js';
-import { uploadPhotos } from '../middleware/upload.js';
+import { uploadFiles } from '../middleware/upload.js';
 import { authenticateToken } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
@@ -623,7 +623,7 @@ const router = express.Router();
 
 router.get('/', authenticateToken, OrderController.getOrders);
 router.get('/:id', authenticateToken, OrderController.getOrderById);
-router.post('/', uploadPhotos, authenticateToken, OrderController.createOrder);
+router.post('/', uploadFiles, authenticateToken, OrderController.createOrder);
 router.delete('/:id', authenticateToken, OrderController.deleteOrderById);
 router.put('/:id', authenticateToken, OrderController.updateOrder);
 router.put('/:id/status', authenticateToken, OrderController.updateOrderStatus);

@@ -1,6 +1,5 @@
 import * as OrderModel from '../models/orderModel.js';
-import * as PhotoModel from '../models/photosModel.js';
-import { login } from './userController.js';
+import * as FilesModel from '../models/filesModel.js';
 
 export async function getOrders(req, res) {
     try {
@@ -92,7 +91,7 @@ export async function createOrder(req, res) {
         );
 
         for (const file of files) {
-            await PhotoModel.addPhotoToOrder(result.insertId, file.buffer);
+            await FilesModel.addFilesToOrder(result.insertId, file.buffer);
         }
 
         res.status(201).json({

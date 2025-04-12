@@ -8,7 +8,7 @@ export interface Order {
   date_end: Date;
   user_id: number;
   status_id: number;
-  photos?: [];
+  files?: [];
   deliveryDates?: Date[];
 }
 

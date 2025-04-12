@@ -1,5 +1,5 @@
 import express from 'express';
-import * as PhotosController from '../controllers/photosController.js';
+import * as PhotosController from '../controllers/filesController.js';
 import { authenticateToken } from '../middleware/authMiddleware.js';
 
 const router = express.Router();

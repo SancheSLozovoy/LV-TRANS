@@ -36,7 +36,6 @@ export const CreateOrderForm: React.FC = () => {
   const [isSuccess, setIsSuccess] = useState(false);
 
   const navigate = useNavigate();
-
   const location = useLocation();
   const { from, to } = location.state || { from: "", to: "" };
 
@@ -73,7 +72,7 @@ export const CreateOrderForm: React.FC = () => {
 
       fileList.forEach((file) => {
         if (file.originFileObj) {
-          formData.append("photos", file.originFileObj);
+          formData.append("files", file.originFileObj);
         }
       });
 
@@ -196,12 +195,12 @@ export const CreateOrderForm: React.FC = () => {
             </Form.Item>
 
             <Form.Item
-              label="Загрузить фото груза и схем"
-              name="photos"
+              label="Загрузить файлы (фото, документы и т.д.)"
+              name="files"
               valuePropName="fileList"
               getValueFromEvent={normFile}
               rules={[
-                { required: true, message: "Пожалуйста, загрузите фото" },
+                { required: true, message: "Пожалуйста, загрузите файлы" },
               ]}
             >
               <Upload
@@ -209,8 +208,12 @@ export const CreateOrderForm: React.FC = () => {
                 fileList={fileList}
                 beforeUpload={(file) => {
                   const isImage = file.type.startsWith("image/");
-                  if (!isImage) {
-                    message.error("Можно загружать только изображения!");
+                  const isDocument = file.type.startsWith("application/");
+
+                  if (!isImage && !isDocument) {
+                    message.error(
+                      "Можно загружать только изображения и документы!",
+                    );
                     return false;
                   }
 
@@ -223,7 +226,6 @@ export const CreateOrderForm: React.FC = () => {
                 onRemove={(file) => {
                   setFileList((prev) => prev.filter((f) => f.uid !== file.uid));
                 }}
-                accept="image/*"
               >
                 <button
                   style={{
