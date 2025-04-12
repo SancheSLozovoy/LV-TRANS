@@ -8,6 +8,8 @@ export async function up(knex) {
       .inTable("orders")
       .onDelete("CASCADE");
     table.binary("file").notNullable();
+    table.string("file_name").notNullable();
+    table.string("file_type").notNullable();
   });
 
   await knex.raw("ALTER TABLE files MODIFY COLUMN file LONGBLOB;");

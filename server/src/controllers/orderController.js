@@ -63,20 +63,8 @@ export async function createOrder(req, res) {
     const { info, weight, from, to, date_start, date_end, user_id } = req.body;
     const files = req.files;
 
-    if (
-        !info ||
-        !weight ||
-        !from ||
-        !to ||
-        !date_start ||
-        !date_end ||
-        !user_id
-    ) {
-        return res.status(400).json({ message: 'Missing required fields' });
-    }
-
     if (!files || files.length === 0) {
-        return res.status(400).json({ message: 'No photos uploaded' });
+        return res.status(400).json({ message: 'No files uploaded' });
     }
 
     try {
@@ -91,14 +79,24 @@ export async function createOrder(req, res) {
         );
 
         for (const file of files) {
-            await FilesModel.addFilesToOrder(result.insertId, file.buffer);
+            const decodedFileName = decodeURIComponent(
+                escape(file.originalname),
+            );
+
+            await FilesModel.addFilesToOrder(
+                result.insertId,
+                file.buffer,
+                decodedFileName,
+                file.mimetype,
+            );
         }
 
         res.status(201).json({
-            message: 'Order created and photos uploaded',
+            message: 'Order created with files',
             orderId: result.insertId,
         });
     } catch (err) {
+        console.error('Error in createOrder:', err);
         res.status(500).json({
             message: 'Error creating order',
             error: err.message,

@@ -1,5 +1,5 @@
 import express from 'express';
-import * as PhotosController from '../controllers/filesController.js';
+import * as FilesController from '../controllers/filesController.js';
 import { authenticateToken } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
@@ -61,9 +61,11 @@ const router = express.Router();
  */
 
 router.get(
-    '/:orderId/photos',
+    '/:orderId/files',
     authenticateToken,
-    PhotosController.getPhotosByOrderId,
+    FilesController.getFilesByOrderId,
 );
+
+router.get('/files/:id', authenticateToken, FilesController.downloadFile);
 
 export default router;

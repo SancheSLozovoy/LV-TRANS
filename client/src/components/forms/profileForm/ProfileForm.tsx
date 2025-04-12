@@ -23,7 +23,6 @@ export const ProfileForm = () => {
   const getUser = () => {
     if (user?.id) {
       return fetchData(`users/${user.id}`, "GET").then((res) => {
-        console.log(res);
         setUserData(res);
       });
     }

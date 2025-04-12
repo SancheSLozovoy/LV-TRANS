@@ -11,6 +11,7 @@ import { CreateSuccess } from "../../createSuccess/CreateSuccess.tsx";
 import { Order, OrderDto } from "../../../models/orderModels.ts";
 import { Type } from "../../../models/orderModels.ts";
 import { useParams } from "react-router-dom";
+import { OrderFiles } from "../../documents/OrderFiles.tsx";
 
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
@@ -110,7 +111,7 @@ export const EditOrderForm: React.FC = () => {
       {isSuccess ? (
         <CreateSuccess type={Type.update} />
       ) : (
-        <Tabs defaultActiveKey="1">
+        <Tabs size="middle" defaultActiveKey="1">
           <Tabs.TabPane tab="Информация" key="1">
             <h1 className={styles.create__title}>
               Информация о заказе №{params.id}
@@ -233,7 +234,7 @@ export const EditOrderForm: React.FC = () => {
           </Tabs.TabPane>
 
           <Tabs.TabPane tab="Документы" key="2">
-            <h1>FILES</h1>
+            <OrderFiles />
           </Tabs.TabPane>
         </Tabs>
       )}
