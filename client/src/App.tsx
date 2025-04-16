@@ -16,6 +16,7 @@ import { OrdersTable } from "./components/tables/ordersTable/OrdersTable.tsx";
 import { ProfileForm } from "./components/forms/profileForm/ProfileForm.tsx";
 import { OrderTabs } from "./components/tabs/OrderTabs.tsx";
 import { EditUserForm } from "./components/forms/editProfileForn/EditUserForm.tsx";
+import { ForgotPassword } from "./pages/forgotPassword/ForgotPassword.tsx";
 
 export default function App(): JSX.Element {
   return (
@@ -24,6 +25,7 @@ export default function App(): JSX.Element {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
 
         <Route element={<ProtectedRoute />}>
           <Route path="/profile" element={<Profile />} />

@@ -15,6 +15,7 @@ const ButtonSubmit: React.FC<ButtonSubmitProps> = ({
   htmlType,
   icon,
   onClick,
+  loading,
 }) => {
   return (
     <Button
@@ -24,6 +25,7 @@ const ButtonSubmit: React.FC<ButtonSubmitProps> = ({
       type="primary"
       htmlType={htmlType}
       onClick={onClick}
+      loading={loading}
     >
       {text}
     </Button>

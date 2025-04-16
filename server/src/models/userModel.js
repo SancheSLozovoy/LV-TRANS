@@ -80,3 +80,10 @@ export async function updateUserRole(id, role_id) {
 
     return result;
 }
+
+export async function updatePassword(userId, newPassword) {
+    return await pool.query('UPDATE users SET password = ? WHERE id = ?', [
+        newPassword,
+        userId,
+    ]);
+}

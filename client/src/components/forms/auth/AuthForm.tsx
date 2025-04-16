@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { LockOutlined, UserOutlined, PhoneOutlined } from "@ant-design/icons";
+import { LockOutlined, MailOutlined, PhoneOutlined } from "@ant-design/icons";
 import { Checkbox, Flex, Form, Input, message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./form.module.scss";
@@ -43,7 +43,7 @@ const AuthForm: React.FC<FormProps> = ({ type }): React.JSX.Element => {
         >
           <Input
             rootClassName={styles.form__input}
-            prefix={<UserOutlined />}
+            prefix={<MailOutlined />}
             placeholder="Email"
           />
         </Form.Item>
@@ -105,7 +105,11 @@ const AuthForm: React.FC<FormProps> = ({ type }): React.JSX.Element => {
               Согласие на обработку персональных данных
             </Checkbox>
           </Form.Item>
-        ) : null}
+        ) : (
+          <Link to="/forgot-password" className={styles.form__link}>
+            Забыли пароль?
+          </Link>
+        )}
       </div>
 
       <Form.Item>

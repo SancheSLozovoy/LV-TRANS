@@ -2,6 +2,8 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import * as UserModel from '../models/userModel.js';
 import dotenv from 'dotenv';
+import nodemailer from 'nodemailer';
+import { getMailTemplate } from '../../getMailTemplate.js';
 
 dotenv.config();
 
@@ -201,6 +203,65 @@ export async function updateUserRole(req, res) {
     } catch (err) {
         res.status(500).json({
             message: 'Error updating role',
+            error: err.message,
+        });
+    }
+}
+
+export async function requestPasswordReset(req, res) {
+    const { email } = req.body;
+
+    if (!email) {
+        return res.status(400).json({ message: 'Email is required' });
+    }
+
+    try {
+        const user = await UserModel.getUserByEmail(email);
+
+        if (!user) {
+            return res.status(200).json({
+                message: 'If user exists, a reset email has been sent',
+            });
+        }
+
+        const token = jwt.sign(
+            {
+                id: user.id,
+                email: user.email,
+                purpose: 'password-reset',
+            },
+            process.env.JWT_SECRET,
+            {
+                expiresIn: '30m',
+            },
+        );
+
+        const resetUrl = `${process.env.FRONT_URL}/reset-password?token=${token}`;
+
+        const transporter = nodemailer.createTransport({
+            host: 'smtp.gmail.com',
+            port: 587,
+            secure: false,
+            auth: {
+                user: process.env.SMTP_USER,
+                pass: process.env.SMTP_PASS,
+            },
+        });
+
+        await transporter.sendMail({
+            from: `"LV-TRANS" <${process.env.SMTP_USER}>`,
+            to: email,
+            subject: 'Reset your password',
+            html: getMailTemplate(resetUrl),
+        });
+
+        res.status(200).json({
+            message: 'If user exists, a reset email has been sent',
+        });
+    } catch (err) {
+        console.error('Error sending email:', err);
+        res.status(500).json({
+            message: 'Error sending reset email',
             error: err.message,
         });
     }

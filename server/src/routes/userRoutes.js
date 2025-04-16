@@ -521,4 +521,5 @@ router.post('/login', UserController.login);
 router.delete('/:id', authenticateToken, UserController.deleteUserById);
 router.put('/:id', authenticateToken, UserController.updateUser);
 router.put('/:id/role', authenticateToken, UserController.updateUserRole);
+router.post('/forgot-password', UserController.requestPasswordReset);
 export default router;
