@@ -65,9 +65,9 @@ export const UsersTable = () => {
 
   const columns: ColumnsType<User> = [
     {
-      title: "Логин",
-      dataIndex: "login",
-      key: "login",
+      title: "Почта",
+      dataIndex: "email",
+      key: "email",
       width: "25%",
       ellipsis: true,
     },

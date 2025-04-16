@@ -35,13 +35,16 @@ const AuthForm: React.FC<FormProps> = ({ type }): React.JSX.Element => {
         {contextHolder}
         <Form.Item
           className={styles.form__item}
-          name="login"
-          rules={[{ required: true, message: "Пожалуйста, введите логин!" }]}
+          name="email"
+          rules={[
+            { required: true, message: "Пожалуйста, введите почту!" },
+            { type: "email", message: "Пожалуйста, введите корректную почту" },
+          ]}
         >
           <Input
             rootClassName={styles.form__input}
             prefix={<UserOutlined />}
-            placeholder="Логин"
+            placeholder="Email"
           />
         </Form.Item>
         {type === "register" ? (

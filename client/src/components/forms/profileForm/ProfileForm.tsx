@@ -64,7 +64,7 @@ export const ProfileForm = () => {
     if (user) {
       getUser();
     }
-  }, [user]);
+  }, []);
 
   const handleEditClick = () => {
     const path = location.pathname.includes("/admin") ? "/admin/user" : "/user";
@@ -78,7 +78,7 @@ export const ProfileForm = () => {
         <div className={styles.form}>
           <Form.Item>
             <Input
-              value={userData?.login}
+              value={userData?.email}
               disabled={true}
               rootClassName={styles.form__input}
               placeholder="Логин"

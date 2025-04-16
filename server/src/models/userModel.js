@@ -21,20 +21,20 @@ export async function getUserById(id) {
     return rows;
 }
 
-export async function createUser(login, phone, password) {
+export async function createUser(email, phone, password) {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const [result] = await pool.query(
-        'INSERT INTO users (login, password, phone) VALUES (?, ?, ?)',
-        [login, hashedPassword, phone],
+        'INSERT INTO users (email, password, phone) VALUES (?, ?, ?)',
+        [email, hashedPassword, phone],
     );
 
     return result;
 }
 
-export async function getUserByLogin(login) {
-    const [rows] = await pool.query('SELECT * FROM users WHERE login = ?', [
-        login,
+export async function getUserByEmail(email) {
+    const [rows] = await pool.query('SELECT * FROM users WHERE email = ?', [
+        email,
     ]);
     return rows.length ? rows[0] : null;
 }
@@ -44,7 +44,7 @@ export async function deleteUserById(id) {
     return result;
 }
 
-export async function updateUser(id, login, phone, password, role_id) {
+export async function updateUser(id, email, phone, password, role_id) {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const [roleExists] = await pool.query(
@@ -57,8 +57,8 @@ export async function updateUser(id, login, phone, password, role_id) {
     }
 
     const [result] = await pool.query(
-        'UPDATE users SET login = ?, phone = ?, password = ?, role_id = ? WHERE id = ?',
-        [login, phone, hashedPassword, role_id, id],
+        'UPDATE users SET email = ?, phone = ?, password = ?, role_id = ? WHERE id = ?',
+        [email, phone, hashedPassword, role_id, id],
     );
     return result;
 }

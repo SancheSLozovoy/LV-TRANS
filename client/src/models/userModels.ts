@@ -1,12 +1,12 @@
 export interface UserAuth {
-  login: string;
+  email: string;
   password: string;
   phone?: string;
 }
 
 export interface User {
   id: number;
-  login: string;
+  email: string;
   password: string;
   phone: string;
   role_id: number;
@@ -14,6 +14,6 @@ export interface User {
 
 export interface UserDecodeJWT {
   id: number;
-  login: string;
+  email: string;
   role_id: number;
 }

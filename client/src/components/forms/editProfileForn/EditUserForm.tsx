@@ -66,7 +66,7 @@ export const EditUserForm: React.FC = () => {
         <div className={styles.form__content}>
           <Form.Item
             label="Логин"
-            name="login"
+            name="email"
             rules={[{ required: true, message: "Пожалуйста, введите логин" }]}
           >
             <Input className={styles.form__input} />

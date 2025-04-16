@@ -10,7 +10,7 @@ describe("User API", () => {
       const res = await request(app)
         .post("/users")
         .send({
-          login: "testuser",
+          email: "testuser",
           phone: "89381000000",
           password: "password123",
         })
@@ -23,7 +23,7 @@ describe("User API", () => {
     it("should return 400 for missing required fields", async () => {
       const res = await request(app)
         .post("/users")
-        .send({ login: "testuser" })
+        .send({ email: "testuser" })
         .expect(400);
       expect(res.body.message).toBe("Missing required fields");
     });
@@ -64,7 +64,7 @@ describe("User API", () => {
       const res = await request(app)
         .put(`/users/${userId}`)
         .send({
-          login: "updateduser",
+          email: "updateduser",
           phone: "89281234567",
           password: "newpassword123",
           role_id: 1,
@@ -77,7 +77,7 @@ describe("User API", () => {
       const res = await request(app)
         .put("/users/99999")
         .send({
-          login: "updateduser",
+          email: "updateduser",
           phone: "89281234567",
           password: "newpassword123",
           role_id: 1,

@@ -6,7 +6,7 @@ dotenv.config();
 export async function up(knex) {
   await knex.schema.createTable("users", (table) => {
     table.increments("id").primary();
-    table.string("login").notNullable().unique();
+    table.string("email").notNullable().unique();
     table.string("phone").notNullable();
     table.string("password").notNullable();
     table
@@ -25,7 +25,7 @@ export async function up(knex) {
 
   await knex("users").insert([
     {
-      login: "admin",
+      email: "alex.lozovoy05@bk.ru",
       phone: "1234567890",
       password: hashedPassword,
       role_id: 1,

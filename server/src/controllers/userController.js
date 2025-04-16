@@ -6,18 +6,18 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export async function register(req, res) {
-    const { login, phone, password } = req.body;
-    if (!login || !phone || !password) {
+    const { email, phone, password } = req.body;
+    if (!email || !phone || !password) {
         return res.status(400).json({ message: 'Missing required fields' });
     }
 
     try {
-        const user = await UserModel.getUserByLogin(login);
+        const user = await UserModel.getUserByEmail(email);
         if (user) {
             return res.status(400).json({ message: 'User already exists' });
         }
 
-        const result = await UserModel.createUser(login, phone, password);
+        const result = await UserModel.createUser(email, phone, password);
         res.status(201).json({
             message: 'User created',
             userId: result.insertId,
@@ -31,28 +31,28 @@ export async function register(req, res) {
 }
 
 export async function login(req, res) {
-    const { login, password } = req.body;
-    if (!login || !password) {
+    const { email, password } = req.body;
+    if (!email || !password) {
         return res.status(400).json({ message: 'Missing required fields' });
     }
 
     try {
-        const user = await UserModel.getUserByLogin(login);
+        const user = await UserModel.getUserByEmail(email);
         if (!user) {
             return res
                 .status(400)
-                .json({ message: 'Invalid login or password' });
+                .json({ message: 'Invalid email or password' });
         }
 
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
             return res
                 .status(400)
-                .json({ message: 'Invalid login or password' });
+                .json({ message: 'Invalid email or password' });
         }
 
         const token = jwt.sign(
-            { id: user.id, login: user.login, role_id: user.role_id },
+            { id: user.id, email: user.email, role_id: user.role_id },
             process.env.JWT_SECRET,
             {
                 expiresIn: '7d',
@@ -146,9 +146,9 @@ export async function deleteUserById(req, res) {
 
 export async function updateUser(req, res) {
     const { id } = req.params;
-    const { login, phone, password, role_id } = req.body;
+    const { email, phone, password, role_id } = req.body;
 
-    if (!id || isNaN(id) || !login || !phone || !password || !role_id) {
+    if (!id || isNaN(id) || !email || !phone || !password || !role_id) {
         return res.status(400).json({ message: 'Missing required fields' });
     }
 
@@ -159,7 +159,7 @@ export async function updateUser(req, res) {
 
         const result = await UserModel.updateUser(
             id,
-            login,
+            email,
             phone,
             password,
             role_id,

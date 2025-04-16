@@ -17,7 +17,7 @@ export const useAuth = () => {
     const decode = jwtDecode<User>(token);
 
     const userData: UserDecodeJWT = {
-      login: decode.login,
+      email: decode.email,
       id: decode.id,
       role_id: decode.role_id,
     };
@@ -34,13 +34,13 @@ export const useAuth = () => {
     const values = form.getFieldsValue();
 
     const regData: UserAuth = {
-      login: values.login,
+      email: values.email,
       password: values.password,
       phone: values.phone,
     };
 
     const loginData: UserAuth = {
-      login: values.login,
+      email: values.email,
       password: values.password,
     };
 
