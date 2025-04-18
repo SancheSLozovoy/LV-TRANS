@@ -88,7 +88,7 @@ export async function login(req, res) {
 export async function getUsers(req, res) {
     try {
         if (req.user.role_id !== 1) {
-            return res.status(403).json({ message: 'Users not found' });
+            return res.status(403).json({ message: 'Access denied' });
         }
 
         const page = parseInt(req.query.page) || 1;
@@ -171,8 +171,17 @@ export async function updateUser(req, res) {
     }
 
     try {
-        if (req.user.role_id !== 1 && req.user.id !== parseInt(id)) {
+        const isAdmin = req.user.role_id === 1;
+        const isSelf = req.user.id === parseInt(id);
+
+        if (!isAdmin && !isSelf) {
             return res.status(403).json({ message: 'Access denied' });
+        }
+
+        if (!isAdmin && role_id !== req.user.role_id) {
+            return res
+                .status(403)
+                .json({ message: 'You are not allowed to change your role' });
         }
 
         const result = await UserModel.updateUser(

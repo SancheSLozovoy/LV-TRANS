@@ -18,11 +18,11 @@ describe("Order API", () => {
         .field("date_start", "2024-01-01")
         .field("date_end", "2024-01-10")
         .field("user_id", 3)
-        .attach("photos", testImage)
+        .attach("files", testImage)
         .expect(201);
 
       orderId = res.body.orderId;
-      expect(res.body.message).toBe("Order created and photos uploaded");
+      expect(res.body.message).toBe("Order created and files uploaded");
       expect(res.body.orderId).toBeDefined();
     });
 
