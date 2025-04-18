@@ -138,7 +138,8 @@ export const OrdersTable = () => {
           <Button
             danger
             icon={<DeleteOutlined />}
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               setSelectedOrderId(record.id);
               setConfirmOpen(true);
             }}
