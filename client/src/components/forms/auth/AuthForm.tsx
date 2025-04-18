@@ -115,7 +115,7 @@ const AuthForm: React.FC<FormProps> = ({ type }): React.JSX.Element => {
       <Form.Item>
         <Flex vertical={true} align={"center"} gap={23}>
           <ButtonSubmit
-            text={type === "register" ? "Зарегестрироваться" : "Войти"}
+            text={type === "register" ? "Зарегистрироваться" : "Войти"}
             htmlType="submit"
           />
           {type === "register" ? (
@@ -129,7 +129,7 @@ const AuthForm: React.FC<FormProps> = ({ type }): React.JSX.Element => {
             <p className={styles.form__text}>
               Нет аккаунта?{" "}
               <Link to="/register" className={styles.form__link}>
-                Зарегестрироваться
+                Зарегистрироваться
               </Link>
             </p>
           )}

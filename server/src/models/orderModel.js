@@ -5,10 +5,11 @@ export async function getOrders(limit = 10, offset = 0) {
         `
         SELECT 
             orders.*, 
-            users.login AS user_login, 
+            users.email AS user_email, 
             users.phone AS user_phone
         FROM orders
         JOIN users ON orders.user_id = users.id
+        ORDER BY id DESC
         LIMIT ? OFFSET ?
         `,
         [limit, offset],
@@ -66,11 +67,18 @@ export async function updateOrder(
     return result;
 }
 
-export async function getOrdersByUserId(userId) {
-    const [rows] = await pool.query('SELECT * FROM orders WHERE user_id = ?', [
-        userId,
-    ]);
-    return rows;
+export async function getOrdersByUserId(userId, limit = 8, offset = 0) {
+    const [rows] = await pool.query(
+        `SELECT * FROM orders WHERE user_id = ? ORDER BY id DESC LIMIT ? OFFSET ?`,
+        [userId, limit, offset],
+    );
+
+    const [[{ total }]] = await pool.query(
+        'SELECT COUNT(*) as total FROM orders WHERE user_id = ?',
+        [userId],
+    );
+
+    return { orders: rows, total };
 }
 
 export async function updateStatus(id, status_id) {

@@ -94,7 +94,7 @@ export const OrdersTable = () => {
     },
 
     {
-      title: "Статус заказа",
+      title: "Смена статуса",
       key: "status_actions",
       render: (_: any, record: Order) => (
         <Select
@@ -122,8 +122,8 @@ export const OrdersTable = () => {
 
     {
       title: "Пользователь",
-      dataIndex: "user_login",
-      key: "user_login",
+      dataIndex: "user_email",
+      key: "user_email",
     },
     {
       title: "Номер телефона",

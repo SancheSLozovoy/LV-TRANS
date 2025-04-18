@@ -12,18 +12,3 @@ export async function addFilesToOrder(
     );
     return result;
 }
-
-export async function getFilesByOrderId(orderId) {
-    const [rows] = await pool.query(
-        'SELECT id, file_name, file_type, file FROM files WHERE order_id = ?',
-        [orderId],
-    );
-    return rows;
-}
-
-export async function getFileById(fileId) {
-    const [rows] = await pool.query('SELECT * FROM files WHERE id = ?', [
-        fileId,
-    ]);
-    return rows;
-}

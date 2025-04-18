@@ -1,9 +1,23 @@
 import * as FilesModel from '../models/filesModel.js';
 import { pool } from '../db.js';
+import * as OrderModel from '../models/orderModel.js';
 
 export async function getFilesByOrderId(req, res) {
     const { orderId } = req.params;
+
     try {
+        const order = await OrderModel.getOrderById(orderId);
+
+        if (order.length === 0) {
+            return res.status(404).json({ message: 'Order not found' });
+        }
+
+        const orderDetails = order[0];
+
+        if (req.user.role_id !== 1 && orderDetails.user_id !== req.user.id) {
+            return res.status(403).json({ message: 'Access denied' });
+        }
+
         const [files] = await pool.query(
             'SELECT id, file, file_name, file_type FROM files WHERE order_id = ?',
             [orderId],
@@ -35,9 +49,13 @@ export async function getFilesByOrderId(req, res) {
 
 export async function downloadFile(req, res) {
     const { id } = req.params;
+
     try {
         const [rows] = await pool.query(
-            'SELECT file, file_name, file_type FROM files WHERE id = ?',
+            `SELECT f.file, f.file_name, f.file_type, o.user_id
+             FROM files f
+             JOIN orders o ON f.order_id = o.id
+             WHERE f.id = ?`,
             [id],
         );
 
@@ -46,6 +64,11 @@ export async function downloadFile(req, res) {
         }
 
         const file = rows[0];
+
+        if (req.user.role_id !== 1 && file.user_id !== req.user.id) {
+            return res.status(403).json({ message: 'Access denied' });
+        }
+
         const fileBase64 = file.file.toString('base64');
 
         res.status(200).json({

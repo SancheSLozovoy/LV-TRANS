@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Badge, Button, Space, Table } from "antd";
+import { Badge, Button, Pagination, Space, Table } from "antd";
 import useFetch from "../../../composales/useFetch.ts";
 import { useAuth } from "../../../composales/useAuth.ts";
 import { reformDate } from "../../../composales/reformDate.ts";
@@ -19,6 +19,10 @@ export const UserTable = () => {
   const [modalData, setModalData] = useState<ModalAttributes | null>(null);
   const [orderToCancel, setOrderToCancel] = useState<number | null>(null);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(8);
+  const [total, setTotal] = useState(0);
+
   const navigate = useNavigate();
 
   const fetchOrders = () => {
@@ -26,9 +30,13 @@ export const UserTable = () => {
 
     setLoading(true);
 
-    fetchData(`/orders/user/${user.id}`, "GET")
+    fetchData(
+      `/orders/user/${user.id}?page=${currentPage}&limit=${pageSize}`,
+      "GET",
+    )
       .then((response) => {
-        setOrders(response);
+        setOrders(response.orders);
+        setTotal(response.total);
       })
       .catch((error) => console.error("Ошибка при загрузке заказов:", error))
       .finally(() => setLoading(false));
@@ -37,9 +45,7 @@ export const UserTable = () => {
   const cancelOrder = (id: number) => {
     fetchData(`/orders/${id}`, "DELETE")
       .then(() => {
-        setOrders((prevOrders) =>
-          prevOrders.filter((order) => order.id !== id),
-        );
+        fetchOrders();
       })
       .catch((error) => {
         console.error("Ошибка при удалении заказа:", error);
@@ -66,7 +72,7 @@ export const UserTable = () => {
 
   useEffect(() => {
     fetchOrders();
-  }, []);
+  }, [currentPage, pageSize]);
 
   const columns = [
     {
@@ -139,6 +145,17 @@ export const UserTable = () => {
         style={{ marginBottom: "20px" }}
         scroll={{ x: 782 }}
         onRow={handleRowClick}
+      />
+
+      <Pagination
+        current={currentPage}
+        total={total}
+        pageSize={pageSize}
+        onChange={(page, pageSize) => {
+          setCurrentPage(page);
+          setPageSize(pageSize);
+        }}
+        style={{ marginBottom: "20px" }}
       />
 
       {modalData && orderToCancel !== null && (
