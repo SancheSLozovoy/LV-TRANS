@@ -30,6 +30,12 @@ export async function up(knex) {
       password: hashedPassword,
       role_id: 1,
     },
+    {
+      email: "user@example.com",
+      phone: "2222222222",
+      password: hashedPassword,
+      role_id: 2,
+    },
   ]);
 }
 
