@@ -1,4 +1,3 @@
-import * as FilesModel from '../models/filesModel.js';
 import { pool } from '../db.js';
 import * as OrderModel from '../models/orderModel.js';
 
