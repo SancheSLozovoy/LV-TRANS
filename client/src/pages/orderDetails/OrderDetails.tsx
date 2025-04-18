@@ -1,10 +1,7 @@
 import { Layout } from "../../components/layout/Layout.tsx";
-import { EditOrderForm } from "../../components/forms/editOrder/EditOrder.tsx";
-import { useParams } from "react-router-dom";
+import { OrderTabs } from "../../components/tabs/OrderTabs.tsx";
 
 export const OrderDetails = () => {
-  const params = useParams();
-
   return (
     <Layout>
       <div
@@ -15,7 +12,7 @@ export const OrderDetails = () => {
           marginTop: "2%",
         }}
       >
-        <EditOrderForm orderId={params.id} />
+        <OrderTabs />
       </div>
     </Layout>
   );

@@ -7,52 +7,33 @@ import { AdvantagesBlock } from "../../components/advantagesBlock/AdvantagesBloc
 import { Container } from "../../components/container/Container.tsx";
 import Company from "../../assets/images/compamy.jpeg";
 import { Footer } from "../../components/footer/Footer.tsx";
-
-const scrollToSection = (id: string) => {
-  const element = document.getElementById(id);
-  if (element) {
-    element.scrollIntoView({ behavior: "smooth" });
-  }
-};
-
-const handleGoToATI = () => {
-  window.location.href = "https://ati.su/firms/93638/info";
-};
+import { useLocation } from "react-router-dom";
 
 export const Home = () => {
+  const location = useLocation();
+
   useEffect(() => {
-    const handleScroll = (): void => {
-      const scrollHeight = document.documentElement.scrollHeight;
-      const viewportHeight = window.innerHeight;
-      const currentScroll = window.scrollY;
-
-      const distanceFromBottom =
-        scrollHeight - (currentScroll + viewportHeight);
-
-      const element = document.querySelector(".scroll") as HTMLElement;
-      console.log(distanceFromBottom);
-
+    const hash = location.hash;
+    if (hash) {
+      const id = hash.replace("#", "");
+      const element = document.getElementById(id);
       if (element) {
-        if (distanceFromBottom <= 10) {
-          element.classList.add("visible");
-        } else {
-          element.classList.remove("visible");
-        }
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: "smooth" });
+        }, 0);
       }
-    };
+    }
+  }, [location]);
 
-    window.addEventListener("scroll", handleScroll);
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
-
-  const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
+  const handleGoToATI = () => {
+    window.open("https://ati.su/firms/93638/info", "_blank");
   };
 
   return (
@@ -206,7 +187,6 @@ export const Home = () => {
           </div>
         </Container>
       </section>
-      <div className="scroll" onClick={scrollToTop}></div>
       <Footer />
     </Layout>
   );

@@ -22,7 +22,6 @@ export const Profile = () => {
               </div>
             </div>
             <div className="profile__form">
-              <h1 className="profile__form-title">Информация</h1>
               <ProfileForm />
             </div>
           </div>

@@ -1,7 +1,8 @@
 import multer from 'multer';
 
-const storage = multer.memoryStorage();
+const upload = multer({
+    storage: multer.memoryStorage(), // Хранение в памяти как Buffer
+    limits: { fileSize: 10 * 1024 * 1024 }, // Лимит 10MB
+});
 
-const upload = multer({ storage: storage });
-
-export const uploadPhotos = upload.array('photos');
+export const uploadFiles = upload.array('files');

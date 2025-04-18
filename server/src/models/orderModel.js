@@ -1,8 +1,25 @@
 import { pool } from '../db.js';
 
-export async function getOrders() {
-    const [rows] = await pool.query('SELECT * FROM orders');
-    return rows;
+export async function getOrders(limit = 10, offset = 0) {
+    const [rows] = await pool.query(
+        `
+        SELECT 
+            orders.*, 
+            users.email AS user_email, 
+            users.phone AS user_phone
+        FROM orders
+        JOIN users ON orders.user_id = users.id
+        ORDER BY id DESC
+        LIMIT ? OFFSET ?
+        `,
+        [limit, offset],
+    );
+
+    const [[{ total }]] = await pool.query(
+        'SELECT COUNT(*) as total FROM orders',
+    );
+
+    return { orders: rows, total };
 }
 
 export async function getOrderById(id) {
@@ -50,9 +67,24 @@ export async function updateOrder(
     return result;
 }
 
-export async function getOrdersByUserId(userId) {
-    const [rows] = await pool.query('SELECT * FROM orders WHERE user_id = ?', [
-        userId,
-    ]);
-    return rows;
+export async function getOrdersByUserId(userId, limit = 8, offset = 0) {
+    const [rows] = await pool.query(
+        `SELECT * FROM orders WHERE user_id = ? ORDER BY id DESC LIMIT ? OFFSET ?`,
+        [userId, limit, offset],
+    );
+
+    const [[{ total }]] = await pool.query(
+        'SELECT COUNT(*) as total FROM orders WHERE user_id = ?',
+        [userId],
+    );
+
+    return { orders: rows, total };
+}
+
+export async function updateStatus(id, status_id) {
+    const [result] = await pool.query(
+        'UPDATE orders SET status_id = ? WHERE id = ?',
+        [status_id, id],
+    );
+    return result;
 }

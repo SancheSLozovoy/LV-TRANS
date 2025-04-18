@@ -2,25 +2,43 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import * as UserModel from '../models/userModel.js';
 import dotenv from 'dotenv';
+import nodemailer from 'nodemailer';
+import { getMailTemplate } from '../../getMailTemplate.js';
 
 dotenv.config();
 
 export async function register(req, res) {
-    const { login, phone, password } = req.body;
-    if (!login || !phone || !password) {
+    const { email, phone, password } = req.body;
+
+    if (!email || !phone || !password) {
         return res.status(400).json({ message: 'Missing required fields' });
     }
 
     try {
-        const user = await UserModel.getUserByLogin(login);
-        if (user) {
+        const existingUser = await UserModel.getUserByEmail(email);
+        if (existingUser) {
             return res.status(400).json({ message: 'User already exists' });
         }
 
-        const result = await UserModel.createUser(login, phone, password);
+        await UserModel.createUser(email, phone, password);
+
+        const newUser = await UserModel.getUserByEmail(email);
+
+        const token = jwt.sign(
+            {
+                id: newUser.id,
+                email: newUser.email,
+                role_id: newUser.role_id,
+            },
+            process.env.JWT_SECRET,
+            {
+                expiresIn: '7d',
+            },
+        );
+
         res.status(201).json({
             message: 'User created',
-            userId: result.insertId,
+            token,
         });
     } catch (err) {
         res.status(500).json({
@@ -31,28 +49,28 @@ export async function register(req, res) {
 }
 
 export async function login(req, res) {
-    const { login, password } = req.body;
-    if (!login || !password) {
+    const { email, password } = req.body;
+    if (!email || !password) {
         return res.status(400).json({ message: 'Missing required fields' });
     }
 
     try {
-        const user = await UserModel.getUserByLogin(login);
+        const user = await UserModel.getUserByEmail(email);
         if (!user) {
             return res
                 .status(400)
-                .json({ message: 'Invalid login or password' });
+                .json({ message: 'Invalid email or password' });
         }
 
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
             return res
                 .status(400)
-                .json({ message: 'Invalid login or password' });
+                .json({ message: 'Invalid email or password' });
         }
 
         const token = jwt.sign(
-            { id: user.id, login: user.login, role_id: user.role_id },
+            { id: user.id, email: user.email, role_id: user.role_id },
             process.env.JWT_SECRET,
             {
                 expiresIn: '7d',
@@ -70,13 +88,19 @@ export async function login(req, res) {
 export async function getUsers(req, res) {
     try {
         if (req.user.role_id !== 1) {
-            return res.status(403).json({ message: 'Users not found' });
+            return res.status(403).json({ message: 'Access denied' });
         }
-        const users = await UserModel.getUsers();
+
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+
+        const { users, total } = await UserModel.getUsers(page, limit);
+
         if (users.length === 0) {
             return res.status(404).json({ message: 'Users not found' });
         }
-        res.status(200).json(users);
+
+        res.status(200).json({ users, total });
     } catch (err) {
         res.status(500).json({
             message: 'Error getting users',
@@ -140,20 +164,29 @@ export async function deleteUserById(req, res) {
 
 export async function updateUser(req, res) {
     const { id } = req.params;
-    const { login, phone, password, role_id } = req.body;
+    const { email, phone, password, role_id } = req.body;
 
-    if (!id || isNaN(id) || !login || !phone || !password || !role_id) {
+    if (!id || isNaN(id) || !email || !phone || !password || !role_id) {
         return res.status(400).json({ message: 'Missing required fields' });
     }
 
     try {
-        if (req.user.role_id !== 1 && req.user.id !== parseInt(id)) {
+        const isAdmin = req.user.role_id === 1;
+        const isSelf = req.user.id === parseInt(id);
+
+        if (!isAdmin && !isSelf) {
             return res.status(403).json({ message: 'Access denied' });
+        }
+
+        if (!isAdmin && role_id !== req.user.role_id) {
+            return res
+                .status(403)
+                .json({ message: 'You are not allowed to change your role' });
         }
 
         const result = await UserModel.updateUser(
             id,
-            login,
+            email,
             phone,
             password,
             role_id,
@@ -169,5 +202,122 @@ export async function updateUser(req, res) {
             message: 'Error updating user',
             error: err.message,
         });
+    }
+}
+
+export async function updateUserRole(req, res) {
+    const { id } = req.params;
+    const { role_id } = req.body;
+
+    if (!id || isNaN(id) || !role_id) {
+        return res.status(400).json({ message: 'Invalid request data' });
+    }
+
+    try {
+        if (req.user.role_id !== 1) {
+            return res.status(403).json({ message: 'Access denied' });
+        }
+
+        const result = await UserModel.updateUserRole(id, role_id);
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.status(200).json({ message: 'Role updated' });
+    } catch (err) {
+        res.status(500).json({
+            message: 'Error updating role',
+            error: err.message,
+        });
+    }
+}
+
+export async function requestPasswordReset(req, res) {
+    const { email } = req.body;
+
+    if (!email) {
+        return res.status(400).json({ message: 'Email is required' });
+    }
+
+    try {
+        const user = await UserModel.getUserByEmail(email);
+
+        if (!user) {
+            return res.status(200).json({
+                message: 'If user exists, a reset email has been sent',
+            });
+        }
+
+        const token = jwt.sign(
+            {
+                id: user.id,
+                email: user.email,
+                purpose: 'password-reset',
+            },
+            process.env.JWT_SECRET,
+            {
+                expiresIn: '30m',
+            },
+        );
+
+        const resetUrl = `${process.env.FRONT_URL}/reset-password?token=${token}`;
+
+        const transporter = nodemailer.createTransport({
+            host: 'smtp.gmail.com',
+            port: 587,
+            secure: false,
+            auth: {
+                user: process.env.SMTP_USER,
+                pass: process.env.SMTP_PASS,
+            },
+        });
+
+        await transporter.sendMail({
+            from: `"LV-TRANS" <${process.env.SMTP_USER}>`,
+            to: email,
+            subject: 'Восстановление пароля',
+            html: getMailTemplate(resetUrl),
+        });
+
+        res.status(200).json({
+            message: 'If user exists, a reset email has been sent',
+        });
+    } catch (err) {
+        console.error('Error sending email:', err);
+        res.status(500).json({
+            message: 'Error sending reset email',
+            error: err.message,
+        });
+    }
+}
+
+export async function resetPassword(req, res) {
+    const { token, password } = req.body;
+
+    if (!token || !password) {
+        return res
+            .status(400)
+            .json({ message: 'Token and password are required' });
+    }
+
+    try {
+        const payload = jwt.verify(token, process.env.JWT_SECRET);
+        if (payload.purpose !== 'password-reset') {
+            return res.status(400).json({ message: 'Invalid token purpose' });
+        }
+
+        const user = await UserModel.getUserByEmail(payload.email);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+        await UserModel.updatePassword(user.id, hashedPassword);
+
+        res.status(200).json({ message: 'Password successfully updated' });
+    } catch (err) {
+        console.error('Reset error:', err);
+        return res.status(400).json({ message: 'Invalid or expired token' });
     }
 }

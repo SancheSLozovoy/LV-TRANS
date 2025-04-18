@@ -10,26 +10,27 @@ import ButtonSubmit from "../../button/Button.tsx";
 import { CreateSuccess } from "../../createSuccess/CreateSuccess.tsx";
 import { Order, OrderDto } from "../../../models/orderModels.ts";
 import { Type } from "../../../models/orderModels.ts";
+import { useParams } from "react-router-dom";
 
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 
-export const EditOrderForm: React.FC<{ orderId: string | undefined }> = ({
-  orderId,
-}) => {
-  const { user } = useAuth();
+export const EditOrderForm: React.FC = () => {
   const [form] = Form.useForm<Order>();
   const [loading, setLoading] = useState(false);
-  const { fetchData } = useFetch();
   const [messageApi, contextHolder] = message.useMessage();
   const [isSuccess, setIsSuccess] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [orderData, setOrderData] = useState<any>(null);
 
+  const params = useParams();
+  const { user } = useAuth();
+  const { fetchData } = useFetch();
+
   useEffect(() => {
     const fetchOrderData = async () => {
       try {
-        const response = await fetchData(`/orders/${orderId}`, "GET");
+        const response = await fetchData(`/orders/${params.id}`, "GET");
         setOrderData(response);
         form.setFieldsValue({
           user_id: 0,
@@ -52,7 +53,7 @@ export const EditOrderForm: React.FC<{ orderId: string | undefined }> = ({
     };
 
     fetchOrderData();
-  }, []);
+  }, [params.id]);
 
   const onFinish = async (values: Order) => {
     setLoading(true);
@@ -77,7 +78,7 @@ export const EditOrderForm: React.FC<{ orderId: string | undefined }> = ({
         user_id: user.id,
       };
 
-      await fetchData(`/orders/${orderId}`, "PUT", dto);
+      await fetchData(`/orders/${params.id}`, "PUT", dto);
       messageApi.open({
         type: "success",
         content: "Заказ обновлен",
@@ -103,123 +104,130 @@ export const EditOrderForm: React.FC<{ orderId: string | undefined }> = ({
     return current && current < dayjs().startOf("day");
   };
 
+  if (isSuccess) {
+    return <CreateSuccess type={Type.update} />;
+  }
+
   return (
     <>
       {contextHolder}
-      {isSuccess ? (
-        <CreateSuccess type={Type.update} />
-      ) : (
-        <>
-          <h1 className={styles.create__title}>
-            Информация о заказе №{orderId}
-          </h1>
-          <Form
-            form={form}
-            layout="vertical"
-            onFinish={onFinish}
-            className={styles.form}
-          >
-            <Form.Item
-              label="Общая информация"
-              name="info"
-              rules={[
-                {
-                  required: true,
-                  message: "Пожалуйста, введите информацию о грузе",
-                },
-              ]}
-            >
-              <TextArea rows={6} disabled={!isEditing} />
-            </Form.Item>
 
-            <Form.Item
-              label="Вес груза"
-              name="weight"
-              rules={[
-                { required: true, message: "Пожалуйста, введите вес груза" },
-                {
-                  type: "number",
-                  min: 0.01,
-                  message: "Вес должен быть больше 0",
-                },
-              ]}
-            >
-              <InputNumber min={0.01} step={0.01} disabled={!isEditing} />
-            </Form.Item>
+      <h1 className={styles.create__title}>Информация о заказе №{params.id}</h1>
+      <Form
+        form={form}
+        layout="vertical"
+        onFinish={onFinish}
+        className={styles.form}
+      >
+        <Form.Item
+          tooltip="Опишите тип груза, габариты, особые условия доставки и т.д"
+          label="Общая информация"
+          name="info"
+          rules={[
+            {
+              required: true,
+              message: "Пожалуйста, введите информацию о грузе",
+            },
+          ]}
+        >
+          <TextArea rows={6} disabled={!isEditing} />
+        </Form.Item>
 
-            <Form.Item
-              label="Откуда"
-              name="from"
-              rules={[
-                {
-                  required: true,
-                  message: "Пожалуйста, введите место загрузки",
-                },
-              ]}
-            >
-              <Input disabled={!isEditing} />
-            </Form.Item>
+        <Form.Item
+          label="Вес груза"
+          tooltip="Вес груза в тоннах"
+          name="weight"
+          rules={[
+            { required: true, message: "Пожалуйста, введите вес груза" },
+            {
+              type: "number",
+              min: 0.01,
+              message: "Вес должен быть больше 0",
+            },
+          ]}
+        >
+          <InputNumber
+            min={0.01}
+            step={0.01}
+            disabled={!isEditing}
+            addonAfter="тонн"
+          />
+        </Form.Item>
 
-            <Form.Item
-              label="Куда"
-              name="to"
-              rules={[
-                {
-                  required: true,
-                  message: "Пожалуйста, введите место выгрузки",
-                },
-              ]}
-            >
-              <Input disabled={!isEditing} />
-            </Form.Item>
+        <Form.Item
+          label="Откуда"
+          tooltip="Место, откуда начинается перевозка груза(Страна, город, адрес)"
+          name="from"
+          rules={[
+            {
+              required: true,
+              message: "Пожалуйста, введите место загрузки",
+            },
+          ]}
+        >
+          <Input disabled={!isEditing} />
+        </Form.Item>
 
-            <Form.Item
-              label="Даты доставки"
-              name="deliveryDates"
-              rules={[
-                {
-                  required: true,
-                  message: "Пожалуйста, выберите даты доставки",
-                },
-              ]}
-            >
-              <RangePicker
-                disabledDate={disabledDate}
-                placeholder={["Дата загрузки", "Дата выгрузки"]}
-                disabled={!isEditing}
+        <Form.Item
+          label="Куда"
+          tooltip="Место, куда нужно отвезти груз(Страна, город, адрес)"
+          name="to"
+          rules={[
+            {
+              required: true,
+              message: "Пожалуйста, введите место выгрузки",
+            },
+          ]}
+        >
+          <Input disabled={!isEditing} />
+        </Form.Item>
+
+        <Form.Item
+          tooltip="Укажите желаемые даты доставки(Дата загрузки - Дата выгрузки)"
+          label="Даты доставки"
+          name="deliveryDates"
+          rules={[
+            {
+              required: true,
+              message: "Пожалуйста, выберите даты доставки",
+            },
+          ]}
+        >
+          <RangePicker
+            disabledDate={disabledDate}
+            placeholder={["Дата загрузки", "Дата выгрузки"]}
+            disabled={!isEditing}
+          />
+        </Form.Item>
+
+        <Form.Item>
+          <div className={styles.form__buttons}>
+            {isEditing ? (
+              <>
+                <ButtonSubmit
+                  htmlType="button"
+                  onClick={onReset}
+                  text="Отмена"
+                  icon={<CloseOutlined />}
+                />
+                <ButtonSubmit
+                  htmlType="submit"
+                  loading={loading}
+                  text="Сохранить"
+                  icon={<CheckOutlined />}
+                />
+              </>
+            ) : (
+              <ButtonSubmit
+                htmlType="button"
+                onClick={() => setIsEditing(true)}
+                text="Редактировать"
+                icon={<EditOutlined />}
               />
-            </Form.Item>
-
-            <Form.Item>
-              <div className={styles.form__buttons}>
-                {isEditing ? (
-                  <>
-                    <ButtonSubmit
-                      htmlType="button"
-                      onClick={onReset}
-                      text="Отмена"
-                      icon={<CloseOutlined />}
-                    />
-                    <ButtonSubmit
-                      htmlType="submit"
-                      loading={loading}
-                      text="Сохранить"
-                      icon={<CheckOutlined />}
-                    />
-                  </>
-                ) : (
-                  <ButtonSubmit
-                    htmlType="button"
-                    onClick={() => setIsEditing(true)}
-                    text="Редактировать"
-                    icon={<EditOutlined />}
-                  />
-                )}
-              </div>
-            </Form.Item>
-          </Form>
-        </>
-      )}
+            )}
+          </div>
+        </Form.Item>
+      </Form>
     </>
   );
 };

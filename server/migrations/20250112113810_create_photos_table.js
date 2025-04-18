@@ -1,5 +1,5 @@
 export async function up(knex) {
-  await knex.schema.createTable("photos", function (table) {
+  await knex.schema.createTable("files", function (table) {
     table.increments("id").primary();
     table
       .integer("order_id")
@@ -7,12 +7,14 @@ export async function up(knex) {
       .references("id")
       .inTable("orders")
       .onDelete("CASCADE");
-    table.binary("photo").notNullable();
+    table.binary("file").notNullable();
+    table.string("file_name").notNullable();
+    table.string("file_type").notNullable();
   });
 
-  await knex.raw("ALTER TABLE photos MODIFY COLUMN photo LONGBLOB;");
+  await knex.raw("ALTER TABLE files MODIFY COLUMN file LONGBLOB;");
 }
 
 export async function down(knex) {
-  await knex.schema.dropTable("photos");
+  await knex.schema.dropTable("files");
 }

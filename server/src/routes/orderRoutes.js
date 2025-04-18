@@ -1,6 +1,6 @@
 import express from 'express';
 import * as OrderController from '../controllers/orderController.js';
-import { uploadPhotos } from '../middleware/upload.js';
+import { uploadFiles } from '../middleware/upload.js';
 import { authenticateToken } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
@@ -548,11 +548,85 @@ const router = express.Router();
  *                   example: Server error
  */
 
+/**
+ * @swagger
+ * /orders/{id}/status:
+ *   put:
+ *     tags:
+ *       - Orders
+ *     summary: Обновление статуса заказа
+ *     description: Изменение статуса заказа (доступно только администраторам)
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: ID заказа
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - status_id
+ *             properties:
+ *               status_id:
+ *                 type: integer
+ *                 enum: [1, 2, 3, 4]
+ *                 description: |
+ *                   Новый статус заказа:
+ *                   - 1 - Не принят
+ *                   - 2 - Принят
+ *                   - 3 - В пути
+ *                   - 4 - Доставлен
+ *     responses:
+ *       200:
+ *         description: Статус заказа успешно обновлен
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Status updated successfully
+ *       400:
+ *         description: Некорректные данные
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorInvalidData'
+ *       403:
+ *         description: Доступ запрещен
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorAccessDenied'
+ *       404:
+ *         description: Заказ не найден
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorOrderNotFound'
+ *       500:
+ *         description: Ошибка сервера
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorServer'
+ */
+
 router.get('/', authenticateToken, OrderController.getOrders);
 router.get('/:id', authenticateToken, OrderController.getOrderById);
-router.post('/', uploadPhotos, authenticateToken, OrderController.createOrder);
+router.post('/', uploadFiles, authenticateToken, OrderController.createOrder);
 router.delete('/:id', authenticateToken, OrderController.deleteOrderById);
 router.put('/:id', authenticateToken, OrderController.updateOrder);
+router.put('/:id/status', authenticateToken, OrderController.updateOrderStatus);
 router.get(
     '/user/:userId',
     authenticateToken,

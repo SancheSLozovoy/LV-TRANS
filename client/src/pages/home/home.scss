@@ -241,26 +241,3 @@
 
   }
 }
-
-
-.scroll {
-  position: fixed;
-  content: url("../../assets/images/scroll.svg");
-  width: 50px;
-  height: 50px;
-  bottom: 200px;
-  right: 35px;
-  z-index: 1000;
-  cursor: pointer;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
-}
-
-.scroll.visible {
-  opacity: 1;
-  visibility: visible;
-}
-
-.scroll.hidden {
-  opacity: 0;
-  visibility: hidden;
-}

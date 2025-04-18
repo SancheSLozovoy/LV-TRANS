@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Badge, Space, Table } from "antd";
+import { Badge, Button, Pagination, Space, Table } from "antd";
 import useFetch from "../../../composales/useFetch.ts";
 import { useAuth } from "../../../composales/useAuth.ts";
 import { reformDate } from "../../../composales/reformDate.ts";
@@ -8,8 +8,7 @@ import { ModalAttributes } from "../../../models/modalAttr.ts";
 import { ConfirmModal } from "../../confirmModal/ConfirmModal.tsx";
 import { defineStatus } from "../../../composales/defineStatus.ts";
 import { useNavigate } from "react-router-dom";
-
-const { Column } = Table;
+import { DeleteOutlined } from "@ant-design/icons";
 
 export const UserTable = () => {
   const { user } = useAuth();
@@ -20,6 +19,10 @@ export const UserTable = () => {
   const [modalData, setModalData] = useState<ModalAttributes | null>(null);
   const [orderToCancel, setOrderToCancel] = useState<number | null>(null);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(8);
+  const [total, setTotal] = useState(0);
+
   const navigate = useNavigate();
 
   const fetchOrders = () => {
@@ -27,9 +30,13 @@ export const UserTable = () => {
 
     setLoading(true);
 
-    fetchData(`/orders/user/${user.id}`, "GET")
+    fetchData(
+      `/orders/user/${user.id}?page=${currentPage}&limit=${pageSize}`,
+      "GET",
+    )
       .then((response) => {
-        setOrders(response);
+        setOrders(response.orders);
+        setTotal(response.total);
       })
       .catch((error) => console.error("Ошибка при загрузке заказов:", error))
       .finally(() => setLoading(false));
@@ -38,9 +45,7 @@ export const UserTable = () => {
   const cancelOrder = (id: number) => {
     fetchData(`/orders/${id}`, "DELETE")
       .then(() => {
-        setOrders((prevOrders) =>
-          prevOrders.filter((order) => order.id !== id),
-        );
+        fetchOrders();
       })
       .catch((error) => {
         console.error("Ошибка при удалении заказа:", error);
@@ -67,62 +72,98 @@ export const UserTable = () => {
 
   useEffect(() => {
     fetchOrders();
-  }, []);
+  }, [currentPage, pageSize]);
+
+  const columns = [
+    {
+      title: "Номер заказа",
+      dataIndex: "id",
+      key: "id",
+      width: 80,
+      fixed: "left" as const,
+    },
+    {
+      title: "Статус",
+      dataIndex: "status_id",
+      key: "status_id",
+      width: 150,
+      render: (statusId: number) => {
+        const status = defineStatus(statusId);
+        return <Badge color={status.color} text={status.name} />;
+      },
+    },
+    {
+      title: "Дата создания",
+      dataIndex: "create_at",
+      key: "create_at",
+      width: 150,
+      render: (date: string) => reformDate(date),
+    },
+    {
+      title: "Откуда",
+      dataIndex: "from",
+      key: "from",
+      width: 150,
+      ellipsis: true,
+    },
+    {
+      title: "Куда",
+      dataIndex: "to",
+      key: "to",
+      width: 150,
+      ellipsis: true,
+    },
+    {
+      title: "Действия",
+      key: "actions",
+      width: 100,
+      fixed: "right" as const,
+      render: (_: any, record: Order) => (
+        <Space size="middle">
+          <Button
+            danger
+            icon={<DeleteOutlined />}
+            onClick={(event) => {
+              event.stopPropagation();
+              openCancelModal(record.id);
+            }}
+          />
+        </Space>
+      ),
+    },
+  ];
 
   return (
-    <>
-      <Table<Order>
+    <div>
+      <Table
         dataSource={orders}
-        loading={loading}
+        columns={columns}
         rowKey="id"
-        style={{ width: "709px" }}
+        loading={loading}
+        pagination={false}
+        bordered
+        style={{ marginBottom: "20px" }}
+        scroll={{ x: 782 }}
         onRow={handleRowClick}
-      >
-        <Column title="Номер заказа" dataIndex="id" key="id" />
-        <Column
-          title="Статус"
-          dataIndex="status_id"
-          key="status_id"
-          render={(statusId: number) => {
-            const status = defineStatus(statusId);
-            return (
-              <Badge key={statusId} color={status.color} text={status.name} />
-            );
-          }}
-        />
-        <Column
-          title="Дата создания"
-          dataIndex="create_at"
-          key="create_at"
-          render={(date) => reformDate(date)}
-        />
-        <Column title="Откуда" dataIndex="from" key="from" />
-        <Column title="Куда" dataIndex="to" key="to" />
-        <Column
-          title="Действия"
-          key="action"
-          render={(_: any, record: Order) => (
-            <Space size="middle">
-              <a
-                onClick={(event) => {
-                  event.stopPropagation();
-                  openCancelModal(record.id);
-                }}
-                style={{ color: "#8F4848" }}
-              >
-                Отменить
-              </a>
-            </Space>
-          )}
-        />
-      </Table>
+      />
+
+      <Pagination
+        current={currentPage}
+        total={total}
+        pageSize={pageSize}
+        onChange={(page, pageSize) => {
+          setCurrentPage(page);
+          setPageSize(pageSize);
+        }}
+        style={{ marginBottom: "20px" }}
+      />
 
       {modalData && orderToCancel !== null && (
         <ConfirmModal
           open={!!modalData}
           onClose={() => setModalData(null)}
           onConfirm={() => {
-            modalData.action();
+            modalData?.action();
             setModalData(null);
             setOrderToCancel(null);
           }}
@@ -131,6 +172,6 @@ export const UserTable = () => {
           confirmText={modalData.confirmText}
         />
       )}
-    </>
+    </div>
   );
 };

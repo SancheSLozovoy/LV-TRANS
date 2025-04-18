@@ -1,18 +1,19 @@
-export interface UserRegister {
-  login: string;
+export interface UserAuth {
+  email: string;
   password: string;
-  phone: string;
-}
-
-export interface UserLogin {
-  login: string;
-  password: string;
+  phone?: string;
 }
 
 export interface User {
   id: number;
-  login: string;
+  email: string;
   password: string;
   phone: string;
+  role_id: number;
+}
+
+export interface UserDecodeJWT {
+  id: number;
+  email: string;
   role_id: number;
 }

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { LockOutlined, UserOutlined, PhoneOutlined } from "@ant-design/icons";
+import { LockOutlined, MailOutlined, PhoneOutlined } from "@ant-design/icons";
 import { Checkbox, Flex, Form, Input, message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./form.module.scss";
@@ -35,13 +35,16 @@ const AuthForm: React.FC<FormProps> = ({ type }): React.JSX.Element => {
         {contextHolder}
         <Form.Item
           className={styles.form__item}
-          name="login"
-          rules={[{ required: true, message: "Пожалуйста, введите логин!" }]}
+          name="email"
+          rules={[
+            { required: true, message: "Пожалуйста, введите почту!" },
+            { type: "email", message: "Пожалуйста, введите корректную почту" },
+          ]}
         >
           <Input
             rootClassName={styles.form__input}
-            prefix={<UserOutlined />}
-            placeholder="Логин"
+            prefix={<MailOutlined />}
+            placeholder="Email"
           />
         </Form.Item>
         {type === "register" ? (
@@ -52,6 +55,11 @@ const AuthForm: React.FC<FormProps> = ({ type }): React.JSX.Element => {
               {
                 required: true,
                 message: "Пожалуйста, введите номер телефона!",
+              },
+              {
+                pattern:
+                  /^(\+7|8|7)\s?\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{2}[\s-]?\d{2}$/,
+                message: "Введите корректный номер телефона",
               },
             ]}
           >
@@ -74,7 +82,7 @@ const AuthForm: React.FC<FormProps> = ({ type }): React.JSX.Element => {
             },
           ]}
         >
-          <Input
+          <Input.Password
             rootClassName={styles.form__input}
             prefix={<LockOutlined />}
             type="password"
@@ -97,13 +105,17 @@ const AuthForm: React.FC<FormProps> = ({ type }): React.JSX.Element => {
               Согласие на обработку персональных данных
             </Checkbox>
           </Form.Item>
-        ) : null}
+        ) : (
+          <Link to="/forgot-password" className={styles.form__link}>
+            Забыли пароль?
+          </Link>
+        )}
       </div>
 
       <Form.Item>
         <Flex vertical={true} align={"center"} gap={23}>
           <ButtonSubmit
-            text={type === "register" ? "Зарегестрироваться" : "Войти"}
+            text={type === "register" ? "Зарегистрироваться" : "Войти"}
             htmlType="submit"
           />
           {type === "register" ? (
@@ -117,7 +129,7 @@ const AuthForm: React.FC<FormProps> = ({ type }): React.JSX.Element => {
             <p className={styles.form__text}>
               Нет аккаунта?{" "}
               <Link to="/register" className={styles.form__link}>
-                Зарегестрироваться
+                Зарегистрироваться
               </Link>
             </p>
           )}

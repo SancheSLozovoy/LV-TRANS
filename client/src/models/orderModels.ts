@@ -1,4 +1,8 @@
+import { UploadFile } from "antd";
+import { Dayjs } from "dayjs";
+
 export interface Order {
+  id: number;
   info: string;
   weight: number;
   from: string;
@@ -7,7 +11,7 @@ export interface Order {
   date_end: Date;
   user_id: number;
   status_id: number;
-  photos?: [];
+  files?: [];
   deliveryDates?: Date[];
 }
 
@@ -25,4 +29,13 @@ export interface OrderDto {
   date_end: string;
   user_id: number;
   status_id: number;
+}
+
+export interface OrderFormData {
+  info: string;
+  weight: number;
+  from: string;
+  to: string;
+  deliveryDates: [Dayjs, Dayjs];
+  files: UploadFile[];
 }

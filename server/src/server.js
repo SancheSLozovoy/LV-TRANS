@@ -3,7 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import userRoutes from './routes/userRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
-import photosRoutes from './routes/photosRoutes.js';
+import filesRoutes from './routes/filesRoutes.js';
 import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from '../swagger.js';
 
@@ -23,7 +23,7 @@ app.use(
 );
 
 app.use('/users', userRoutes);
-app.use('/orders', orderRoutes, photosRoutes);
+app.use('/orders', orderRoutes, filesRoutes);
 
 app.get('/', (req, res) => {
     res.send('Сервер работает!');

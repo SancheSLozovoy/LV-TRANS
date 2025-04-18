@@ -1,4 +1,4 @@
-import { User, UserLogin, UserRegister } from "../models/userModels.ts";
+import { User, UserAuth, UserDecodeJWT } from "../models/userModels.ts";
 import Cookies from "js-cookie";
 import { FormInstance } from "antd";
 import { MessageInstance } from "antd/es/message/interface";
@@ -13,11 +13,15 @@ export const useAuth = () => {
 
   const handleGetUser = (token: string) => {
     if (!token) return null;
+
     const decode = jwtDecode<User>(token);
-    const userData = {
-      login: decode.login,
+
+    const userData: UserDecodeJWT = {
+      email: decode.email,
       id: decode.id,
+      role_id: decode.role_id,
     };
+
     return userData;
   };
 
@@ -28,26 +32,24 @@ export const useAuth = () => {
     type: "register" | "login",
   ) => {
     const values = form.getFieldsValue();
-    const regData: UserRegister = {
-      login: values.login,
-      password: values.password,
+
+    const data: UserAuth = {
+      email: values.email,
       phone: values.phone,
-    };
-    const loginData: UserLogin = {
-      login: values.login,
       password: values.password,
     };
 
     try {
       if (type === "register") {
-        await fetchData("/users", "POST", regData);
+        const res = await fetchData("/users", "POST", data);
         messageApi.open({
           type: "success",
           content: "Успешная регистрация",
         });
-        setTimeout(() => navigate("/login"), 3000);
+        Cookies.set("token", res.token, { expires: 7 });
+        setTimeout(() => navigate("/"), 3000);
       } else {
-        const res = await fetchData("/users/login", "POST", loginData);
+        const res = await fetchData("/users/login", "POST", data);
         Cookies.set("token", res.token, { expires: 7 });
         messageApi.open({
           type: "success",
@@ -65,13 +67,13 @@ export const useAuth = () => {
         } else {
           messageApi.open({
             type: "error",
-            content: "Данный логин уже существует",
+            content: "Данный пользователь уже существует",
           });
         }
       } else {
         messageApi.open({
           type: "error",
-          content: "Неверный логин или пароль",
+          content: "Неверная почта или пароль",
         });
       }
     }
