@@ -17,6 +17,7 @@ import { ProfileForm } from "./components/forms/profileForm/ProfileForm.tsx";
 import { OrderTabs } from "./components/tabs/OrderTabs.tsx";
 import { EditUserForm } from "./components/forms/editProfileForn/EditUserForm.tsx";
 import { ForgotPassword } from "./pages/forgotPassword/ForgotPassword.tsx";
+import { ResetPassword } from "./pages/forgotPassword/ResetPassword.tsx";
 
 export default function App(): JSX.Element {
   return (
@@ -26,6 +27,7 @@ export default function App(): JSX.Element {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
 
         <Route element={<ProtectedRoute />}>
           <Route path="/profile" element={<Profile />} />

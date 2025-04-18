@@ -266,3 +266,33 @@ export async function requestPasswordReset(req, res) {
         });
     }
 }
+
+export async function resetPassword(req, res) {
+    const { token, password } = req.body;
+
+    if (!token || !password) {
+        return res
+            .status(400)
+            .json({ message: 'Token and password are required' });
+    }
+
+    try {
+        const payload = jwt.verify(token, process.env.JWT_SECRET);
+        if (payload.purpose !== 'password-reset') {
+            return res.status(400).json({ message: 'Invalid token purpose' });
+        }
+
+        const user = await UserModel.getUserByEmail(payload.email);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+        await UserModel.updatePassword(user.id, hashedPassword);
+
+        res.status(200).json({ message: 'Password successfully updated' });
+    } catch (err) {
+        console.error('Reset error:', err);
+        return res.status(400).json({ message: 'Invalid or expired token' });
+    }
+}
