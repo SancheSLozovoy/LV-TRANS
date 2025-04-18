@@ -42,7 +42,7 @@ export const EditUserForm: React.FC = () => {
     } catch (error) {
       console.error("Update user error", error);
       messageApi.error(
-        "Не удалось обновить профиль, данный логин уже существует",
+        "Не удалось обновить профиль, пользователь с такой почтой уже существует",
       );
     } finally {
       setLoading(false);
@@ -65,7 +65,7 @@ export const EditUserForm: React.FC = () => {
       >
         <div className={styles.form__content}>
           <Form.Item
-            label="Логин"
+            label="Почта"
             name="email"
             rules={[{ required: true, message: "Пожалуйста, введите логин" }]}
           >

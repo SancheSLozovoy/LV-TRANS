@@ -6,6 +6,7 @@ import { User } from "../../../models/userModels.ts";
 import useFetch from "../../../composales/useFetch.ts";
 import { DeleteOutlined } from "@ant-design/icons";
 import "./usersTable.scss";
+import { useAuth } from "../../../composales/useAuth.ts";
 
 export const UsersTable = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -15,6 +16,8 @@ export const UsersTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [pageSize, setPageSize] = useState(10);
+
+  const { user: currentUser } = useAuth();
 
   useEffect(() => {
     fetchUsers();
@@ -90,28 +93,29 @@ export const UsersTable = () => {
       title: "Действия",
       key: "actions",
       width: "13%",
-      render: (_, user) => (
-        <div className="actions-container">
-          <Button
-            type="primary"
-            onClick={() => toggleRole(user)}
-            style={{
-              backgroundColor: user.role_id === 1 ? "#D9D9D9" : "#5686E1",
-              color: user.role_id === 1 ? "#5686E1" : "#D9D9D9",
-            }}
-          >
-            {user.role_id === 1 ? "Сделать пользователем" : "Сделать админом"}
-          </Button>
-          <Button
-            danger
-            icon={<DeleteOutlined />}
-            onClick={() => {
-              setSelectedUserId(user.id);
-              setConfirmOpen(true);
-            }}
-          />
-        </div>
-      ),
+      render: (_, user) => {
+        const isCurrentUser = currentUser?.id === user.id;
+        return (
+          <div className="actions-container">
+            <Button
+              type="primary"
+              onClick={() => toggleRole(user)}
+              disabled={isCurrentUser}
+            >
+              {user.role_id === 1 ? "Сделать пользователем" : "Сделать админом"}
+            </Button>
+            <Button
+              danger
+              icon={<DeleteOutlined />}
+              disabled={isCurrentUser}
+              onClick={() => {
+                setSelectedUserId(user.id);
+                setConfirmOpen(true);
+              }}
+            />
+          </div>
+        );
+      },
     },
   ];
 

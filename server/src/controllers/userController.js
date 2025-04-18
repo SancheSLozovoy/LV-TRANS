@@ -251,7 +251,7 @@ export async function requestPasswordReset(req, res) {
         await transporter.sendMail({
             from: `"LV-TRANS" <${process.env.SMTP_USER}>`,
             to: email,
-            subject: 'Reset your password',
+            subject: 'Восстановление пароля gmail',
             html: getMailTemplate(resetUrl),
         });
 

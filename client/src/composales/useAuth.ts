@@ -71,13 +71,13 @@ export const useAuth = () => {
         } else {
           messageApi.open({
             type: "error",
-            content: "Данный логин уже существует",
+            content: "Данный пользователь уже существует",
           });
         }
       } else {
         messageApi.open({
           type: "error",
-          content: "Неверный логин или пароль",
+          content: "Неверная почта или пароль",
         });
       }
     }

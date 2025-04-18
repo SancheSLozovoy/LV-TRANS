@@ -28,7 +28,7 @@ export const ForgotPassword = () => {
         )
         .then(() => navigate("/login"));
     } catch (err) {
-      messageApi.error(err.message || "Не удалось отправить письмо");
+      messageApi.error("Не удалось отправить письмо");
     } finally {
       setLoading(false);
     }

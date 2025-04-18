@@ -81,7 +81,7 @@ export const ProfileForm = () => {
               value={userData?.email}
               disabled={true}
               rootClassName={styles.form__input}
-              placeholder="Логин"
+              placeholder="Почта"
             ></Input>
           </Form.Item>
           <Form.Item>
