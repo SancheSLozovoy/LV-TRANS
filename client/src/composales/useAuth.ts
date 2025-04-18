@@ -33,27 +33,23 @@ export const useAuth = () => {
   ) => {
     const values = form.getFieldsValue();
 
-    const regData: UserAuth = {
+    const data: UserAuth = {
       email: values.email,
-      password: values.password,
       phone: values.phone,
-    };
-
-    const loginData: UserAuth = {
-      email: values.email,
       password: values.password,
     };
 
     try {
       if (type === "register") {
-        await fetchData("/users", "POST", regData);
+        const res = await fetchData("/users", "POST", data);
         messageApi.open({
           type: "success",
           content: "Успешная регистрация",
         });
-        setTimeout(() => navigate("/login"), 3000);
+        Cookies.set("token", res.token, { expires: 7 });
+        setTimeout(() => navigate("/"), 3000);
       } else {
-        const res = await fetchData("/users/login", "POST", loginData);
+        const res = await fetchData("/users/login", "POST", data);
         Cookies.set("token", res.token, { expires: 7 });
         messageApi.open({
           type: "success",

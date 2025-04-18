@@ -9,20 +9,36 @@ dotenv.config();
 
 export async function register(req, res) {
     const { email, phone, password } = req.body;
+
     if (!email || !phone || !password) {
         return res.status(400).json({ message: 'Missing required fields' });
     }
 
     try {
-        const user = await UserModel.getUserByEmail(email);
-        if (user) {
+        const existingUser = await UserModel.getUserByEmail(email);
+        if (existingUser) {
             return res.status(400).json({ message: 'User already exists' });
         }
 
-        const result = await UserModel.createUser(email, phone, password);
+        await UserModel.createUser(email, phone, password);
+
+        const newUser = await UserModel.getUserByEmail(email);
+
+        const token = jwt.sign(
+            {
+                id: newUser.id,
+                email: newUser.email,
+                role_id: newUser.role_id,
+            },
+            process.env.JWT_SECRET,
+            {
+                expiresIn: '7d',
+            },
+        );
+
         res.status(201).json({
             message: 'User created',
-            userId: result.insertId,
+            token,
         });
     } catch (err) {
         res.status(500).json({
@@ -251,7 +267,7 @@ export async function requestPasswordReset(req, res) {
         await transporter.sendMail({
             from: `"LV-TRANS" <${process.env.SMTP_USER}>`,
             to: email,
-            subject: 'Восстановление пароля gmail',
+            subject: 'Восстановление пароля',
             html: getMailTemplate(resetUrl),
         });
 
