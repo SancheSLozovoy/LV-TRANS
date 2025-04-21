@@ -1,0 +1,29 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 24px;
+}
+
+.lottie {
+  max-width: 500px;
+  width: 100%;
+  height: auto;
+}
+
+.buttonWrapper {
+  width: 344px;
+  margin-top: 50px;
+}
+
+@media (max-width: 768px) {
+  .lottie {
+    max-width: 300px;
+  }
+
+  .buttonWrapper {
+    width: 100%;
+    margin-top: 32px;
+  }
+}

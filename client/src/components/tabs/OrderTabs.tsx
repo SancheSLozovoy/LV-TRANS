@@ -4,7 +4,7 @@ import { EditOrderForm } from "../forms/editOrder/EditOrder.tsx";
 
 export const OrderTabs = () => {
   return (
-    <Tabs size="middle" defaultActiveKey="1">
+    <Tabs size="middle">
       <Tabs.TabPane tab="Информация" key="1">
         <EditOrderForm />
       </Tabs.TabPane>

@@ -24,7 +24,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { OrderFormData, Type } from "../../../models/orderModels.ts";
 import { RangePickerProps } from "antd/es/date-picker/index";
 
-const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 
 const normFile = (e: any) => {
@@ -85,14 +84,16 @@ export const CreateOrderForm: React.FC = () => {
 
   const createFormData = (values: OrderFormData): FormData => {
     const formData = new FormData();
-    const [dateStart, dateEnd] = values.deliveryDates;
 
     formData.append("info", values.info);
     formData.append("weight", values.weight.toString());
     formData.append("from", values.from);
     formData.append("to", values.to);
-    formData.append("date_start", dayjs(dateStart).format("YYYY-MM-DD"));
-    formData.append("date_end", dayjs(dateEnd).format("YYYY-MM-DD"));
+    formData.append(
+      "date_start",
+      dayjs(values.date_start).format("YYYY-MM-DD"),
+    );
+    formData.append("date_end", dayjs(values.date_end).format("YYYY-MM-DD"));
     formData.append("user_id", user!.id.toString());
 
     fileList.forEach((file) => {
@@ -134,7 +135,7 @@ export const CreateOrderForm: React.FC = () => {
   }
 
   return (
-    <>
+    <div className={styles.form__container}>
       {contextHolder}
       <h1 className={styles.create__title}>Сделать заказ</h1>
       <Form<OrderFormData>
@@ -202,19 +203,38 @@ export const CreateOrderForm: React.FC = () => {
         </Form.Item>
 
         <Form.Item
-          tooltip="Укажите желаемые даты доставки(Дата загрузки - Дата выгрузки)"
-          label="Даты доставки"
-          name="deliveryDates"
+          tooltip="Укажите желаемую дату загрузки"
+          label="Дата загрузки"
+          name="date_start"
           rules={[
             {
               required: true,
-              message: "Пожалуйста, выберите даты доставки",
+              message: "Пожалуйста, выберите дату загрузки",
             },
           ]}
         >
-          <RangePicker
+          <DatePicker
+            format="DD-MM-YY"
             disabledDate={disabledDate}
-            placeholder={["Дата загрузки", "Дата выгрузки"]}
+            placeholder="Дата загрузки"
+          />
+        </Form.Item>
+
+        <Form.Item
+          tooltip="Укажите желаемую дату выгрузки"
+          label="Дата выгрузки"
+          name="date_end"
+          rules={[
+            {
+              required: true,
+              message: "Пожалуйста, выберите дату выгрузки",
+            },
+          ]}
+        >
+          <DatePicker
+            format="DD-MM-YY"
+            disabledDate={disabledDate}
+            placeholder="Дата выгрузки"
           />
         </Form.Item>
 
@@ -263,6 +283,6 @@ export const CreateOrderForm: React.FC = () => {
           </div>
         </Form.Item>
       </Form>
-    </>
+    </div>
   );
 };

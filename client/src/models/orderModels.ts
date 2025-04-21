@@ -36,6 +36,7 @@ export interface OrderFormData {
   weight: number;
   from: string;
   to: string;
-  deliveryDates: [Dayjs, Dayjs];
+  date_start: string;
+  date_end: string;
   files: UploadFile[];
 }

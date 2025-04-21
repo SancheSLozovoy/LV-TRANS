@@ -72,7 +72,7 @@ export const ProfileForm = () => {
   };
 
   return (
-    <div>
+    <div className={styles.form__container}>
       <h1 className={styles.form__title}>Профиль</h1>
       <Form>
         <div className={styles.form}>

@@ -12,7 +12,6 @@ import { Order, OrderDto } from "../../../models/orderModels.ts";
 import { Type } from "../../../models/orderModels.ts";
 import { useParams } from "react-router-dom";
 
-const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 
 export const EditOrderForm: React.FC = () => {
@@ -69,12 +68,8 @@ export const EditOrderForm: React.FC = () => {
         from: values.from,
         to: values.to,
         status_id: orderData.status_id,
-        date_start: values.deliveryDates?.[0]
-          ? dayjs(values.deliveryDates[0]).format("YYYY-MM-DD")
-          : "",
-        date_end: values.deliveryDates?.[1]
-          ? dayjs(values.deliveryDates[1]).format("YYYY-MM-DD")
-          : "",
+        date_start: dayjs(values.date_start).format("YYYY-MM-DD"),
+        date_end: dayjs(values.date_end).format("YYYY-MM-DD"),
         user_id: user.id,
       };
 
@@ -109,7 +104,7 @@ export const EditOrderForm: React.FC = () => {
   }
 
   return (
-    <>
+    <div className={styles.form__container}>
       {contextHolder}
 
       <h1 className={styles.create__title}>Информация о заказе №{params.id}</h1>
@@ -183,19 +178,39 @@ export const EditOrderForm: React.FC = () => {
         </Form.Item>
 
         <Form.Item
-          tooltip="Укажите желаемые даты доставки(Дата загрузки - Дата выгрузки)"
-          label="Даты доставки"
-          name="deliveryDates"
+          tooltip="Укажите желаемую дату загрузки"
+          label="Дата загрузки"
+          name="date_start"
           rules={[
             {
               required: true,
-              message: "Пожалуйста, выберите даты доставки",
+              message: "Пожалуйста, выберите дату загрузки",
             },
           ]}
         >
-          <RangePicker
+          <DatePicker
+            format="DD-MM-YY"
             disabledDate={disabledDate}
-            placeholder={["Дата загрузки", "Дата выгрузки"]}
+            placeholder="Дата загрузки"
+            disabled={!isEditing}
+          />
+        </Form.Item>
+
+        <Form.Item
+          tooltip="Укажите желаемую дату выгрузки"
+          label="Дата выгрузки"
+          name="date_end"
+          rules={[
+            {
+              required: true,
+              message: "Пожалуйста, выберите дату выгрузки",
+            },
+          ]}
+        >
+          <DatePicker
+            format="DD-MM-YY"
+            disabledDate={disabledDate}
+            placeholder="Дата выгрузки"
             disabled={!isEditing}
           />
         </Form.Item>
@@ -228,6 +243,6 @@ export const EditOrderForm: React.FC = () => {
           </div>
         </Form.Item>
       </Form>
-    </>
+    </div>
   );
 };

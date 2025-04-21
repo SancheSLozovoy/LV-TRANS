@@ -8,8 +8,61 @@
   border: none;
   background-color: var(--yellow);
   color: var(--brown);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 
   &:hover {
     background-color: var(--hover) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: none;
+  }
+
+  .anticon {
+    font-size: 1.2em;
+  }
+
+  .ant-btn-loading-icon {
+    display: flex;
+    align-items: center;
+  }
+
+  @media (max-width: 1800px) {
+    font-size: 2vw;
+    height: 3.472vw;
+    border-radius: 0.694vw;
+    gap: 0.556vw;
+
+    .anticon {
+      font-size: 1.25vw;
+    }
+  }
+
+  @media (max-width: 768px) {
+    font-size: 16px;
+    height: 45px;
+    border-radius: 8px;
+    gap: 6px;
+
+    .anticon {
+      font-size: 18px;
+    }
+  }
+
+  @media (max-width: 768px) and (orientation: landscape) {
+    height: 40px;
+    font-size: 14px;
+  }
+
+  @media (max-width: 480px) {
+    height: 42px;
+    font-size: 15px;
   }
 }
