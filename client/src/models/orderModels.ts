@@ -1,10 +1,12 @@
 import { UploadFile } from "antd";
-import { Dayjs } from "dayjs";
 
 export interface Order {
   id: number;
   info: string;
   weight: number;
+  length: number;
+  width: number;
+  height: number;
   from: string;
   to: string;
   date_start: Date;
@@ -23,6 +25,9 @@ export enum Type {
 export interface OrderDto {
   info: string;
   weight: number;
+  length: number;
+  width: number;
+  height: number;
   from: string;
   to: string;
   date_start: string;
@@ -35,6 +40,9 @@ export interface OrderFormData {
   info: string;
   weight: number;
   from: string;
+  length: number;
+  width: number;
+  height: number;
   to: string;
   date_start: string;
   date_end: string;

@@ -30,6 +30,9 @@ export async function getOrderById(id) {
 export async function createOrder(
     info,
     weight,
+    length,
+    width,
+    height,
     from,
     to,
     date_start,
@@ -37,8 +40,19 @@ export async function createOrder(
     user_id,
 ) {
     const [result] = await pool.query(
-        'INSERT INTO orders (info, weight, `from`, `to`, date_start, date_end, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)',
-        [info, weight, from, to, date_start, date_end, user_id],
+        'INSERT INTO orders (info, weight, length, width, height, `from`, `to`, date_start, date_end, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        [
+            info,
+            weight,
+            length,
+            width,
+            height,
+            from,
+            to,
+            date_start,
+            date_end,
+            user_id,
+        ],
     );
 
     return result;
@@ -53,6 +67,9 @@ export async function updateOrder(
     id,
     info,
     weight,
+    length,
+    width,
+    height,
     from,
     to,
     date_start,
@@ -61,8 +78,21 @@ export async function updateOrder(
     user_id,
 ) {
     const [result] = await pool.query(
-        'UPDATE orders SET info = ?, weight = ?, `from` = ?, `to` = ?, date_start = ?, date_end = ?, user_id = ?, status_id = ? WHERE id = ?',
-        [info, weight, from, to, date_start, date_end, user_id, status_id, id],
+        'UPDATE orders SET info = ?, weight = ?, length = ?, width = ?, height = ?, `from` = ?, `to` = ?, date_start = ?, date_end = ?, user_id = ?, status_id = ? WHERE id = ?',
+        [
+            info,
+            weight,
+            length,
+            width,
+            height,
+            from,
+            to,
+            date_start,
+            date_end,
+            user_id,
+            status_id,
+            id,
+        ],
     );
     return result;
 }

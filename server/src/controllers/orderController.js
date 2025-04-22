@@ -60,7 +60,18 @@ export async function getOrderById(req, res) {
 }
 
 export async function createOrder(req, res) {
-    const { info, weight, from, to, date_start, date_end, user_id } = req.body;
+    const {
+        info,
+        weight,
+        length,
+        width,
+        height,
+        from,
+        to,
+        date_start,
+        date_end,
+        user_id,
+    } = req.body;
     const files = req.files;
 
     if (!files || files.length === 0) {
@@ -71,6 +82,9 @@ export async function createOrder(req, res) {
         const result = await OrderModel.createOrder(
             info,
             weight,
+            length,
+            width,
+            height,
             from,
             to,
             date_start,
@@ -132,8 +146,19 @@ export async function deleteOrderById(req, res) {
 
 export async function updateOrder(req, res) {
     const { id } = req.params;
-    const { info, weight, from, to, date_start, date_end, status_id, user_id } =
-        req.body;
+    const {
+        info,
+        weight,
+        length,
+        width,
+        height,
+        from,
+        to,
+        date_start,
+        date_end,
+        status_id,
+        user_id,
+    } = req.body;
 
     if (!id || isNaN(id)) {
         return res.status(400).json({ message: 'Invalid order ID' });
@@ -142,6 +167,9 @@ export async function updateOrder(req, res) {
     if (
         !info ||
         !weight ||
+        !length ||
+        !width ||
+        !height ||
         !from ||
         !to ||
         !date_start ||
@@ -166,6 +194,9 @@ export async function updateOrder(req, res) {
             id,
             info,
             weight,
+            length,
+            width,
+            height,
             from,
             to,
             date_start,

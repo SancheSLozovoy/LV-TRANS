@@ -3,6 +3,9 @@ export async function up(knex) {
     table.increments("id").primary();
     table.text("info").notNullable();
     table.float("weight").notNullable();
+    table.float("length").notNullable();
+    table.float("width").notNullable();
+    table.float("height").notNullable();
     table.string("from").notNullable();
     table.string("to").notNullable();
     table.timestamp("create_at").defaultTo(knex.fn.now());

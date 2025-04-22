@@ -38,6 +38,9 @@ export const EditOrderForm: React.FC = () => {
           deliveryDates: [dayjs(response.date_start), dayjs(response.date_end)],
           info: response.info,
           weight: response.weight,
+          height: response.height,
+          width: response.width,
+          length: response.length,
           from: response.from,
           status_id: response.status_id,
           to: response.to,
@@ -65,6 +68,9 @@ export const EditOrderForm: React.FC = () => {
       const dto: OrderDto = {
         info: values.info,
         weight: values.weight,
+        height: values.height,
+        width: values.width,
+        length: values.length,
         from: values.from,
         to: values.to,
         status_id: orderData.status_id,
@@ -130,7 +136,7 @@ export const EditOrderForm: React.FC = () => {
 
         <Form.Item
           label="Вес груза"
-          tooltip="Вес груза в тоннах"
+          tooltip="Вес груза в килограммах"
           name="weight"
           rules={[
             { required: true, message: "Пожалуйста, введите вес груза" },
@@ -139,14 +145,91 @@ export const EditOrderForm: React.FC = () => {
               min: 0.01,
               message: "Вес должен быть больше 0",
             },
+            {
+              validator: (_, value) =>
+                value === undefined || value <= 32000
+                  ? Promise.resolve()
+                  : Promise.reject(new Error("Максимальный вес — 32 000 кг")),
+            },
           ]}
         >
           <InputNumber
             min={0.01}
             step={0.01}
             disabled={!isEditing}
-            addonAfter="тонн"
+            addonAfter="кг"
           />
+        </Form.Item>
+
+        <Form.Item
+          label="Габариты груза"
+          required={true}
+          tooltip="Введите габариты вашего груза(длина, ширина, высота)"
+        >
+          <Input.Group compact>
+            <Form.Item
+              name="length"
+              noStyle
+              rules={[
+                { required: true, message: "Введите длину" },
+                {
+                  type: "number",
+                  min: 1,
+                  message: "Длина должна быть больше 0",
+                },
+              ]}
+            >
+              <InputNumber
+                disabled={!isEditing}
+                placeholder="Длина"
+                min={1}
+                style={{ width: "32%" }}
+                addonAfter="см"
+              />
+            </Form.Item>
+
+            <Form.Item
+              name="width"
+              noStyle
+              rules={[
+                { required: true, message: "Введите ширину" },
+                {
+                  type: "number",
+                  min: 1,
+                  message: "Ширина должна быть больше 0",
+                },
+              ]}
+            >
+              <InputNumber
+                disabled={!isEditing}
+                placeholder="Ширина"
+                min={1}
+                style={{ width: "32%", marginLeft: "2%" }}
+                addonAfter="см"
+              />
+            </Form.Item>
+
+            <Form.Item
+              name="height"
+              noStyle
+              rules={[
+                { required: true, message: "Введите высоту" },
+                {
+                  type: "number",
+                  min: 1,
+                  message: "Высота должна быть больше 0",
+                },
+              ]}
+            >
+              <InputNumber
+                disabled={!isEditing}
+                placeholder="Высота"
+                min={1}
+                style={{ width: "32%", marginLeft: "2%" }}
+                addonAfter="см"
+              />
+            </Form.Item>
+          </Input.Group>
         </Form.Item>
 
         <Form.Item
