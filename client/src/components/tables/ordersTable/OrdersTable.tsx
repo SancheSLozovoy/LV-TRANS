@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Table, Button, message, Tag, Pagination, Select, Space } from "antd";
+import { Table, Button, message, Pagination, Select, Space, Badge } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import { ConfirmModal } from "../../confirmModal/ConfirmModal.tsx";
 import useFetch from "../../../composales/useFetch.ts";
@@ -82,20 +82,23 @@ export const OrdersTable = () => {
       title: "Номер заказа",
       dataIndex: "id",
       key: "id",
+      width: 50,
     },
     {
       title: "Статус",
       dataIndex: "status_id",
       key: "status_id",
+      width: 150,
       render: (statusId: number) => {
         const status = defineStatus(statusId);
-        return <Tag color={status.color}>{status.name}</Tag>;
+        return <Badge color={status.color} text={status.name} />;
       },
     },
 
     {
       title: "Смена статуса",
       key: "status_actions",
+      width: 200,
       render: (_: any, record: Order) => (
         <Select
           defaultValue={record.status_id}
@@ -117,6 +120,7 @@ export const OrdersTable = () => {
       title: "Создан",
       dataIndex: "create_at",
       key: "create_at",
+      width: 150,
       render: (date: string) => reformDate(date),
     },
 
@@ -124,15 +128,18 @@ export const OrdersTable = () => {
       title: "Пользователь",
       dataIndex: "user_email",
       key: "user_email",
+      width: 150,
     },
     {
       title: "Номер телефона",
       dataIndex: "user_phone",
       key: "user_phone",
+      width: 150,
     },
     {
       title: "Действия",
       key: "actions",
+      width: 50,
       render: (_: any, record: Order) => (
         <Space size="middle">
           <Button
@@ -159,6 +166,7 @@ export const OrdersTable = () => {
         loading={loading}
         pagination={false}
         onRow={handleRowClick}
+        scroll={{ x: 900 }}
       />
 
       <Pagination

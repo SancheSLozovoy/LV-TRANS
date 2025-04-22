@@ -50,11 +50,11 @@ export const EditUserForm: React.FC = () => {
   };
 
   const onCancel = () => {
-    navigate("/profile");
+    navigate(-1);
   };
 
   return (
-    <div>
+    <div className={styles.form__container}>
       {contextHolder}
       <h1 className={styles.create__title}>Редактировать профиль</h1>
       <Form

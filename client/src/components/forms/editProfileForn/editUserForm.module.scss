@@ -1,10 +1,27 @@
 .create__title {
-  font-weight: 600;
-  font-size: 40px;
+  font-weight: 500;
+  font-size: 48px;
   line-height: 48px;
   text-align: center;
-  vertical-align: bottom;
-  margin-bottom: 10px;
+  margin-bottom: 21px;
+
+  @media (max-width: 1800px) {
+    font-size: 2.667vw;
+    line-height: 1.2;
+  }
+
+  @media (max-width: 1200px) {
+    font-size: 36px;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 28px;
+    margin-bottom: 15px;
+  }
+}
+
+.form__container {
+  margin-top: 40px;
 }
 
 .form {
@@ -12,6 +29,7 @@
   padding: 24px;
   border-radius: 20px;
   box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.25);
+  width: 100%;
   max-width: 500px;
   margin: 0 auto;
 
@@ -57,6 +75,7 @@
 .button__group {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
   gap: 16px;
 
   & > * {
@@ -67,14 +86,12 @@
   .cancelButton button {
     font-size: 16px;
     height: 35px;
-    width: 160px;
     margin: 0;
   }
 
   .saveButton button {
     font-size: 16px;
     height: 35px;
-    width: 160px;
     margin: 0;
   }
 }
@@ -88,11 +105,7 @@
       height: 44px;
     }
   }
-
-  .create__title {
-    font-size: 20px;
-    margin-bottom: 16px;
-  }
+  
 }
 
 

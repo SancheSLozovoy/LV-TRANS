@@ -71,28 +71,28 @@ export const UsersTable = () => {
       title: "Почта",
       dataIndex: "email",
       key: "email",
-      width: "25%",
+      width: 250,
       ellipsis: true,
     },
     {
       title: "Телефон",
       dataIndex: "phone",
       key: "phone",
-      width: "25%",
+      width: 250,
       ellipsis: true,
     },
     {
       title: "Роль",
       dataIndex: "role_id",
       key: "role_id",
-      width: "20%",
+      width: 250,
       render: (role_id) =>
         role_id === 1 ? <Tag color="blue">Админ</Tag> : <Tag>Пользователь</Tag>,
     },
     {
       title: "Действия",
       key: "actions",
-      width: "13%",
+      width: 300,
       render: (_, user) => {
         const isCurrentUser = currentUser?.id === user.id;
         return (
@@ -127,6 +127,7 @@ export const UsersTable = () => {
         columns={columns}
         rowKey="id"
         loading={loading}
+        scroll={{ x: 1050 }}
         pagination={false}
       />
 

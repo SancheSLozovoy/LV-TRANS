@@ -1,0 +1,15 @@
+.custom-tabs .ant-tabs-tab {
+    color: var(--brown-1);
+}
+
+.custom-tabs .ant-tabs-tab.ant-tabs-tab-active > * {
+    color: var(--brown-1) !important;
+}
+
+.custom-tabs .ant-tabs-tab:hover {
+    color: var(--hover);
+}
+
+.custom-tabs .ant-tabs-ink-bar.ant-tabs-ink-bar-animated {
+    background: var(--brown-1) !important;
+}

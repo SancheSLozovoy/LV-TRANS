@@ -15,7 +15,7 @@ export const Profile = () => {
             <div className="profile__table">
               <h1 className="profile__form-title">Заказы</h1>
               <UserTable />
-              <div className="profile__crete-order">
+              <div className="profile__create-order">
                 <Link to="/create">
                   <ButtonSubmit text="Сделать заказ" />
                 </Link>

@@ -12,7 +12,6 @@ import { Order, OrderDto } from "../../../models/orderModels.ts";
 import { Type } from "../../../models/orderModels.ts";
 import { useParams } from "react-router-dom";
 
-const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 
 export const EditOrderForm: React.FC = () => {
@@ -39,6 +38,9 @@ export const EditOrderForm: React.FC = () => {
           deliveryDates: [dayjs(response.date_start), dayjs(response.date_end)],
           info: response.info,
           weight: response.weight,
+          height: response.height,
+          width: response.width,
+          length: response.length,
           from: response.from,
           status_id: response.status_id,
           to: response.to,
@@ -66,15 +68,14 @@ export const EditOrderForm: React.FC = () => {
       const dto: OrderDto = {
         info: values.info,
         weight: values.weight,
+        height: values.height,
+        width: values.width,
+        length: values.length,
         from: values.from,
         to: values.to,
         status_id: orderData.status_id,
-        date_start: values.deliveryDates?.[0]
-          ? dayjs(values.deliveryDates[0]).format("YYYY-MM-DD")
-          : "",
-        date_end: values.deliveryDates?.[1]
-          ? dayjs(values.deliveryDates[1]).format("YYYY-MM-DD")
-          : "",
+        date_start: dayjs(values.date_start).format("YYYY-MM-DD"),
+        date_end: dayjs(values.date_end).format("YYYY-MM-DD"),
         user_id: user.id,
       };
 
@@ -109,7 +110,7 @@ export const EditOrderForm: React.FC = () => {
   }
 
   return (
-    <>
+    <div className={styles.form__container}>
       {contextHolder}
 
       <h1 className={styles.create__title}>Информация о заказе №{params.id}</h1>
@@ -135,7 +136,7 @@ export const EditOrderForm: React.FC = () => {
 
         <Form.Item
           label="Вес груза"
-          tooltip="Вес груза в тоннах"
+          tooltip="Вес груза в килограммах"
           name="weight"
           rules={[
             { required: true, message: "Пожалуйста, введите вес груза" },
@@ -144,14 +145,91 @@ export const EditOrderForm: React.FC = () => {
               min: 0.01,
               message: "Вес должен быть больше 0",
             },
+            {
+              validator: (_, value) =>
+                value === undefined || value <= 32000
+                  ? Promise.resolve()
+                  : Promise.reject(new Error("Максимальный вес — 32 000 кг")),
+            },
           ]}
         >
           <InputNumber
             min={0.01}
             step={0.01}
             disabled={!isEditing}
-            addonAfter="тонн"
+            addonAfter="кг"
           />
+        </Form.Item>
+
+        <Form.Item
+          label="Габариты груза"
+          required={true}
+          tooltip="Введите габариты вашего груза(длина, ширина, высота)"
+        >
+          <Input.Group compact>
+            <Form.Item
+              name="length"
+              noStyle
+              rules={[
+                { required: true, message: "Введите длину" },
+                {
+                  type: "number",
+                  min: 1,
+                  message: "Длина должна быть больше 0",
+                },
+              ]}
+            >
+              <InputNumber
+                disabled={!isEditing}
+                placeholder="Длина"
+                min={1}
+                style={{ width: "32%" }}
+                addonAfter="см"
+              />
+            </Form.Item>
+
+            <Form.Item
+              name="width"
+              noStyle
+              rules={[
+                { required: true, message: "Введите ширину" },
+                {
+                  type: "number",
+                  min: 1,
+                  message: "Ширина должна быть больше 0",
+                },
+              ]}
+            >
+              <InputNumber
+                disabled={!isEditing}
+                placeholder="Ширина"
+                min={1}
+                style={{ width: "32%", marginLeft: "2%" }}
+                addonAfter="см"
+              />
+            </Form.Item>
+
+            <Form.Item
+              name="height"
+              noStyle
+              rules={[
+                { required: true, message: "Введите высоту" },
+                {
+                  type: "number",
+                  min: 1,
+                  message: "Высота должна быть больше 0",
+                },
+              ]}
+            >
+              <InputNumber
+                disabled={!isEditing}
+                placeholder="Высота"
+                min={1}
+                style={{ width: "32%", marginLeft: "2%" }}
+                addonAfter="см"
+              />
+            </Form.Item>
+          </Input.Group>
         </Form.Item>
 
         <Form.Item
@@ -183,19 +261,39 @@ export const EditOrderForm: React.FC = () => {
         </Form.Item>
 
         <Form.Item
-          tooltip="Укажите желаемые даты доставки(Дата загрузки - Дата выгрузки)"
-          label="Даты доставки"
-          name="deliveryDates"
+          tooltip="Укажите желаемую дату загрузки"
+          label="Дата загрузки"
+          name="date_start"
           rules={[
             {
               required: true,
-              message: "Пожалуйста, выберите даты доставки",
+              message: "Пожалуйста, выберите дату загрузки",
             },
           ]}
         >
-          <RangePicker
+          <DatePicker
+            format="DD-MM-YY"
             disabledDate={disabledDate}
-            placeholder={["Дата загрузки", "Дата выгрузки"]}
+            placeholder="Дата загрузки"
+            disabled={!isEditing}
+          />
+        </Form.Item>
+
+        <Form.Item
+          tooltip="Укажите желаемую дату выгрузки"
+          label="Дата выгрузки"
+          name="date_end"
+          rules={[
+            {
+              required: true,
+              message: "Пожалуйста, выберите дату выгрузки",
+            },
+          ]}
+        >
+          <DatePicker
+            format="DD-MM-YY"
+            disabledDate={disabledDate}
+            placeholder="Дата выгрузки"
             disabled={!isEditing}
           />
         </Form.Item>
@@ -228,6 +326,6 @@ export const EditOrderForm: React.FC = () => {
           </div>
         </Form.Item>
       </Form>
-    </>
+    </div>
   );
 };

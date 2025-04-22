@@ -69,7 +69,7 @@ export const OrderFiles: React.FC = () => {
     <List
       dataSource={files}
       renderItem={(file) => (
-        <List.Item style={{ display: "flex", width: "500px" }}>
+        <List.Item>
           <List.Item.Meta
             avatar={<FileOutlined style={{ fontSize: 24 }} />}
             title={file.file_name}
