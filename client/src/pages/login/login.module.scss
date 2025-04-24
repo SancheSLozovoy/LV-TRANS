@@ -11,6 +11,7 @@
 }
 
 .login__left {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -18,7 +19,6 @@
   height: 100%;
   color: var(--white);
   width: 50%;
-  position: relative;
   padding: 15px;
   overflow: hidden;
 
@@ -70,36 +70,15 @@
   position: relative;
   z-index: 2;
   width: 100%;
-  max-width: 500px;
   padding: 20px;
 
   @media (max-width: 1800px) {
-    gap: 3.542vw;
+    gap: 2.833vw;
   }
 
   @media (max-width: 768px) {
     gap: 30px;
     padding: 10px;
-  }
-}
-
-
-.left__content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 51px;
-  position: relative;
-  z-index: 2;
-
-  @media (max-width: 1800px) {
-    gap: 3.542vw;
-  }
-
-  @media (max-width: 768px) {
-    gap: 30px;
-    width: 100%;
   }
 }
 
@@ -116,7 +95,7 @@
   font-size: 40px;
 
   @media (max-width: 1800px) {
-    font-size: 2.778vw;
+    font-size: 2.222vw;
   }
 
   @media (max-width: 768px) {
@@ -130,8 +109,8 @@
   text-align: center;
 
   @media (max-width: 1800px) {
-    font-size: 2.083vw;
-    line-height: 2.847vw;
+    font-size: 1.667vw;
+    line-height: 2.278vw;
   }
 
   @media (max-width: 768px) {
@@ -169,8 +148,8 @@
   color: var(--brown);
 
   @media (max-width: 1800px) {
-    font-size: 2.778vw;
-    line-height: 3.542vw;
+    font-size: 2.222vw;
+    line-height: 2.849vw;
   }
 
   @media (max-width: 768px) {
