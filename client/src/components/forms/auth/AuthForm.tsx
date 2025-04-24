@@ -102,7 +102,17 @@ const AuthForm: React.FC<FormProps> = ({ type }): React.JSX.Element => {
             ]}
           >
             <Checkbox onChange={() => setAgreement(!agreement)}>
-              Согласие на обработку персональных данных
+              Я согласен с{" "}
+              <Link
+                style={{ textDecoration: "underline" }}
+                to="/agreement.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+              >
+                политикой конфиденциальности и условиями обработки персональных
+                данных
+              </Link>
             </Checkbox>
           </Form.Item>
         ) : (
