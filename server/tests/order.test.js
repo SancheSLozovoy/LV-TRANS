@@ -1,7 +1,7 @@
 import request from "supertest";
 import app from "../src/server.js";
 import * as OrderModel from "../src/models/orderModel.js";
-import { generateToken } from "../src/middleware/generateToke.js";
+import { generateToken } from "../src/middleware/generateToken.js";
 
 const testImage = `${__dirname}/test.jpg`;
 

@@ -4,18 +4,25 @@ import { FileOutlined, DownloadOutlined } from "@ant-design/icons";
 import useFetch from "../../composales/useFetch.ts";
 import { useParams } from "react-router-dom";
 import { FileData } from "../../models/file.ts";
+import { useAuth } from "../../composales/useAuth.ts";
 
 export const OrderFiles: React.FC = () => {
   const [files, setFiles] = useState<FileData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const { fetchData } = useFetch();
   const { id } = useParams();
+  const { token } = useAuth();
 
   useEffect(() => {
     const fetchFiles = async () => {
       try {
         const response = await fetchData(`/orders/${id}/files`, "GET");
-        setFiles(response);
+
+        if (Array.isArray(response)) {
+          setFiles(response);
+        } else {
+          console.error("Ответ не является массивом", response);
+        }
       } catch (err) {
         console.error("Error fetching files list:", err);
       } finally {
@@ -24,7 +31,7 @@ export const OrderFiles: React.FC = () => {
     };
 
     fetchFiles();
-  }, [id]);
+  }, [id, token]);
 
   if (loading) return <Spin size="large" />;
 

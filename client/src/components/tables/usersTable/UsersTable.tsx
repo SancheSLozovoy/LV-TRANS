@@ -17,11 +17,11 @@ export const UsersTable = () => {
   const [total, setTotal] = useState(0);
   const [pageSize, setPageSize] = useState(10);
 
-  const { user: currentUser } = useAuth();
+  const { user: currentUser, token } = useAuth();
 
   useEffect(() => {
     fetchUsers();
-  }, [currentPage, pageSize]);
+  }, [currentPage, pageSize, token]);
 
   const { fetchData } = useFetch();
 

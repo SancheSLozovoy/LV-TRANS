@@ -12,12 +12,18 @@ import { ConfirmModal } from "../../confirmModal/ConfirmModal.tsx";
 import { ModalAttributes } from "../../../models/modalAttr.ts";
 
 export const ProfileForm = () => {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const navigate = useNavigate();
   const { fetchData } = useFetch();
   const location = useLocation();
   const [userData, setUserData] = useState<User | null>(null);
   const [modalData, setModalData] = useState<ModalAttributes | null>(null);
+
+  useEffect(() => {
+    if (user) {
+      getUser();
+    }
+  }, [token]);
 
   const getUser = () => {
     if (user?.id) {
@@ -37,7 +43,8 @@ export const ProfileForm = () => {
   };
 
   const logout = () => {
-    Cookies.remove("token");
+    Cookies.remove("accessToken");
+    Cookies.remove("refreshToken");
     navigate("/login");
   };
 
@@ -59,12 +66,6 @@ export const ProfileForm = () => {
       });
     }
   };
-
-  useEffect(() => {
-    if (user) {
-      getUser();
-    }
-  }, []);
 
   const handleEditClick = () => {
     const path = location.pathname.includes("/admin") ? "/admin/user" : "/user";

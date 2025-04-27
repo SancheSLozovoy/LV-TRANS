@@ -7,7 +7,7 @@ import { jwtDecode } from "jwt-decode";
 import useFetch from "./useFetch.ts";
 
 export const useAuth = () => {
-  const token = Cookies.get("token");
+  const token = Cookies.get("accessToken");
 
   const { fetchData } = useFetch();
 
@@ -46,11 +46,13 @@ export const useAuth = () => {
           type: "success",
           content: "Успешная регистрация",
         });
-        Cookies.set("token", res.token, { expires: 7 });
+        Cookies.set("accessToken", res.accessToken, { expires: 0.01 });
+        Cookies.set("refreshToken", res.refreshToken, { expires: 7 });
         setTimeout(() => navigate("/"), 3000);
       } else {
         const res = await fetchData("/users/login", "POST", data);
-        Cookies.set("token", res.token, { expires: 7 });
+        Cookies.set("accessToken", res.accessToken, { expires: 0.01 });
+        Cookies.set("refreshToken", res.refreshToken, { expires: 7 });
         messageApi.open({
           type: "success",
           content: "Успешный вход",

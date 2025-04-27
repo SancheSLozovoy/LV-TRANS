@@ -1,4 +1,4 @@
-import { generateToken } from "../src/middleware/generateToke.js";
+import { generateToken } from "../src/middleware/generateToken.js";
 import request from "supertest";
 import app from "../src/server.js";
 import { pool } from "../src/db.js";

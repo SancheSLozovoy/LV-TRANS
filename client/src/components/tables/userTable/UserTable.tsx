@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { DeleteOutlined } from "@ant-design/icons";
 
 export const UserTable = () => {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const { fetchData } = useFetch();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(false);
@@ -24,6 +24,10 @@ export const UserTable = () => {
   const [total, setTotal] = useState(0);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchOrders();
+  }, [currentPage, pageSize, token]);
 
   const fetchOrders = () => {
     if (!user?.id) return;
@@ -69,10 +73,6 @@ export const UserTable = () => {
       action: () => cancelOrder(id),
     });
   };
-
-  useEffect(() => {
-    fetchOrders();
-  }, [currentPage, pageSize]);
 
   const columns = [
     {

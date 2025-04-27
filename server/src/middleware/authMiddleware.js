@@ -12,6 +12,11 @@ export function authenticateToken(req, res, next) {
         req.user = decoded;
         next();
     } catch (err) {
-        res.status(403).json({ message: 'Invalid token' });
+        if (err instanceof jwt.TokenExpiredError) {
+            return res
+                .status(401)
+                .json({ message: 'Token expired. Please refresh your token.' });
+        }
+        return res.status(401).json({ message: 'Invalid token' });
     }
 }

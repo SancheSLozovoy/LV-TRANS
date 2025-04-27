@@ -7,6 +7,7 @@ import { Order } from "../../../models/orderModels.ts";
 import { defineStatus } from "../../../composales/defineStatus.ts";
 import { useNavigate } from "react-router-dom";
 import { reformDate } from "../../../composales/reformDate.ts";
+import { useAuth } from "../../../composales/useAuth.ts";
 
 export const OrdersTable = () => {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -17,13 +18,14 @@ export const OrdersTable = () => {
   const [total, setTotal] = useState(0);
   const [pageSize, setPageSize] = useState(10);
 
+  const { token } = useAuth();
   const { fetchData } = useFetch();
 
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchOrders();
-  }, [currentPage, pageSize]);
+  }, [currentPage, pageSize, token]);
 
   const fetchOrders = async () => {
     try {
