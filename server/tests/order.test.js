@@ -21,6 +21,9 @@ describe("Order API", () => {
         .set("Authorization", `Bearer ${userToken}`)
         .field("info", "Test order")
         .field("weight", 10000)
+        .field("length", 50000)
+        .field("width", 50000)
+        .field("height", 50000)
         .field("from", "City A")
         .field("to", "City B")
         .field("date_start", "2024-01-01")
@@ -39,6 +42,9 @@ describe("Order API", () => {
         .set("Authorization", `Bearer ${userToken}`)
         .field("info", "Test order")
         .field("weight", 10000)
+        .field("length", 10000)
+        .field("width", 20000)
+        .field("height", 30000)
         .field("from", "City A")
         .field("to", "City B")
         .field("date_start", "2024-01-01")
@@ -132,6 +138,9 @@ describe("Order API", () => {
         .send({
           info: "Updated",
           weight: 2000,
+          length: 10000,
+          width: 20000,
+          height: 30000,
           from: "City A",
           to: "City C",
           date_start: "2024-02-01",
@@ -153,6 +162,9 @@ describe("Order API", () => {
         .send({
           info: "Try",
           weight: 1000,
+          length: 30000,
+          width: 10000,
+          height: 30000,
           from: "X",
           to: "Y",
           date_start: "2024-02-01",

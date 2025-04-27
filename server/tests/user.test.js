@@ -56,8 +56,12 @@ describe("User API", () => {
           .expect(201);
 
         expect(res.body.message).toBe("User created");
-        expect(res.body.token).toBeDefined();
-        newUserId = jwt.verify(res.body.token, process.env.JWT_SECRET).id;
+        expect(res.body.accessToken).toBeDefined();
+        expect(res.body.refreshToken).toBeDefined();
+        newUserId = jwt.verify(
+          res.body.refreshToken,
+          process.env.JWT_SECRET,
+        ).id;
       });
 
       it("should return 400 for missing fields", async () => {
@@ -90,7 +94,8 @@ describe("User API", () => {
           .expect(200);
 
         expect(res.body.message).toBe("Login successful");
-        expect(res.body.token).toBeDefined();
+        expect(res.body.accessToken).toBeDefined();
+        expect(res.body.refreshToken).toBeDefined();
       });
 
       it("should return 400 for invalid credentials", async () => {
