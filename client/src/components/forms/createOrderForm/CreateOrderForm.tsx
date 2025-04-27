@@ -319,7 +319,8 @@ export const CreateOrderForm: React.FC = () => {
         </Form.Item>
 
         <Form.Item
-          label="Загрузить файлы (фото, документы и т.д.)"
+          tooltip="Фото, документы, таблицы и т.д. (Не более 5 файлов)"
+          label="Загрузить файлы"
           name="files"
           valuePropName="fileList"
           getValueFromEvent={normFile}
@@ -330,6 +331,7 @@ export const CreateOrderForm: React.FC = () => {
             fileList={fileList}
             beforeUpload={handleBeforeUpload}
             onRemove={handleRemove}
+            maxCount={5}
           >
             <button
               style={{
