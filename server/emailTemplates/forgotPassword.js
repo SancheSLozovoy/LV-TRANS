@@ -1,4 +1,4 @@
-export function getMailTemplate(resetUrl) {
+export function forgotPassword(resetUrl) {
   return `
     <table width="100%" cellpadding="0" cellspacing="0" style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
       <tr>

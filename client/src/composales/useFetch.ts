@@ -32,7 +32,7 @@ export default function useFetch() {
                 refreshToken,
               });
               const newAccessToken = res.data.accessToken;
-              Cookies.set("accessToken", newAccessToken, { expires: 0.01 });
+              Cookies.set("accessToken", newAccessToken, { expires: 7 });
 
               error.config.headers["Authorization"] =
                 `Bearer ${newAccessToken}`;

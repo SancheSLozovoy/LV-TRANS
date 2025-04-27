@@ -51,10 +51,15 @@ export const OrdersTable = () => {
     };
   };
 
-  const handleStatusChange = async (orderId: number, statusId: number) => {
+  const handleStatusChange = async (
+    orderId: number,
+    statusId: number,
+    email,
+  ) => {
     try {
       await fetchData(`/orders/${orderId}/status`, "PUT", {
         status_id: statusId,
+        email: email,
       });
 
       message.success("Статус заказа изменён");
@@ -104,7 +109,9 @@ export const OrdersTable = () => {
       render: (_: any, record: Order) => (
         <Select
           defaultValue={record.status_id}
-          onChange={(value) => handleStatusChange(record.id, value)}
+          onChange={(value) =>
+            handleStatusChange(record.id, value, record.user_email)
+          }
           style={{ width: 120 }}
           onClick={(e) => {
             e.stopPropagation();

@@ -2,12 +2,12 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import * as UserModel from '../models/userModel.js';
 import dotenv from 'dotenv';
-import nodemailer from 'nodemailer';
-import { getMailTemplate } from '../../getMailTemplate.js';
+import { forgotPassword } from '../../emailTemplates/forgotPassword.js';
 import {
     generateAccessToken,
     generateRefreshToken,
 } from '../middleware/generateToken.js';
+import { transporter } from '../middleware/emailTransporter.js';
 
 dotenv.config();
 
@@ -288,21 +288,11 @@ export async function requestPasswordReset(req, res) {
 
         const resetUrl = `${process.env.FRONT_URL}/reset-password?token=${token}`;
 
-        const transporter = nodemailer.createTransport({
-            host: 'smtp.gmail.com',
-            port: 587,
-            secure: false,
-            auth: {
-                user: process.env.SMTP_USER,
-                pass: process.env.SMTP_PASS,
-            },
-        });
-
         await transporter.sendMail({
             from: `"LV-TRANS" <${process.env.SMTP_USER}>`,
             to: email,
             subject: 'Восстановление пароля',
-            html: getMailTemplate(resetUrl),
+            html: forgotPassword(resetUrl),
         });
 
         res.status(200).json({

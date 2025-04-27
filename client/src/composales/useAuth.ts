@@ -46,12 +46,12 @@ export const useAuth = () => {
           type: "success",
           content: "Успешная регистрация",
         });
-        Cookies.set("accessToken", res.accessToken, { expires: 0.01 });
+        Cookies.set("accessToken", res.accessToken, { expires: 7 });
         Cookies.set("refreshToken", res.refreshToken, { expires: 7 });
         setTimeout(() => navigate("/"), 3000);
       } else {
         const res = await fetchData("/users/login", "POST", data);
-        Cookies.set("accessToken", res.accessToken, { expires: 0.01 });
+        Cookies.set("accessToken", res.accessToken, { expires: 7 });
         Cookies.set("refreshToken", res.refreshToken, { expires: 7 });
         messageApi.open({
           type: "success",

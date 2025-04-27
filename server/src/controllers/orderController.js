@@ -1,5 +1,7 @@
 import * as OrderModel from '../models/orderModel.js';
 import * as FilesModel from '../models/filesModel.js';
+import { statusChange } from '../../emailTemplates/statusChange.js';
+import { transporter } from '../middleware/emailTransporter.js';
 
 export async function getOrders(req, res) {
     try {
@@ -258,7 +260,7 @@ export async function getOrdersByUserId(req, res) {
 export async function updateOrderStatus(req, res) {
     try {
         const { id } = req.params;
-        const { status_id } = req.body;
+        const { status_id, email } = req.body;
 
         if (req.user.role_id !== 1) {
             return res.status(403).json({ message: 'Access denied' });
@@ -269,6 +271,31 @@ export async function updateOrderStatus(req, res) {
         if (result.affectedRows === 0) {
             return res.status(404).json({ message: 'Order not found' });
         }
+
+        const statusResult = await OrderModel.getStatusById(status_id);
+        if (!statusResult || statusResult.length === 0) {
+            return res.status(400).json({ message: 'Invalid status ID' });
+        }
+
+        const statusName = statusResult[0].name;
+
+        const statusTranslations = {
+            'NOT ACCEPTED': 'Не принят',
+            ACCEPT: 'Принят',
+            'ON TRANSIT': 'В пути',
+            DELIVERED: 'Доставлен',
+        };
+
+        const russianStatus = statusTranslations[statusName] || statusName;
+
+        const mailOptions = {
+            from: `"LV-TRANS" <${process.env.SMTP_USER}>`,
+            to: email,
+            subject: 'Изменение статуса заказа',
+            html: statusChange(id, russianStatus),
+        };
+
+        await transporter.sendMail(mailOptions);
 
         res.status(200).json({ message: 'Status updated successfully' });
     } catch (err) {

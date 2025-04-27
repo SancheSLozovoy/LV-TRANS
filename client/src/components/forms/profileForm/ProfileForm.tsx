@@ -36,7 +36,8 @@ export const ProfileForm = () => {
   const deleteUser = () => {
     if (user?.id) {
       fetchData(`users/${user.id}`, "DELETE").then(() => {
-        Cookies.remove("token");
+        Cookies.remove("accessToken");
+        Cookies.remove("refreshToken");
         navigate("/login");
       });
     }
