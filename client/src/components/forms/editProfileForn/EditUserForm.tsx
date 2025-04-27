@@ -10,7 +10,7 @@ import { LeftCircleOutlined, SaveOutlined } from "@ant-design/icons";
 import { ChangePasswordModal } from "../../changePassword/ChangePasswordModal.tsx";
 
 export const EditUserForm: React.FC = () => {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const navigate = useNavigate();
   const { fetchData } = useFetch();
   const [form] = Form.useForm();
@@ -26,7 +26,7 @@ export const EditUserForm: React.FC = () => {
         form.setFieldsValue(res);
       });
     }
-  }, []);
+  }, [token]);
 
   const onFinish = async (values: Partial<User>) => {
     setLoading(true);

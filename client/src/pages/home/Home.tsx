@@ -8,9 +8,13 @@ import { Container } from "../../components/container/Container.tsx";
 import Company from "../../assets/images/compamy.jpeg";
 import { Footer } from "../../components/footer/Footer.tsx";
 import { useLocation } from "react-router-dom";
+import { CurrentOrders } from "../../components/currentOrders/CurrentOrders.tsx";
+import { useAuth } from "../../composales/useAuth.ts";
 
 export const Home = () => {
   const location = useLocation();
+
+  const { user } = useAuth();
 
   useEffect(() => {
     const hash = location.hash;
@@ -57,6 +61,8 @@ export const Home = () => {
           </div>
         </section>
       </Container>
+
+      <>{user && <CurrentOrders />}</>
 
       <section id="advantages" className="advantages">
         <Container>

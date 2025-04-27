@@ -4,7 +4,7 @@ import Cookies from "js-cookie";
 import { useAuth } from "../../composales/useAuth.ts";
 
 export const ProtectedRoute: React.FC = () => {
-  const token = Cookies.get("token");
+  const token = Cookies.get("accessToken");
   const { user } = useAuth();
   const location = useLocation();
 

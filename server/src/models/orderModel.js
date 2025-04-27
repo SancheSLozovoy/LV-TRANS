@@ -118,3 +118,10 @@ export async function updateStatus(id, status_id) {
     );
     return result;
 }
+
+export async function getStatusById(status_id) {
+    const [rows] = await pool.query('SELECT * FROM status WHERE id = ?', [
+        status_id,
+    ]);
+    return rows;
+}

@@ -64,7 +64,6 @@ export const ForgotPassword = () => {
             </Form.Item>
 
             <ButtonSubmit
-              loadind={loading}
               text="Восстановить пароль"
               htmlType="submit"
               loading={loading}

@@ -12,6 +12,8 @@ export interface Order {
   date_start: Date;
   date_end: Date;
   user_id: number;
+  user_email?: string;
+  user_phone?: string;
   status_id: number;
   files?: [];
   deliveryDates?: Date[];

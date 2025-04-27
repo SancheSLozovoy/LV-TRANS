@@ -1,4 +1,4 @@
-import { generateToken } from "../src/middleware/generateToke.js";
+import { generateToken } from "../src/middleware/generateToken.js";
 import request from "supertest";
 import app from "../src/server.js";
 import { pool } from "../src/db.js";
@@ -21,6 +21,9 @@ describe("File API", () => {
       .set("Authorization", `Bearer ${userToken}`)
       .field("info", "Order for file tests")
       .field("weight", 1234)
+      .field("length", 10000)
+      .field("width", 20000)
+      .field("height", 30000)
       .field("from", "A")
       .field("to", "B")
       .field("date_start", "2024-01-01")
@@ -84,6 +87,9 @@ describe("File API", () => {
         .set("Authorization", `Bearer ${userToken}`)
         .field("info", "No files here")
         .field("weight", 123)
+        .field("length", 10000)
+        .field("width", 20000)
+        .field("height", 30000)
         .field("from", "X")
         .field("to", "Y")
         .field("date_start", "2024-01-01")

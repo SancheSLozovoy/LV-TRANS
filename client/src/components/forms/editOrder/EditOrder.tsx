@@ -23,7 +23,7 @@ export const EditOrderForm: React.FC = () => {
   const [orderData, setOrderData] = useState<any>(null);
 
   const params = useParams();
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const { fetchData } = useFetch();
 
   useEffect(() => {
@@ -55,7 +55,7 @@ export const EditOrderForm: React.FC = () => {
     };
 
     fetchOrderData();
-  }, [params.id]);
+  }, [params.id, token]);
 
   const onFinish = async (values: Order) => {
     setLoading(true);

@@ -2,8 +2,12 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import * as UserModel from '../models/userModel.js';
 import dotenv from 'dotenv';
-import nodemailer from 'nodemailer';
-import { getMailTemplate } from '../../getMailTemplate.js';
+import { forgotPassword } from '../../emailTemplates/forgotPassword.js';
+import {
+    generateAccessToken,
+    generateRefreshToken,
+} from '../middleware/generateToken.js';
+import { transporter } from '../middleware/emailTransporter.js';
 
 dotenv.config();
 
@@ -24,21 +28,13 @@ export async function register(req, res) {
 
         const newUser = await UserModel.getUserByEmail(email);
 
-        const token = jwt.sign(
-            {
-                id: newUser.id,
-                email: newUser.email,
-                role_id: newUser.role_id,
-            },
-            process.env.JWT_SECRET,
-            {
-                expiresIn: '7d',
-            },
-        );
+        const accessToken = generateAccessToken(newUser);
+        const refreshToken = generateRefreshToken(newUser);
 
         res.status(201).json({
             message: 'User created',
-            token,
+            accessToken,
+            refreshToken,
         });
     } catch (err) {
         res.status(500).json({
@@ -69,19 +65,48 @@ export async function login(req, res) {
                 .json({ message: 'Invalid email or password' });
         }
 
-        const token = jwt.sign(
-            { id: user.id, email: user.email, role_id: user.role_id },
-            process.env.JWT_SECRET,
-            {
-                expiresIn: '7d',
-            },
-        );
-        res.json({ message: 'Login successful', token });
+        const accessToken = generateAccessToken(user);
+        const refreshToken = generateRefreshToken(user);
+
+        res.json({
+            message: 'Login successful',
+            accessToken,
+            refreshToken,
+        });
     } catch (err) {
         res.status(500).json({
             message: 'Error logging in',
             error: err.message,
         });
+    }
+}
+
+export async function refreshToken(req, res) {
+    const { refreshToken } = req.body;
+
+    if (!refreshToken) {
+        return res.status(401).json({ message: 'Refresh token required' });
+    }
+
+    try {
+        const decoded = jwt.verify(
+            refreshToken,
+            process.env.JWT_REFRESH_SECRET,
+        );
+
+        const user = await UserModel.getUserById(decoded.id);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const accessToken = generateAccessToken(user[0]);
+
+        res.json({ accessToken });
+    } catch (err) {
+        return res
+            .status(403)
+            .json({ message: 'Invalid or expired refresh token' });
     }
 }
 
@@ -263,21 +288,11 @@ export async function requestPasswordReset(req, res) {
 
         const resetUrl = `${process.env.FRONT_URL}/reset-password?token=${token}`;
 
-        const transporter = nodemailer.createTransport({
-            host: 'smtp.gmail.com',
-            port: 587,
-            secure: false,
-            auth: {
-                user: process.env.SMTP_USER,
-                pass: process.env.SMTP_PASS,
-            },
-        });
-
         await transporter.sendMail({
             from: `"LV-TRANS" <${process.env.SMTP_USER}>`,
             to: email,
             subject: 'Восстановление пароля',
-            html: getMailTemplate(resetUrl),
+            html: forgotPassword(resetUrl),
         });
 
         res.status(200).json({

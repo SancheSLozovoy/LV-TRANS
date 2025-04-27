@@ -1,16 +1,13 @@
 import instance from "../api/axios/axiosSettings.ts";
 import Cookies from "js-cookie";
 import { isAxiosError } from "axios";
-import { useNavigate } from "react-router-dom";
 
 export default function useFetch() {
-  const navigate = useNavigate();
-
   const fetchData = async (
     url: string,
     method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH",
     data?: any,
-    headers?: Record<string, string>,
+    headers?: Record<string, string>
   ) => {
     try {
       const response = await instance({
@@ -28,8 +25,29 @@ export default function useFetch() {
           errorMessage === "Invalid token" ||
           error.response?.status === 401
         ) {
-          Cookies.remove("token");
-          navigate("/login");
+          const refreshToken = Cookies.get("refreshToken");
+          if (refreshToken) {
+            try {
+              const res = await instance.post("/users/refresh-token", {
+                refreshToken,
+              });
+              const newAccessToken = res.data.accessToken;
+              Cookies.set("accessToken", newAccessToken, { expires: 7 });
+
+              if (error.config && error.config.headers) {
+                error.config.headers["Authorization"] =
+                  `Bearer ${newAccessToken}`;
+                return instance(error.config); 
+              } else {
+                throw new Error("Ошибка в конфигурации запроса");
+              }
+            } catch (refreshError) {
+              console.error(refreshError);
+              throw new Error("Не удалось обновить токен");
+            }
+          } else {
+            throw new Error("Refresh token отсутствует");
+          }
         }
 
         throw new Error(errorMessage);
