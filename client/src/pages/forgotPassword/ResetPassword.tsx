@@ -1,6 +1,6 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Form, Input, Typography, message } from "antd";
-import React, { useState } from "react";
+import { useState } from "react";
 import ButtonSubmit from "../../components/button/Button.tsx";
 import useFetch from "../../composales/useFetch.ts";
 import styles from "../../components/forms/auth/form.module.scss";
@@ -79,10 +79,8 @@ export function ResetPassword() {
           </Form.Item>
           <Form.Item>
             <ButtonSubmit
-              type="primary"
               htmlType="submit"
               loading={loading}
-              block
               text="Обновить пароль"
             />
           </Form.Item>

@@ -32,7 +32,7 @@ export const CurrentOrders = () => {
   };
 
   useEffect(() => {
-    fetchOrders(currentPage);
+    fetchOrders();
   }, []);
 
   const paginatedOrders = activeOrders.slice(
@@ -50,6 +50,10 @@ export const CurrentOrders = () => {
 
   const handleOrderClick = (id: number) => {
     navigate(`/orders/${id}`);
+  };
+
+  const formatRoute = (route: string) => {
+    return route.length > 12 ? route.slice(0, 12) + "..." : route;
   };
 
   return (
@@ -74,7 +78,7 @@ export const CurrentOrders = () => {
                 text={defineStatus(order.status_id).name}
               />
               <div className="current-orders__item-route">
-                {order.from} → {order.to}
+                {formatRoute(order.from)} → {formatRoute(order.to)}
               </div>
             </div>
           ))}

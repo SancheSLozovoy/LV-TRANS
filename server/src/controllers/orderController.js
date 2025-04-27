@@ -272,30 +272,30 @@ export async function updateOrderStatus(req, res) {
             return res.status(404).json({ message: 'Order not found' });
         }
 
-        // const statusResult = await OrderModel.getStatusById(status_id);
-        // if (!statusResult || statusResult.length === 0) {
-        //     return res.status(400).json({ message: 'Invalid status ID' });
-        // }
-        //
-        // const statusName = statusResult[0].name;
-        //
-        // const statusTranslations = {
-        //     'NOT ACCEPTED': 'Не принят',
-        //     ACCEPT: 'Принят',
-        //     'ON TRANSIT': 'В пути',
-        //     DELIVERED: 'Доставлен',
-        // };
-        //
-        // const russianStatus = statusTranslations[statusName] || statusName;
-        //
-        // const mailOptions = {
-        //     from: `"LV-TRANS" <${process.env.SMTP_USER}>`,
-        //     to: email,
-        //     subject: 'Изменение статуса заказа',
-        //     html: statusChange(id, russianStatus),
-        // };
-        //
-        // await transporter.sendMail(mailOptions);
+        const statusResult = await OrderModel.getStatusById(status_id);
+        if (!statusResult || statusResult.length === 0) {
+            return res.status(400).json({ message: 'Invalid status ID' });
+        }
+
+        const statusName = statusResult[0].name;
+
+        const statusTranslations = {
+            'NOT ACCEPTED': 'Не принят',
+            ACCEPT: 'Принят',
+            'ON TRANSIT': 'В пути',
+            DELIVERED: 'Доставлен',
+        };
+
+        const russianStatus = statusTranslations[statusName] || statusName;
+
+        const mailOptions = {
+            from: `"LV-TRANS" <${process.env.SMTP_USER}>`,
+            to: email,
+            subject: 'Изменение статуса заказа',
+            html: statusChange(id, russianStatus),
+        };
+
+        await transporter.sendMail(mailOptions);
 
         res.status(200).json({ message: 'Status updated successfully' });
     } catch (err) {

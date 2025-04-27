@@ -7,7 +7,7 @@ export default function useFetch() {
     url: string,
     method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH",
     data?: any,
-    headers?: Record<string, string>,
+    headers?: Record<string, string>
   ) => {
     try {
       const response = await instance({
@@ -34,10 +34,13 @@ export default function useFetch() {
               const newAccessToken = res.data.accessToken;
               Cookies.set("accessToken", newAccessToken, { expires: 7 });
 
-              error.config.headers["Authorization"] =
-                `Bearer ${newAccessToken}`;
-
-              return instance(error.config);
+              if (error.config && error.config.headers) {
+                error.config.headers["Authorization"] =
+                  `Bearer ${newAccessToken}`;
+                return instance(error.config); 
+              } else {
+                throw new Error("Ошибка в конфигурации запроса");
+              }
             } catch (refreshError) {
               console.error(refreshError);
               throw new Error("Не удалось обновить токен");

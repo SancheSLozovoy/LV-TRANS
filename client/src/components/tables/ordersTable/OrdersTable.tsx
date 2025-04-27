@@ -32,7 +32,7 @@ export const OrdersTable = () => {
       setLoading(true);
       const data = await fetchData(
         `/orders?page=${currentPage}&limit=${pageSize}`,
-        "GET",
+        "GET"
       );
       setOrders(data.orders);
       setTotal(data.total);
@@ -54,7 +54,7 @@ export const OrdersTable = () => {
   const handleStatusChange = async (
     orderId: number,
     statusId: number,
-    email,
+    email: string
   ) => {
     try {
       await fetchData(`/orders/${orderId}/status`, "PUT", {
@@ -110,7 +110,7 @@ export const OrdersTable = () => {
         <Select
           defaultValue={record.status_id}
           onChange={(value) =>
-            handleStatusChange(record.id, value, record.user_email)
+            handleStatusChange(record.id, value, record.user_email || "")
           }
           style={{ width: 120 }}
           onClick={(e) => {
