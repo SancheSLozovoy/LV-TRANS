@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Modal, Form, Input, message } from "antd";
 import { User } from "../../models/userModels.ts";
-import useFetch from "../../composales/useFetch.ts";
+import useFetch from "../../composables/useFetch.ts";
 
 interface ChangePasswordModalProps {
   userData: User | null;

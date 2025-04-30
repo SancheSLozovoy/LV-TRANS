@@ -1,7 +1,7 @@
 import React from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import Cookies from "js-cookie";
-import { useAuth } from "../../composales/useAuth.ts";
+import { useAuth } from "../../composables/useAuth.ts";
 
 export const ProtectedRoute: React.FC = () => {
   const token = Cookies.get("accessToken");

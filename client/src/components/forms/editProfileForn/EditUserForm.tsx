@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Form, Input, message, Button } from "antd";
 import { User } from "../../../models/userModels.ts";
-import { useAuth } from "../../../composales/useAuth.ts";
-import useFetch from "../../../composales/useFetch.ts";
+import { useAuth } from "../../../composables/useAuth.ts";
+import useFetch from "../../../composables/useFetch.ts";
 import { useNavigate } from "react-router-dom";
 import styles from "./editUserForm.module.scss";
 import ButtonSubmit from "../../button/Button.tsx";

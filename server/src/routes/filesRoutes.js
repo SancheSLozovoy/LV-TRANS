@@ -1,6 +1,7 @@
 import express from 'express';
 import * as FilesController from '../controllers/filesController.js';
 import { authenticateToken } from '../middleware/authMiddleware.js';
+import { uploadFile } from '../middleware/upload.js';
 
 const router = express.Router();
 
@@ -160,5 +161,12 @@ router.get(
 );
 
 router.get('/files/:id', authenticateToken, FilesController.downloadFile);
+router.post(
+    '/:orderId/files',
+    uploadFile,
+    authenticateToken,
+    FilesController.uploadFileToOrder,
+);
+router.delete('/files/:id', authenticateToken, FilesController.deleteFile);
 
 export default router;

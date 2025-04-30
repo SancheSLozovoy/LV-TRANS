@@ -1,39 +1,51 @@
 import React, { useState, useEffect } from "react";
-import { List, Button, Spin } from "antd";
-import { FileOutlined, DownloadOutlined } from "@ant-design/icons";
-import useFetch from "../../composales/useFetch.ts";
+import { List, Button, Spin, Upload, message } from "antd";
+import {
+  FileOutlined,
+  DownloadOutlined,
+  UploadOutlined,
+  DeleteOutlined,
+} from "@ant-design/icons";
+import useFetch from "../../composables/useFetch.ts";
 import { useParams } from "react-router-dom";
 import { FileData } from "../../models/file.ts";
-import { useAuth } from "../../composales/useAuth.ts";
+import { useAuth } from "../../composables/useAuth.ts";
+import ButtonSubmit from "../button/Button.tsx";
+import { getFileIconColor } from "../../composables/getFileIconColor.ts";
+import styles from "./OrderFiles.module.scss";
+import { ConfirmModal } from "../confirmModal/ConfirmModal.tsx";
 
 export const OrderFiles: React.FC = () => {
   const [files, setFiles] = useState<FileData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [uploading, setUploading] = useState<boolean>(false);
+  const [messageApi, contextHolder] = message.useMessage();
+  const [deleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
+  const [fileToDelete, setFileToDelete] = useState<FileData | null>(null);
+
   const { fetchData } = useFetch();
   const { id } = useParams();
   const { token } = useAuth();
 
   useEffect(() => {
-    const fetchFiles = async () => {
-      try {
-        const response = await fetchData(`/orders/${id}/files`, "GET");
-
-        if (Array.isArray(response)) {
-          setFiles(response);
-        } else {
-          console.error("Ответ не является массивом", response);
-        }
-      } catch (err) {
-        console.error("Error fetching files list:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchFiles();
   }, [id, token]);
 
-  if (loading) return <Spin size="large" />;
+  const fetchFiles = async () => {
+    try {
+      setLoading(true);
+      const response = await fetchData(`/orders/${id}/files`, "GET");
+      if (Array.isArray(response)) {
+        setFiles(response);
+      } else {
+        console.error("Ответ не является массивом", response);
+      }
+    } catch (err) {
+      console.error("Error fetching files list:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleDownload = async (file: FileData) => {
     try {
@@ -68,29 +80,147 @@ export const OrderFiles: React.FC = () => {
       }, 100);
     } catch (error) {
       console.error("Download error:", error);
-      alert("Ошибка при скачивании файла");
+      messageApi.error("Ошибка при скачивании файла");
     }
   };
 
+  const handleUpload = async (options: any) => {
+    const { file } = options;
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      setUploading(true);
+      await fetchData(`/orders/${id}/files`, "POST", formData, {
+        "Content-Type": "multipart/form-data",
+      });
+      messageApi.success(`${file.name} успешно загружен`);
+      await fetchFiles();
+    } catch (error) {
+      console.error("Upload error:", error);
+      messageApi.error("Ошибка при загрузке файла");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const uploadProps = {
+    accept: "image/*,.pdf,.doc,.docx,.xls,.xlsx",
+    multiple: false,
+    showUploadList: false,
+    customRequest: handleUpload,
+    beforeUpload: (file: File) => {
+      const isLt10M = file.size / 1024 / 1024 < 10;
+      if (!isLt10M) {
+        messageApi.error("Файл должен быть меньше 10MB!");
+        return Upload.LIST_IGNORE;
+      }
+
+      if (files.length >= 5) {
+        messageApi.error("Можно загрузить не более 5 файлов.");
+        return Upload.LIST_IGNORE;
+      }
+
+      return true;
+    },
+  };
+
+  const showDeleteConfirm = (file: FileData) => {
+    setFileToDelete(file);
+    setDeleteModalVisible(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!fileToDelete) return;
+
+    try {
+      await fetchData(`/orders/files/${fileToDelete.id}`, "DELETE");
+      messageApi.success("Файл удален");
+      setFiles((prev) => prev.filter((f) => f.id !== fileToDelete.id));
+    } catch (err) {
+      console.error("Delete error:", err);
+      messageApi.error("Ошибка при удалении файла");
+    } finally {
+      setDeleteModalVisible(false);
+      setFileToDelete(null);
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteModalVisible(false);
+    setFileToDelete(null);
+  };
+
   return (
-    <List
-      dataSource={files}
-      renderItem={(file) => (
-        <List.Item>
-          <List.Item.Meta
-            avatar={<FileOutlined style={{ fontSize: 24 }} />}
-            title={file.file_name}
-          />
-          <Button
-            type="link"
-            icon={<DownloadOutlined />}
-            onClick={() => handleDownload(file)}
-          >
-            Скачать
-          </Button>
-        </List.Item>
+    <>
+      {contextHolder}
+      <div className={styles.wrapper}>
+        <h1>Файлы заказа</h1>
+        <Upload {...uploadProps}>
+          <div className={styles.uploadButton}>
+            <ButtonSubmit
+              icon={<UploadOutlined />}
+              loading={uploading}
+              text="Загрузить файл"
+            />
+          </div>
+        </Upload>
+      </div>
+
+      {loading ? (
+        <div className={styles.loading}>
+          <Spin size="large" />
+        </div>
+      ) : (
+        <List
+          dataSource={files}
+          renderItem={(file) => (
+            <List.Item
+              className={styles.listItem}
+              actions={[
+                <Button
+                  type="link"
+                  icon={<DownloadOutlined />}
+                  onClick={() => handleDownload(file)}
+                  className={styles.downloadButton}
+                >
+                  Скачать
+                </Button>,
+                <Button
+                  danger
+                  icon={<DeleteOutlined />}
+                  onClick={() => {
+                    showDeleteConfirm(file);
+                  }}
+                />,
+              ]}
+            >
+              <List.Item.Meta
+                avatar={
+                  <FileOutlined
+                    className={styles.fileIcon}
+                    style={{ color: getFileIconColor(file.file_type) }}
+                  />
+                }
+                title={
+                  <span className={styles.fileName}>{file.file_name}</span>
+                }
+              />
+            </List.Item>
+          )}
+          locale={{ emptyText: "Нет загруженных файлов" }}
+        />
       )}
-      locale={{ emptyText: "Нет загруженных файлов" }}
-    />
+
+      <ConfirmModal
+        open={deleteModalVisible}
+        onClose={handleDeleteCancel}
+        onConfirm={handleDeleteConfirm}
+        title="Удаление файла"
+        description={`Вы уверены, что хотите удалить файл "${fileToDelete?.file_name}"?`}
+        confirmText="Удалить"
+        cancelText="Отмена"
+      />
+    </>
   );
 };

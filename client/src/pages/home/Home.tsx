@@ -9,7 +9,7 @@ import Company from "../../assets/images/compamy.jpeg";
 import { Footer } from "../../components/footer/Footer.tsx";
 import { useLocation } from "react-router-dom";
 import { CurrentOrders } from "../../components/currentOrders/CurrentOrders.tsx";
-import { useAuth } from "../../composales/useAuth.ts";
+import { useAuth } from "../../composables/useAuth.ts";
 
 export const Home = () => {
   const location = useLocation();

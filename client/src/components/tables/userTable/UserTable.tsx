@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { Badge, Button, Pagination, Space, Table } from "antd";
-import useFetch from "../../../composales/useFetch.ts";
-import { useAuth } from "../../../composales/useAuth.ts";
-import { reformDate } from "../../../composales/reformDate.ts";
+import useFetch from "../../../composables/useFetch.ts";
+import { useAuth } from "../../../composables/useAuth.ts";
+import { reformDate } from "../../../composables/reformDate.ts";
 import { Order } from "../../../models/orderModels.ts";
 import { ModalAttributes } from "../../../models/modalAttr.ts";
 import { ConfirmModal } from "../../confirmModal/ConfirmModal.tsx";
-import { defineStatus } from "../../../composales/defineStatus.ts";
+import { defineStatus } from "../../../composables/defineStatus.ts";
 import { useNavigate } from "react-router-dom";
 import { DeleteOutlined } from "@ant-design/icons";
 

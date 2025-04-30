@@ -2,7 +2,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { Form, Input, Typography, message } from "antd";
 import { useState } from "react";
 import ButtonSubmit from "../../components/button/Button.tsx";
-import useFetch from "../../composales/useFetch.ts";
+import useFetch from "../../composables/useFetch.ts";
 import styles from "../../components/forms/auth/form.module.scss";
 import { Container } from "../../components/container/Container.tsx";
 import { LockOutlined } from "@ant-design/icons";

@@ -15,8 +15,8 @@ import {
   UploadProps,
 } from "antd";
 import dayjs from "dayjs";
-import useFetch from "../../../composales/useFetch.ts";
-import { useAuth } from "../../../composales/useAuth.ts";
+import useFetch from "../../../composables/useFetch.ts";
+import { useAuth } from "../../../composables/useAuth.ts";
 import styles from "./createOrderForm.module.scss";
 import ButtonSubmit from "../../button/Button.tsx";
 import { CreateSuccess } from "../../createSuccess/CreateSuccess.tsx";
@@ -121,7 +121,7 @@ export const CreateOrderForm: React.FC = () => {
     const isDocument = file.type.startsWith("application/");
 
     if (!isImage && !isDocument) {
-      message.error("Можно загружать только изображения и документы!");
+      messageApi.error("Можно загружать только изображения и документы!");
       return Upload.LIST_IGNORE;
     }
 
