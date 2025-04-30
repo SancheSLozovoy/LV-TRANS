@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   LeftCircleOutlined,
   PlusOutlined,
-  SaveOutlined,
+  CheckOutlined,
 } from "@ant-design/icons";
 import {
   DatePicker,
@@ -360,7 +360,7 @@ export const CreateOrderForm: React.FC = () => {
               htmlType="submit"
               loading={loading}
               text="Сохранить"
-              icon={<SaveOutlined />}
+              icon={<CheckOutlined />}
             />
           </div>
         </Form.Item>
