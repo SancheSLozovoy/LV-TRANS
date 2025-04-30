@@ -22,7 +22,7 @@ export function statusChange(orderId, statusName) {
                         </tr>
                         <tr>
                             <td style="color: #555555; font-size: 16px; line-height: 1.5; padding-bottom: 30px;">
-                                Ваш заказ №${orderId} изменил свой статус на "${statusName}". Мы рады сообщить, что процесс обработки вашего заказа продолжается.
+                                Ваш заказ №${orderId} изменил свой статус на "${statusName}".
                             </td>
                         </tr>
                         <tr>

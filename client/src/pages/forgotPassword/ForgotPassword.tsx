@@ -3,7 +3,7 @@ import { MailOutlined } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
 import ButtonSubmit from "../../components/button/Button.tsx";
 import { Container } from "../../components/container/Container.tsx";
-import useFetch from "../../composales/useFetch.ts";
+import useFetch from "../../composables/useFetch.ts";
 import { useState } from "react";
 import styles from "../../components/forms/auth/form.module.scss";
 

@@ -3,10 +3,10 @@ import { Table, Button, message, Tag, Pagination } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { ConfirmModal } from "../../confirmModal/ConfirmModal.tsx";
 import { User } from "../../../models/userModels.ts";
-import useFetch from "../../../composales/useFetch.ts";
+import useFetch from "../../../composables/useFetch.ts";
 import { DeleteOutlined } from "@ant-design/icons";
 import "./usersTable.scss";
-import { useAuth } from "../../../composales/useAuth.ts";
+import { useAuth } from "../../../composables/useAuth.ts";
 
 export const UsersTable = () => {
   const [users, setUsers] = useState<User[]>([]);

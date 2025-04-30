@@ -12,8 +12,6 @@ const router = express.Router();
  *     tags:
  *       - Orders
  *     summary: Получение всех заказов
- *     security:
- *       - bearerAuth: []  # Авторизация через токен
  *     responses:
  *       200:
  *         description: Список всех заказов
@@ -106,8 +104,6 @@ const router = express.Router();
  *         schema:
  *           type: integer
  *         description: ID заказа
- *     security:
- *       - bearerAuth: []  # Авторизация через токен
  *     responses:
  *       200:
  *         description: Заказ найден
@@ -556,8 +552,6 @@ const router = express.Router();
  *       - Orders
  *     summary: Обновление статуса заказа
  *     description: Изменение статуса заказа (доступно только администраторам)
- *     security:
- *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -599,26 +593,42 @@ const router = express.Router();
  *         description: Некорректные данные
  *         content:
  *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorInvalidData'
+ *            schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Invalid status ID
  *       403:
  *         description: Доступ запрещен
  *         content:
  *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorAccessDenied'
+ *            schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Access denied
  *       404:
  *         description: Заказ не найден
  *         content:
  *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorOrderNotFound'
+ *            schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Order not found
  *       500:
  *         description: Ошибка сервера
  *         content:
  *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorServer'
+ *            schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Error updating order status
  */
 
 router.get('/', authenticateToken, OrderController.getOrders);

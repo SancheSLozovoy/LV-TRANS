@@ -3,10 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { Badge, Pagination } from "antd";
 import "./currentOrders.scss";
 import { Order } from "../../models/orderModels.ts";
-import useFetch from "../../composales/useFetch.ts";
-import { useAuth } from "../../composales/useAuth.ts";
+import useFetch from "../../composables/useFetch.ts";
+import { useAuth } from "../../composables/useAuth.ts";
 import { Container } from "../container/Container.tsx";
-import { defineStatus } from "../../composales/defineStatus.ts";
+import { defineStatus } from "../../composables/defineStatus.ts";
 
 const PAGE_SIZE = 8;
 

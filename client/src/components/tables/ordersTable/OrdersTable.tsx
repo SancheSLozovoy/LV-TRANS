@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import { Table, Button, message, Pagination, Select, Space, Badge } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import { ConfirmModal } from "../../confirmModal/ConfirmModal.tsx";
-import useFetch from "../../../composales/useFetch.ts";
+import useFetch from "../../../composables/useFetch.ts";
 import { Order } from "../../../models/orderModels.ts";
-import { defineStatus } from "../../../composales/defineStatus.ts";
+import { defineStatus } from "../../../composables/defineStatus.ts";
 import { useNavigate } from "react-router-dom";
-import { reformDate } from "../../../composales/reformDate.ts";
-import { useAuth } from "../../../composales/useAuth.ts";
+import { reformDate } from "../../../composables/reformDate.ts";
+import { useAuth } from "../../../composables/useAuth.ts";
 
 export const OrdersTable = () => {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -32,7 +32,7 @@ export const OrdersTable = () => {
       setLoading(true);
       const data = await fetchData(
         `/orders?page=${currentPage}&limit=${pageSize}`,
-        "GET"
+        "GET",
       );
       setOrders(data.orders);
       setTotal(data.total);
@@ -54,7 +54,7 @@ export const OrdersTable = () => {
   const handleStatusChange = async (
     orderId: number,
     statusId: number,
-    email: string
+    email: string,
   ) => {
     try {
       await fetchData(`/orders/${orderId}/status`, "PUT", {
