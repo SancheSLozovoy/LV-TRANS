@@ -154,6 +154,126 @@ const router = express.Router();
  *                   example: Error message details
  */
 
+/**
+ * @swagger
+ * /{orderId}/files:
+ *   post:
+ *     summary: Подгрузка файла заказу
+ *     tags:
+ *       - Orders
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID заказа
+ *     responses:
+ *       200:
+ *         description: Успешная загрузка файла
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: File uploaded
+ *       403:
+ *         description: Доступ запрещён
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Access denied
+ *       404:
+ *         description: Заказ не найден
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Order not found
+ *       500:
+ *         description: Ошибка сервера
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Error file upload
+ *                 error:
+ *                   type: string
+ *                   example: Error message details
+ */
+
+/**
+ * @swagger
+ * /files/{id}:
+ *   delete:
+ *     summary: Удаление файлов
+ *     tags:
+ *       - Orders
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID файла
+ *     responses:
+ *       200:
+ *         description: Успешное удаление файла
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: File deleted successfully
+ *       403:
+ *         description: Доступ запрещён
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Access denied
+ *       404:
+ *         description: Файл не найден
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: File not found
+ *       500:
+ *         description: Ошибка сервера
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: File deletion failed
+ *                 error:
+ *                   type: string
+ *                   example: Error message details
+ */
+
 router.get(
     '/:orderId/files',
     authenticateToken,

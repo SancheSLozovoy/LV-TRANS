@@ -147,7 +147,6 @@ export async function deleteFile(req, res) {
 
         res.status(200).json({ message: 'File deleted successfully' });
     } catch (err) {
-        console.error('Delete file error:', err);
         res.status(500).json({
             message: 'File deletion failed',
             error: err.message,
