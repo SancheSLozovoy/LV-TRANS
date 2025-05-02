@@ -80,7 +80,7 @@ export const OrderFiles: React.FC = () => {
       }, 100);
     } catch (error) {
       console.error("Download error:", error);
-      messageApi.error("Ошибка при скачивании файла");
+      messageApi.error(error.message);
     }
   };
 
@@ -98,7 +98,7 @@ export const OrderFiles: React.FC = () => {
       await fetchFiles();
     } catch (error) {
       console.error("Upload error:", error);
-      messageApi.error("Ошибка при загрузке файла");
+      messageApi.error(error.message);
     } finally {
       setUploading(false);
     }
@@ -134,12 +134,12 @@ export const OrderFiles: React.FC = () => {
     if (!fileToDelete) return;
 
     try {
-      await fetchData(`/orders/files/${fileToDelete.id}`, "DELETE");
-      messageApi.success("Файл удален");
+      const res = await fetchData(`/orders/files/${fileToDelete.id}`, "DELETE");
+      messageApi.success(res.message);
       setFiles((prev) => prev.filter((f) => f.id !== fileToDelete.id));
     } catch (err) {
       console.error("Delete error:", err);
-      messageApi.error("Ошибка при удалении файла");
+      messageApi.error(err.message);
     } finally {
       setDeleteModalVisible(false);
       setFileToDelete(null);

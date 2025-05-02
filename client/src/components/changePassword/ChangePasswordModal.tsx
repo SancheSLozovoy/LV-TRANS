@@ -36,7 +36,7 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
       onClose();
     } catch (error) {
       console.error("Error updating password", error);
-      messageApi.error("Не удалось сменить пароль");
+      messageApi.error(error.message);
     } finally {
       setLoading(false);
     }

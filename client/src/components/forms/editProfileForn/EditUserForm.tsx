@@ -37,13 +37,11 @@ export const EditUserForm: React.FC = () => {
 
       const dto: User = { ...userData, ...values };
 
-      await fetchData(`users/${user?.id}`, "PUT", dto);
-      messageApi.success("Профиль успешно обновлен");
+      const res = await fetchData(`users/${user?.id}`, "PUT", dto);
+      messageApi.success(res.message);
     } catch (error) {
       console.error("Update user error", error);
-      messageApi.error(
-        "Не удалось обновить профиль, пользователь с такой почтой уже существует",
-      );
+      messageApi.error(error.message);
     } finally {
       setLoading(false);
     }
@@ -67,7 +65,13 @@ export const EditUserForm: React.FC = () => {
           <Form.Item
             label="Почта"
             name="email"
-            rules={[{ required: true, message: "Пожалуйста, введите логин" }]}
+            rules={[
+              { required: true, message: "Пожалуйста, введите логин" },
+              {
+                type: "email",
+                message: "Пожалуйста, введите корректную почту",
+              },
+            ]}
           >
             <Input className={styles.form__input} />
           </Form.Item>

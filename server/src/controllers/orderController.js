@@ -10,14 +10,14 @@ export async function getOrders(req, res) {
         const offset = (page - 1) * limit;
 
         if (req.user.role_id !== 1) {
-            return res.status(403).json({ message: 'Access denied' });
+            return res.status(403).json({ message: 'Доступ запрещен' });
         }
 
         const { orders, total } = await OrderModel.getOrders(limit, offset);
 
         if (orders.length === 0) {
             return res.status(404).json({
-                message: 'No orders found',
+                message: 'Заказы не найдены',
             });
         }
 
@@ -27,7 +27,7 @@ export async function getOrders(req, res) {
         });
     } catch (err) {
         res.status(500).json({
-            message: 'Error getting orders',
+            message: 'Ошибка сервера',
             error: err.message,
         });
     }
@@ -36,14 +36,16 @@ export async function getOrders(req, res) {
 export async function getOrderById(req, res) {
     const { id } = req.params;
     if (!id || isNaN(id)) {
-        return res.status(400).json({ message: 'Invalid order ID' });
+        return res
+            .status(400)
+            .json({ message: 'Недопустимый идентификатор заказа' });
     }
 
     try {
         const order = await OrderModel.getOrderById(id);
 
         if (order.length === 0) {
-            return res.status(404).json({ message: 'Order not found' });
+            return res.status(404).json({ message: 'Заказ не найден' });
         }
 
         const orderDetails = order[0];
@@ -52,10 +54,10 @@ export async function getOrderById(req, res) {
             return res.status(200).json(orderDetails);
         }
 
-        return res.status(403).json({ message: 'Access denied' });
+        return res.status(403).json({ message: 'Доступ запрещен' });
     } catch (err) {
         res.status(500).json({
-            message: 'Error getting order',
+            message: 'Ошибка сервера',
             error: err.message,
         });
     }
@@ -76,8 +78,23 @@ export async function createOrder(req, res) {
     } = req.body;
     const files = req.files;
 
-    if (!files || files.length === 0) {
-        return res.status(400).json({ message: 'No files uploaded' });
+    if (
+        !info ||
+        !weight ||
+        !length ||
+        !width ||
+        !height ||
+        !from ||
+        !to ||
+        !date_start ||
+        !date_end ||
+        !user_id ||
+        !files ||
+        files.length === 0
+    ) {
+        return res
+            .status(400)
+            .json({ message: 'Не заполнены обязательные поля' });
     }
 
     try {
@@ -108,13 +125,12 @@ export async function createOrder(req, res) {
         }
 
         res.status(201).json({
-            message: 'Order created with files',
+            message: 'Заказ создан',
             orderId: result.insertId,
         });
     } catch (err) {
-        console.error('Error in createOrder:', err);
         res.status(500).json({
-            message: 'Error creating order',
+            message: 'Ошибка сервера',
             error: err.message,
         });
     }
@@ -123,24 +139,26 @@ export async function createOrder(req, res) {
 export async function deleteOrderById(req, res) {
     const { id } = req.params;
     if (!id || isNaN(id)) {
-        return res.status(400).json({ message: 'Invalid order ID' });
+        return res
+            .status(400)
+            .json({ message: 'Недопустимый идентификатор заказа' });
     }
 
     try {
         const order = await OrderModel.getOrderById(id);
         if (!order || order.length === 0) {
-            return res.status(404).json({ message: 'Order not found' });
+            return res.status(404).json({ message: 'Заказ не найден' });
         }
 
         if (req.user.role_id !== 1 && order[0].user_id !== req.user.id) {
-            return res.status(403).json({ message: 'Access denied' });
+            return res.status(403).json({ message: 'Доступ запрещен' });
         }
 
         await OrderModel.deleteOrderById(id);
-        res.status(200).json({ message: 'Order deleted' });
+        res.status(200).json({ message: 'Заказ удален' });
     } catch (err) {
         res.status(500).json({
-            message: 'Error deleting order',
+            message: 'Ошибка сервера',
             error: err.message,
         });
     }
@@ -163,7 +181,9 @@ export async function updateOrder(req, res) {
     } = req.body;
 
     if (!id || isNaN(id)) {
-        return res.status(400).json({ message: 'Invalid order ID' });
+        return res
+            .status(400)
+            .json({ message: 'Недопустимый идентификатор заказа' });
     }
 
     if (
@@ -179,17 +199,19 @@ export async function updateOrder(req, res) {
         !status_id ||
         !user_id
     ) {
-        return res.status(400).json({ message: 'Missing required fields' });
+        return res
+            .status(400)
+            .json({ message: 'Не заполнены обязательные поля' });
     }
 
     try {
         const order = await OrderModel.getOrderById(id);
         if (!order || order.length === 0) {
-            return res.status(404).json({ message: 'Order not found' });
+            return res.status(404).json({ message: 'Заказ не найден' });
         }
 
         if (req.user.role_id !== 1 && order[0].user_id !== req.user.id) {
-            return res.status(403).json({ message: 'Access denied' });
+            return res.status(403).json({ message: 'Доступ запрещен' });
         }
 
         const result = await OrderModel.updateOrder(
@@ -208,12 +230,12 @@ export async function updateOrder(req, res) {
         );
 
         if (result.affectedRows === 0) {
-            return res.status(404).json({ message: 'Order not found' });
+            return res.status(404).json({ message: 'Заказ не найден' });
         }
-        res.status(200).json({ message: 'Order updated' });
+        res.status(200).json({ message: 'Заказ обновлен' });
     } catch (err) {
         res.status(500).json({
-            message: 'Error updating order',
+            message: 'Ошибка сервера',
             error: err.message,
         });
     }
@@ -224,11 +246,13 @@ export async function getOrdersByUserId(req, res) {
     const currentUserId = req.user.id;
 
     if (!userId || isNaN(userId)) {
-        return res.status(400).json({ message: 'Invalid user ID' });
+        return res
+            .status(400)
+            .json({ message: 'Недопустимый идентификатор пользователя' });
     }
 
     if (userId !== currentUserId) {
-        return res.status(403).json({ message: 'Access denied' });
+        return res.status(403).json({ message: 'Доступ запрещен' });
     }
 
     const page = Number(req.query.page) || 1;
@@ -245,13 +269,13 @@ export async function getOrdersByUserId(req, res) {
         if (!orders.length) {
             return res
                 .status(404)
-                .json({ message: 'No orders found for this user' });
+                .json({ message: 'У пользователя нет заказов' });
         }
 
         return res.status(200).json({ orders, total });
     } catch (error) {
         return res.status(500).json({
-            message: 'Error getting orders by user ID',
+            message: 'Ошибка сервера',
             error: error.message,
         });
     }
@@ -263,18 +287,20 @@ export async function updateOrderStatus(req, res) {
         const { status_id, email } = req.body;
 
         if (req.user.role_id !== 1) {
-            return res.status(403).json({ message: 'Access denied' });
+            return res.status(403).json({ message: 'Доступ запрещен' });
         }
 
         const result = await OrderModel.updateStatus(id, status_id);
 
         if (result.affectedRows === 0) {
-            return res.status(404).json({ message: 'Order not found' });
+            return res.status(404).json({ message: 'Заказ не найден' });
         }
 
         const statusResult = await OrderModel.getStatusById(status_id);
         if (!statusResult || statusResult.length === 0) {
-            return res.status(400).json({ message: 'Invalid status ID' });
+            return res
+                .status(400)
+                .json({ message: 'Недопустимый идентификатор статуса' });
         }
 
         const statusName = statusResult[0].name;
@@ -297,10 +323,10 @@ export async function updateOrderStatus(req, res) {
 
         await transporter.sendMail(mailOptions);
 
-        res.status(200).json({ message: 'Status updated successfully' });
+        res.status(200).json({ message: 'Статус обновлен' });
     } catch (err) {
         res.status(500).json({
-            message: 'Error updating order status',
+            message: 'Ошибка сервера',
             error: err.message,
         });
     }

@@ -42,10 +42,7 @@ export const useAuth = () => {
     try {
       if (type === "register") {
         const res = await fetchData("/users", "POST", data);
-        messageApi.open({
-          type: "success",
-          content: "Успешная регистрация",
-        });
+        messageApi.success(res.message);
         Cookies.set("accessToken", res.accessToken, { expires: 7 });
         Cookies.set("refreshToken", res.refreshToken, { expires: 7 });
         setTimeout(() => navigate("/"), 3000);
@@ -53,30 +50,18 @@ export const useAuth = () => {
         const res = await fetchData("/users/login", "POST", data);
         Cookies.set("accessToken", res.accessToken, { expires: 7 });
         Cookies.set("refreshToken", res.refreshToken, { expires: 7 });
-        messageApi.open({
-          type: "success",
-          content: "Успешный вход",
-        });
+        messageApi.success(res.message);
         setTimeout(() => navigate("/"), 3000);
       }
     } catch (e: any) {
       if (type === "register") {
         if (e.code === "ERR_NETWORK") {
-          messageApi.open({
-            type: "error",
-            content: "Ошибка сервера. Попробуйте позже",
-          });
+          messageApi.error(e.message);
         } else {
-          messageApi.open({
-            type: "error",
-            content: "Данный пользователь уже существует",
-          });
+          messageApi.error(e.message);
         }
       } else {
-        messageApi.open({
-          type: "error",
-          content: "Неверная почта или пароль",
-        });
+        messageApi.error(e.message);
       }
     }
   };

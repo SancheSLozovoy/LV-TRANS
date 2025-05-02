@@ -64,7 +64,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Access denied"
+ *                   example: "Доступ запрещен"
  *       404:
  *         description: Заказы не найдены
  *         content:
@@ -74,7 +74,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "No orders found"
+ *                   example: "Заказы не найдены"
  *       500:
  *         description: Ошибка сервера
  *         content:
@@ -84,7 +84,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Error getting orders"
+ *                   example: "Ошибка сервера"
  *                 error:
  *                   type: string
  *                   example: "Server error"
@@ -154,7 +154,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Invalid order ID"
+ *                   example: "Недопустимый идентификатор заказа"
  *       403:
  *         description: Доступ запрещён (если у пользователя не роль администратора и заказ не его)
  *         content:
@@ -164,7 +164,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Access denied"
+ *                   example: "Доступ запрещен"
  *       404:
  *         description: Заказ не найден
  *         content:
@@ -174,7 +174,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Order not found"
+ *                   example: "Заказ не найден"
  *       500:
  *         description: Ошибка сервера
  *         content:
@@ -184,7 +184,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Error getting order"
+ *                   example: "Ошибка сервера"
  *                 error:
  *                   type: string
  *                   example: "Server error"
@@ -243,7 +243,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Order created and photos uploaded"
+ *                   example: "Заказ создан"
  *                 orderId:
  *                   type: integer
  *                   example: 20
@@ -256,7 +256,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Missing required fields"
+ *                   example: "Не заполнены обязательные поля"
  *       500:
  *         description: Ошибка сервера
  *         content:
@@ -266,7 +266,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Error creating order"
+ *                   example: "Ошибка сервера"
  *                 error:
  *                   type: string
  *                   example: "Server error"
@@ -296,7 +296,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Order deleted"
+ *                   example: "Заказ удален"
  *       400:
  *         description: Некорректный ID
  *         content:
@@ -306,7 +306,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Invalid order ID"
+ *                   example: "Недопустимый идентификатор заказа"
  *       404:
  *         description: Заказ не найден
  *         content:
@@ -316,7 +316,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Order not found"
+ *                   example: "Заказ не найден"
  *       403:
  *         description: Отказ в доступе (если пользователь не имеет прав для удаления)
  *         content:
@@ -326,7 +326,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Access denied"
+ *                   example: "Доступ запрещен"
  *       500:
  *         description: Ошибка сервера
  *         content:
@@ -336,7 +336,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Error deleting order"
+ *                   example: "Ошибка сервера"
  *                 error:
  *                   type: string
  *                   example: "Server error"
@@ -399,7 +399,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Order updated"
+ *                   example: "Заказ обновлен"
  *       400:
  *         description: Некорректные данные или ID
  *         content:
@@ -409,7 +409,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Missing required fields"
+ *                   example: "Не заполнены обязательные поля"
  *       404:
  *         description: Заказ не найден
  *         content:
@@ -419,7 +419,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Order not found"
+ *                   example: "Заказ не найден"
  *       403:
  *         description: Отказ в доступе (если пользователь не имеет прав на обновление)
  *         content:
@@ -429,7 +429,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Access denied"
+ *                   example: "Доступ запрещен"
  *       500:
  *         description: Ошибка сервера
  *         content:
@@ -439,7 +439,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Error updating order"
+ *                   example: "Ошибка сервера"
  *                 error:
  *                   type: string
  *                   example: "Server error"
@@ -508,7 +508,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Invalid user ID
+ *                   example: Недопустимый идентификатор пользователя
  *       403:
  *         description: Отказ в доступе (если запрашиваемый ID не соответствует текущему пользователю)
  *         content:
@@ -518,7 +518,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Access denied
+ *                   example: Доступ запрещен
  *       404:
  *         description: Заказы не найдены для данного пользователя
  *         content:
@@ -528,7 +528,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: No orders found for this user
+ *                   example: У пользователя нет заказов
  *       500:
  *         description: Ошибка сервера
  *         content:
@@ -538,7 +538,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Error getting orders by user ID
+ *                   example: Ошибка сервера
  *                 error:
  *                   type: string
  *                   example: Server error
@@ -588,7 +588,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Status updated successfully
+ *                   example: Статус обновлен
  *       400:
  *         description: Некорректные данные
  *         content:
@@ -598,7 +598,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Invalid status ID
+ *                   example: Недопустимый идентификатор статуса
  *       403:
  *         description: Доступ запрещен
  *         content:
@@ -608,7 +608,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Access denied
+ *                   example: Доступ запрещен
  *       404:
  *         description: Заказ не найден
  *         content:
@@ -618,7 +618,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Order not found
+ *                   example: Заказ не найден
  *       500:
  *         description: Ошибка сервера
  *         content:
@@ -628,7 +628,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Error updating order status
+ *                   example: Ошибка сервера
  */
 
 router.get('/', authenticateToken, OrderController.getOrders);

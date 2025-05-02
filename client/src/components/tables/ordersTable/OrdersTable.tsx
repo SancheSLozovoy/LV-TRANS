@@ -17,6 +17,7 @@ export const OrdersTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [pageSize, setPageSize] = useState(10);
+  const [messageApi, contextHolder] = message.useMessage();
 
   const { token } = useAuth();
   const { fetchData } = useFetch();
@@ -37,7 +38,7 @@ export const OrdersTable = () => {
       setOrders(data.orders);
       setTotal(data.total);
     } catch (error) {
-      message.error("Ошибка при загрузке заказов");
+      messageApi.error(error.message);
     } finally {
       setLoading(false);
     }
@@ -57,27 +58,27 @@ export const OrdersTable = () => {
     email: string,
   ) => {
     try {
-      await fetchData(`/orders/${orderId}/status`, "PUT", {
+      const res = await fetchData(`/orders/${orderId}/status`, "PUT", {
         status_id: statusId,
         email: email,
       });
 
-      message.success("Статус заказа изменён");
+      messageApi.success(res.message);
 
       fetchOrders();
     } catch (error) {
-      message.error("Ошибка при изменении статуса");
+      messageApi.error(error.message);
     }
   };
 
   const handleDelete = async () => {
     if (!selectedOrderId) return;
     try {
-      await fetchData(`/orders/${selectedOrderId}`, "DELETE");
-      message.success("Заказ отменён");
+      const res = await fetchData(`/orders/${selectedOrderId}`, "DELETE");
+      messageApi.success(res.message);
       fetchOrders();
-    } catch {
-      message.error("Ошибка при отмене заказа");
+    } catch (error) {
+      messageApi.error(error.message);
     } finally {
       setConfirmOpen(false);
       setSelectedOrderId(null);
@@ -167,6 +168,7 @@ export const OrdersTable = () => {
 
   return (
     <div>
+      {contextHolder}
       <h1 className="title">Список заказов</h1>
       <Table
         dataSource={orders}
@@ -195,7 +197,7 @@ export const OrdersTable = () => {
         onConfirm={handleDelete}
         title="Отмена заказа"
         description="Вы уверены, что хотите отменить этот заказ?"
-        confirmText="Отменить"
+        confirmText="Удалить"
         cancelText="Отмена"
       />
     </div>

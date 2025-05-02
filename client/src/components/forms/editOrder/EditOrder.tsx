@@ -47,10 +47,7 @@ export const EditOrderForm: React.FC = () => {
         });
       } catch (error) {
         console.error("Fetch order data error", error);
-        messageApi.open({
-          type: "error",
-          content: "Не удалось загрузить данные заказа",
-        });
+        messageApi.error(error.message);
       }
     };
 
@@ -79,19 +76,13 @@ export const EditOrderForm: React.FC = () => {
         user_id: user.id,
       };
 
-      await fetchData(`/orders/${params.id}`, "PUT", dto);
-      messageApi.open({
-        type: "success",
-        content: "Заказ обновлен",
-      });
+      const res = await fetchData(`/orders/${params.id}`, "PUT", dto);
+      messageApi.success(res.message);
       setIsSuccess(true);
       setIsEditing(false);
     } catch (error) {
       console.error("Update order error", error);
-      messageApi.open({
-        type: "error",
-        content: "Не удалось обновить заказ",
-      });
+      messageApi.error(error.message);
     } finally {
       setLoading(false);
     }

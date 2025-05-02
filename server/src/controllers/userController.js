@@ -16,21 +16,27 @@ export async function register(req, res) {
     const { email, phone, password } = req.body;
 
     if (!email || !phone || !password) {
-        return res.status(400).json({ message: 'Missing required fields' });
+        return res
+            .status(400)
+            .json({ message: 'Не заполнены обязательные поля' });
     }
 
     if (!isValidEmail(email)) {
-        return res.status(400).json({ message: 'Invalid email format' });
+        return res.status(400).json({ message: 'Некорректный формат email' });
     }
 
     if (!isValidPhone(phone)) {
-        return res.status(400).json({ message: 'Invalid phone format' });
+        return res
+            .status(400)
+            .json({ message: 'Некорректный формат номера телефона' });
     }
 
     try {
         const existingUser = await UserModel.getUserByEmail(email);
         if (existingUser) {
-            return res.status(400).json({ message: 'User already exists' });
+            return res
+                .status(400)
+                .json({ message: 'Пользователь с этой почтой уже существует' });
         }
 
         await UserModel.createUser(email, phone, password);
@@ -41,13 +47,13 @@ export async function register(req, res) {
         const refreshToken = generateRefreshToken(newUser);
 
         res.status(201).json({
-            message: 'User created',
+            message: 'Успешная регистрация',
             accessToken,
             refreshToken,
         });
     } catch (err) {
         res.status(500).json({
-            message: 'Error creating user',
+            message: 'Ошибка сервера',
             error: err.message,
         });
     }
@@ -56,7 +62,9 @@ export async function register(req, res) {
 export async function login(req, res) {
     const { email, password } = req.body;
     if (!email || !password) {
-        return res.status(400).json({ message: 'Missing required fields' });
+        return res
+            .status(400)
+            .json({ message: 'Не заполнены обязательные поля' });
     }
 
     try {
@@ -64,27 +72,27 @@ export async function login(req, res) {
         if (!user) {
             return res
                 .status(400)
-                .json({ message: 'Invalid email or password' });
+                .json({ message: 'Неверный email или пароль' });
         }
 
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
             return res
                 .status(400)
-                .json({ message: 'Invalid email or password' });
+                .json({ message: 'Неверный email или пароль' });
         }
 
         const accessToken = generateAccessToken(user);
         const refreshToken = generateRefreshToken(user);
 
         res.json({
-            message: 'Login successful',
+            message: 'Успешный вход',
             accessToken,
             refreshToken,
         });
     } catch (err) {
         res.status(500).json({
-            message: 'Error logging in',
+            message: 'Ошибка сервера',
             error: err.message,
         });
     }
@@ -94,7 +102,7 @@ export async function refreshToken(req, res) {
     const { refreshToken } = req.body;
 
     if (!refreshToken) {
-        return res.status(401).json({ message: 'Refresh token required' });
+        return res.status(401).json({ message: 'Refresh token обязателен' });
     }
 
     try {
@@ -106,7 +114,7 @@ export async function refreshToken(req, res) {
         const user = await UserModel.getUserById(decoded.id);
 
         if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+            return res.status(404).json({ message: 'Пользователь не найден' });
         }
 
         const accessToken = generateAccessToken(user[0]);
@@ -115,14 +123,14 @@ export async function refreshToken(req, res) {
     } catch (err) {
         return res
             .status(403)
-            .json({ message: 'Invalid or expired refresh token' });
+            .json({ message: 'Неверный или просроченный refresh-токен' });
     }
 }
 
 export async function getUsers(req, res) {
     try {
         if (req.user.role_id !== 1) {
-            return res.status(403).json({ message: 'Access denied' });
+            return res.status(403).json({ message: 'Доступ запрещен' });
         }
 
         const page = parseInt(req.query.page) || 1;
@@ -131,13 +139,13 @@ export async function getUsers(req, res) {
         const { users, total } = await UserModel.getUsers(page, limit);
 
         if (users.length === 0) {
-            return res.status(404).json({ message: 'Users not found' });
+            return res.status(404).json({ message: 'Пользователи не найдены' });
         }
 
         res.status(200).json({ users, total });
     } catch (err) {
         res.status(500).json({
-            message: 'Error getting users',
+            message: 'Ошибка сервера',
             error: err.message,
         });
     }
@@ -147,24 +155,26 @@ export async function getUserById(req, res) {
     const { id } = req.params;
 
     if (!id || isNaN(id)) {
-        return res.status(400).json({ message: 'Invalid user ID' });
+        return res
+            .status(400)
+            .json({ message: 'Недопустимый идентификатор пользователя' });
     }
 
     try {
         const user = await UserModel.getUserById(id);
 
         if (!user || user.length === 0) {
-            return res.status(404).json({ message: 'User not found' });
+            return res.status(404).json({ message: 'Пользователь не найден' });
         }
 
         if (req.user.role_id !== 1 && req.user.id !== parseInt(id)) {
-            return res.status(403).json({ message: 'Access denied' });
+            return res.status(403).json({ message: 'Доступ запрещен' });
         }
 
         res.status(200).json(user[0]);
     } catch (err) {
         res.status(500).json({
-            message: 'Error getting user',
+            message: 'Ошибка сервера',
             error: err.message,
         });
     }
@@ -173,24 +183,26 @@ export async function getUserById(req, res) {
 export async function deleteUserById(req, res) {
     const { id } = req.params;
     if (!id || isNaN(id)) {
-        return res.status(400).json({ message: 'Invalid user ID' });
+        return res
+            .status(400)
+            .json({ message: 'Недопустимый идентификатор пользователя' });
     }
 
     try {
         if (req.user.role_id !== 1 && req.user.id !== parseInt(id)) {
-            return res.status(403).json({ message: 'Access denied' });
+            return res.status(403).json({ message: 'Доступ запрещен' });
         }
 
         const result = await UserModel.deleteUserById(id);
 
         if (result.affectedRows === 0) {
-            return res.status(404).json({ message: 'User not found' });
+            return res.status(404).json({ message: 'Пользователь не найден' });
         }
 
-        res.status(200).json({ message: 'User deleted' });
+        res.status(200).json({ message: 'Пользователь удален' });
     } catch (err) {
         res.status(500).json({
-            message: 'Error deleting user',
+            message: 'Ошибка сервера',
             error: err.message,
         });
     }
@@ -201,29 +213,41 @@ export async function updateUser(req, res) {
     const { email, phone, password, role_id } = req.body;
 
     if (!id || isNaN(id) || !email || !phone || !password || !role_id) {
-        return res.status(400).json({ message: 'Missing required fields' });
+        return res
+            .status(400)
+            .json({ message: 'Не заполнены обязательные поля' });
     }
 
     try {
+        const existingUser = await UserModel.getUserByEmail(email);
+        if (existingUser && existingUser.id !== parseInt(id)) {
+            return res
+                .status(400)
+                .json({ message: 'Пользователь с этой почтой уже существует' });
+        }
         const isAdmin = req.user.role_id === 1;
         const isSelf = req.user.id === parseInt(id);
 
         if (!isAdmin && !isSelf) {
-            return res.status(403).json({ message: 'Access denied' });
+            return res.status(403).json({ message: 'Доступ запрещен' });
         }
 
         if (!isValidEmail(email)) {
-            return res.status(400).json({ message: 'Invalid email format' });
+            return res
+                .status(400)
+                .json({ message: 'Некорректный формат email' });
         }
 
         if (!isValidPhone(phone)) {
-            return res.status(400).json({ message: 'Invalid phone format' });
+            return res
+                .status(400)
+                .json({ message: 'Некорректный формат номера телефона' });
         }
 
         if (!isAdmin && role_id !== req.user.role_id) {
             return res
                 .status(403)
-                .json({ message: 'You are not allowed to change your role' });
+                .json({ message: 'Обновление роли доступно администратору' });
         }
 
         const result = await UserModel.updateUser(
@@ -235,13 +259,13 @@ export async function updateUser(req, res) {
         );
 
         if (result.affectedRows === 0) {
-            return res.status(404).json({ message: 'User not found' });
+            return res.status(404).json({ message: 'Пользователь не найден' });
         }
 
-        res.status(200).json({ message: 'User updated' });
+        res.status(200).json({ message: 'Профиль успешно обновлен' });
     } catch (err) {
         res.status(500).json({
-            message: 'Error updating user',
+            message: 'Ошибка сервера',
             error: err.message,
         });
     }
@@ -252,24 +276,24 @@ export async function updateUserRole(req, res) {
     const { role_id } = req.body;
 
     if (!id || isNaN(id) || !role_id) {
-        return res.status(400).json({ message: 'Invalid request data' });
+        return res.status(400).json({ message: 'Некорректные данные запроса' });
     }
 
     try {
         if (req.user.role_id !== 1) {
-            return res.status(403).json({ message: 'Access denied' });
+            return res.status(403).json({ message: 'Доступ запрещен' });
         }
 
         const result = await UserModel.updateUserRole(id, role_id);
 
         if (result.affectedRows === 0) {
-            return res.status(404).json({ message: 'User not found' });
+            return res.status(404).json({ message: 'Пользователь не найден' });
         }
 
-        res.status(200).json({ message: 'Role updated' });
+        res.status(200).json({ message: 'Роль обновлена' });
     } catch (err) {
         res.status(500).json({
-            message: 'Error updating role',
+            message: 'Ошибка сервера',
             error: err.message,
         });
     }
@@ -279,7 +303,7 @@ export async function requestPasswordReset(req, res) {
     const { email } = req.body;
 
     if (!email) {
-        return res.status(400).json({ message: 'Email is required' });
+        return res.status(400).json({ message: 'Почта обязательна' });
     }
 
     try {
@@ -287,7 +311,8 @@ export async function requestPasswordReset(req, res) {
 
         if (!user) {
             return res.status(200).json({
-                message: 'If user exists, a reset email has been sent',
+                message:
+                    'Если пользователь существует, письмо для сброса пароля было отправлено',
             });
         }
 
@@ -313,12 +338,12 @@ export async function requestPasswordReset(req, res) {
         });
 
         res.status(200).json({
-            message: 'If user exists, a reset email has been sent',
+            message:
+                'Если пользователь существует, письмо для сброса пароля было отправлено',
         });
     } catch (err) {
-        console.error('Error sending email:', err);
         res.status(500).json({
-            message: 'Error sending reset email',
+            message: 'Ошибка сервера',
             error: err.message,
         });
     }
@@ -328,28 +353,28 @@ export async function resetPassword(req, res) {
     const { token, password } = req.body;
 
     if (!token || !password) {
-        return res
-            .status(400)
-            .json({ message: 'Token and password are required' });
+        return res.status(400).json({ message: 'Токен и пароль обязательны' });
     }
 
     try {
         const payload = jwt.verify(token, process.env.JWT_SECRET);
         if (payload.purpose !== 'password-reset') {
-            return res.status(400).json({ message: 'Invalid token purpose' });
+            return res.status(400).json({ message: 'Некорректный токен' });
         }
 
         const user = await UserModel.getUserByEmail(payload.email);
         if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+            return res.status(404).json({ message: 'Пользователь не найден' });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
         await UserModel.updatePassword(user.id, hashedPassword);
 
-        res.status(200).json({ message: 'Password successfully updated' });
+        res.status(200).json({ message: 'Пароль успешно обновлен' });
     } catch (err) {
         console.error('Reset error:', err);
-        return res.status(400).json({ message: 'Invalid or expired token' });
+        return res
+            .status(400)
+            .json({ message: 'Неверный или просроченный токен' });
     }
 }

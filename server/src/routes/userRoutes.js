@@ -45,7 +45,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Users not found
+ *                   example: Доступ запрещен
  *       404:
  *         description: Пользователи не найдены
  *         content:
@@ -55,7 +55,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Users not found
+ *                   example: Пользователи не найдены
  *       500:
  *         description: Ошибка сервера
  *         content:
@@ -65,7 +65,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Error getting users
+ *                   example: Ошибка сервера
  *                 error:
  *                   type: string
  *                   example: Server error
@@ -76,7 +76,7 @@ const router = express.Router();
  * /users/login:
  *   post:
  *     tags:
- *       - Users
+ *       - Auth
  *     summary: Логин пользователя
  *     requestBody:
  *       required: true
@@ -101,8 +101,11 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Login successful
- *                 token:
+ *                   example: Успешный вход
+ *                 accessToken:
+ *                   type: string
+ *                   example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *                 refreshToken:
  *                   type: string
  *                   example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
  *       400:
@@ -114,7 +117,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Invalid login or password
+ *                   example: Неверный email или пароль
  *       500:
  *         description: Ошибка сервера
  *         content:
@@ -124,7 +127,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Error logging in
+ *                   example: Ошибка сервера
  *                 error:
  *                   type: string
  *                   example: Server error
@@ -176,7 +179,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Invalid user ID
+ *                   example: Недопустимый идентификатор пользователя
  *       403:
  *         description: Доступ запрещен (если пользователь пытается получить данные другого пользователя без прав администратора)
  *         content:
@@ -186,7 +189,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Access denied
+ *                   example: Доступ запрещен
  *       404:
  *         description: Пользователь не найден
  *         content:
@@ -196,7 +199,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: User not found
+ *                   example: Пользователь не найден
  *       500:
  *         description: Ошибка сервера
  *         content:
@@ -206,7 +209,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Error getting user
+ *                   example: Ошибка сервера
  *                 error:
  *                   type: string
  *                   example: Server error
@@ -217,7 +220,7 @@ const router = express.Router();
  * /users:
  *   post:
  *     tags:
- *       - Users
+ *       - Auth
  *     summary: Создание нового пользователя (регистрация)
  *     requestBody:
  *       required: true
@@ -227,14 +230,14 @@ const router = express.Router();
  *             type: object
  *             properties:
  *               login:
- *                  type: string
- *                  example: Login
+ *                 type: string
+ *                 example: Login
  *               phone:
- *                   type: string
- *                   example: 89381000000
+ *                 type: string
+ *                 example: 89381000000
  *               password:
- *                  type: string
- *                  example: 432rewfds432sdDsdsad!dew
+ *                 type: string
+ *                 example: 432rewfds432sdDsdsad!dew
  *     responses:
  *       201:
  *         description: Пользователь успешно создан
@@ -245,12 +248,12 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: User created
+ *                   example: Успешная регистрация
  *                 userId:
  *                   type: integer
  *                   example: 20
- *       400:
- *         description: Некорректные данные (отсутствуют обязательные поля или пользователь уже существует)
+ *       400_required:
+ *         description: Не заполнены обязательные поля
  *         content:
  *           application/json:
  *             schema:
@@ -258,7 +261,37 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Missing required fields or User already exists
+ *                   example: Не заполнены обязательные поля
+ *       400_exists:
+ *         description: Пользователь с этой почтой уже существует
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Пользователь с этой почтой уже существует
+ *       400_email:
+ *         description: Некорректный формат email
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Некорректный формат email
+ *       400_phone:
+ *         description: Некорректный формат номера телефона
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Некорректный формат номера телефона
  *       500:
  *         description: Ошибка сервера при создании пользователя
  *         content:
@@ -268,7 +301,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Error creating user
+ *                   example: Ошибка сервера
  *                 error:
  *                   type: string
  *                   example: Server error
@@ -298,7 +331,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: User deleted
+ *                   example: Пользователь удален
  *       400:
  *         description: Некорректный ID
  *         content:
@@ -308,7 +341,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Invalid user ID
+ *                   example: Недопустимый идентификатор пользователя
  *       403:
  *         description: Отказано в доступе (пользователь может удалять только себя, администратор - любого)
  *         content:
@@ -318,7 +351,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Access denied
+ *                   example: Доступ запрещен
  *       404:
  *         description: Пользователь не найден
  *         content:
@@ -328,7 +361,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: User not found
+ *                   example: Пользователь не найден
  *       500:
  *         description: Ошибка сервера
  *         content:
@@ -338,7 +371,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Error deleting user
+ *                   example: Ошибка сервера
  *                 error:
  *                   type: string
  *                   example: Server error
@@ -379,7 +412,7 @@ const router = express.Router();
  *                  example: 1
  *     responses:
  *       200:
- *         description: Пользователь обновлен
+ *         description: Профиль успешно обновлен
  *         content:
  *           application/json:
  *             schema:
@@ -387,7 +420,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: User updated
+ *                   example: Профиль успешно обновлен
  *       400:
  *         description: Некорректные данные или ID
  *         content:
@@ -397,7 +430,27 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Missing required fields
+ *                   example: Не заполнены обязательные поля
+ *       400_email:
+ *         description: Некорректный формат email
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Некорректный формат email
+ *       400_phone:
+ *         description: Некорректный формат номера телефона
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Некорректный формат номера телефона
  *       403:
  *         description: Отказано в доступе (пользователь может обновлять только себя, администратор - любого)
  *         content:
@@ -407,7 +460,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Access denied
+ *                   example: Доступ запрещен
  *       404:
  *         description: Пользователь не найден
  *         content:
@@ -417,7 +470,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: User not found
+ *                   example: Пользователь не найден
  *       500:
  *         description: Ошибка сервера
  *         content:
@@ -427,7 +480,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Error updating user
+ *                   example: Ошибка сервера
  *                 error:
  *                   type: string
  *                   example: Server error
@@ -468,7 +521,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Role updated
+ *                   example: Роль обновлена
  *       400:
  *         description: Некорректные данные или ID
  *         content:
@@ -478,7 +531,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Invalid request data
+ *                   example: Некорректные данные запроса
  *       403:
  *         description: Отказано в доступе (только администратор может обновлять роли)
  *         content:
@@ -488,7 +541,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Access denied
+ *                   example: Доступ запрещен
  *       404:
  *         description: Пользователь не найден
  *         content:
@@ -498,7 +551,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: User not found
+ *                   example: Пользователь не найден
  *       500:
  *         description: Ошибка сервера
  *         content:
@@ -508,10 +561,141 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Error updating role
+ *                   example: Ошибка сервера
  *                 error:
  *                   type: string
  *                   example: Server error
+ */
+
+/**
+ * @swagger
+ * users/forgot-password:
+ *   post:
+ *     tags:
+ *       - Auth
+ *     summary: Запрос сброса пароля
+ *     description: Отправляет письмо с ссылкой для сброса пароля на указанную почту
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: user@example.com
+ *     responses:
+ *       200:
+ *         description: Письмо отправлено (если пользователь существует)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Если пользователь существует, письмо для сброса пароля было отправлено
+ *       400:
+ *         description: Не указана почта
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Почта обязательна
+ *       500:
+ *         description: Ошибка сервера
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Ошибка сервера
+ *                 error:
+ *                   type: string
+ *                   example: Error details
+ */
+
+/**
+ * @swagger
+ * /users/reset-password:
+ *   post:
+ *     tags:
+ *       - Auth
+ *     summary: Сброс пароля
+ *     description: Устанавливает новый пароль пользователя по токену из письма
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               token:
+ *                 type: string
+ *                 example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 example: newStrongPassword123
+ *     responses:
+ *       200:
+ *         description: Пароль успешно обновлен
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Пароль успешно обновлен
+ *       400:
+ *         description: Неверные данные запроса
+ *         content:
+ *           application/json:
+ *             schema:
+ *               oneOf:
+ *                 - type: object
+ *                   properties:
+ *                     message:
+ *                       type: string
+ *                       example: Токен и пароль обязательны
+ *                 - type: object
+ *                   properties:
+ *                     message:
+ *                       type: string
+ *                       example: Некорректный токен
+ *                 - type: object
+ *                   properties:
+ *                     message:
+ *                       type: string
+ *                       example: Неверный или просроченный токен
+ *       404:
+ *         description: Пользователь не найден
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Пользователь не найден
+ *       500:
+ *         description: Ошибка сервера
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Ошибка сервера
  */
 
 router.get('/', authenticateToken, UserController.getUsers);

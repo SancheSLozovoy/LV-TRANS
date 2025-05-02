@@ -19,7 +19,7 @@ export async function getFilesByOrderId(req, res) {
         const orderDetails = order[0];
 
         if (req.user.role_id !== 1 && orderDetails.user_id !== req.user.id) {
-            return res.status(403).json({ message: 'Access denied' });
+            return res.status(403).json({ message: 'Доступ запрещен' });
         }
 
         const [files] = await pool.query(
@@ -30,7 +30,7 @@ export async function getFilesByOrderId(req, res) {
         if (files.length === 0) {
             return res
                 .status(404)
-                .json({ message: 'No files found for this order' });
+                .json({ message: 'Файлы для этого заказа не найдены' });
         }
 
         const filesData = files.map((file) => ({
@@ -43,9 +43,8 @@ export async function getFilesByOrderId(req, res) {
 
         res.status(200).json(filesData);
     } catch (err) {
-        console.error('Error getting files:', err);
         res.status(500).json({
-            message: 'Error getting files',
+            message: 'Ошибка сервера',
             error: err.message,
         });
     }
@@ -64,13 +63,13 @@ export async function downloadFile(req, res) {
         );
 
         if (!rows.length) {
-            return res.status(404).json({ message: 'File not found' });
+            return res.status(404).json({ message: 'Файл не найден' });
         }
 
         const file = rows[0];
 
         if (req.user.role_id !== 1 && file.user_id !== req.user.id) {
-            return res.status(403).json({ message: 'Access denied' });
+            return res.status(403).json({ message: 'Доступ запрещен' });
         }
 
         const fileBase64 = file.file.toString('base64');
@@ -82,9 +81,8 @@ export async function downloadFile(req, res) {
             size: file.file.length,
         });
     } catch (err) {
-        console.error('Download error:', err);
         res.status(500).json({
-            message: 'File download failed',
+            message: 'Ошибка сервера',
             error: err.message,
         });
     }
@@ -95,20 +93,20 @@ export async function uploadFileToOrder(req, res) {
     const file = req.file;
 
     if (!file) {
-        return res.status(400).json({ message: 'No files uploaded' });
+        return res.status(400).json({ message: 'Файлы не были загружены' });
     }
 
     try {
         const order = await OrderModel.getOrderById(orderId);
 
         if (order.length === 0) {
-            return res.status(404).json({ message: 'Order not found' });
+            return res.status(404).json({ message: 'Заказ не найден' });
         }
 
         const orderDetails = order[0];
 
         if (req.user.role_id !== 1 && orderDetails.user_id !== req.user.id) {
-            return res.status(403).json({ message: 'Access denied' });
+            return res.status(403).json({ message: 'Доступ запрещен' });
         }
 
         const decodedFileName = decodeURIComponent(escape(file.originalname));
@@ -120,10 +118,10 @@ export async function uploadFileToOrder(req, res) {
             file.mimetype,
         );
 
-        res.status(201).json({ message: 'File uploaded' });
+        res.status(201).json({ message: 'Файл загружен' });
     } catch (err) {
         res.status(500).json({
-            message: 'Error file upload',
+            message: 'Ошибка сервера',
             error: err.message,
         });
     }
@@ -136,19 +134,19 @@ export async function deleteFile(req, res) {
         const file = await getFileWithUser(id);
 
         if (!file) {
-            return res.status(404).json({ message: 'File not found' });
+            return res.status(404).json({ message: 'Файл не найден' });
         }
 
         if (req.user.role_id !== 1 && file.user_id !== req.user.id) {
-            return res.status(403).json({ message: 'Access denied' });
+            return res.status(403).json({ message: 'Доступ запрещен' });
         }
 
         await deleteFileById(id);
 
-        res.status(200).json({ message: 'File deleted successfully' });
+        res.status(200).json({ message: 'Файл успешно удален' });
     } catch (err) {
         res.status(500).json({
-            message: 'File deletion failed',
+            message: 'Ошибка сервера',
             error: err.message,
         });
     }

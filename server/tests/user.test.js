@@ -55,7 +55,7 @@ describe("User API", () => {
           })
           .expect(201);
 
-        expect(res.body.message).toBe("User created");
+        expect(res.body.message).toBe("Успешная регистрация");
         expect(res.body.accessToken).toBeDefined();
         expect(res.body.refreshToken).toBeDefined();
         newUserId = jwt.verify(
@@ -93,7 +93,7 @@ describe("User API", () => {
           })
           .expect(200);
 
-        expect(res.body.message).toBe("Login successful");
+        expect(res.body.message).toBe("Успешный вход");
         expect(res.body.accessToken).toBeDefined();
         expect(res.body.refreshToken).toBeDefined();
       });
@@ -119,7 +119,7 @@ describe("User API", () => {
           .expect(200);
 
         expect(res.body.message).toBe(
-          "If user exists, a reset email has been sent",
+          "Если пользователь существует, письмо для сброса пароля было отправлено",
         );
 
         const user = await UserModel.getUserByEmail("user@test.com");
@@ -148,7 +148,7 @@ describe("User API", () => {
           })
           .expect(200);
 
-        expect(res.body.message).toBe("Password successfully updated");
+        expect(res.body.message).toBe("Пароль успешно обновлен");
       });
 
       it("should return 400 for invalid token", async () => {
