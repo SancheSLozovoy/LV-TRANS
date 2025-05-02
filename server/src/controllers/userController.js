@@ -8,6 +8,7 @@ import {
     generateRefreshToken,
 } from '../middleware/generateToken.js';
 import { transporter } from '../middleware/emailTransporter.js';
+import { isValidEmail, isValidPhone } from '../middleware/validation.js';
 
 dotenv.config();
 
@@ -16,6 +17,14 @@ export async function register(req, res) {
 
     if (!email || !phone || !password) {
         return res.status(400).json({ message: 'Missing required fields' });
+    }
+
+    if (!isValidEmail(email)) {
+        return res.status(400).json({ message: 'Invalid email format' });
+    }
+
+    if (!isValidPhone(phone)) {
+        return res.status(400).json({ message: 'Invalid phone format' });
     }
 
     try {
@@ -201,6 +210,14 @@ export async function updateUser(req, res) {
 
         if (!isAdmin && !isSelf) {
             return res.status(403).json({ message: 'Access denied' });
+        }
+
+        if (!isValidEmail(email)) {
+            return res.status(400).json({ message: 'Invalid email format' });
+        }
+
+        if (!isValidPhone(phone)) {
+            return res.status(400).json({ message: 'Invalid phone format' });
         }
 
         if (!isAdmin && role_id !== req.user.role_id) {
