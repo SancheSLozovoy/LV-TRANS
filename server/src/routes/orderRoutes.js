@@ -546,6 +546,105 @@ const router = express.Router();
 
 /**
  * @swagger
+ * /orders/user/{userId}/active:
+ *   get:
+ *     tags:
+ *       - Orders
+ *     summary: Получение заказов пользователя по его ID(активные)
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID пользователя
+ *     responses:
+ *       200:
+ *         description: Заказы пользователя успешно получены
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                     example: 20
+ *                   info:
+ *                     type: string
+ *                     example: Info about the order
+ *                   weight:
+ *                     type: number
+ *                     example: 5000
+ *                   from:
+ *                     type: string
+ *                     example: From place
+ *                   to:
+ *                     type: string
+ *                     example: To place
+ *                   create_at:
+ *                     type: string
+ *                     format: date
+ *                     example: 2025-10-10
+ *                   date_start:
+ *                     type: string
+ *                     format: date
+ *                     example: 2025-12-12
+ *                   date_end:
+ *                     type: string
+ *                     format: date
+ *                     example: 2025-12-12
+ *                   status_id:
+ *                     type: integer
+ *                     example: 1
+ *       400:
+ *         description: Некорректный ID пользователя
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Недопустимый идентификатор пользователя
+ *       403:
+ *         description: Отказ в доступе (если запрашиваемый ID не соответствует текущему пользователю)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Доступ запрещен
+ *       404:
+ *         description: Заказы не найдены для данного пользователя
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: У пользователя нет заказов
+ *       500:
+ *         description: Ошибка сервера
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Ошибка сервера
+ *                 error:
+ *                   type: string
+ *                   example: Server error
+ */
+
+/**
+ * @swagger
  * /orders/{id}/status:
  *   put:
  *     tags:
@@ -631,6 +730,208 @@ const router = express.Router();
  *                   example: Ошибка сервера
  */
 
+/**
+ * @swagger
+ * orders/metrics:
+ *   get:
+ *     tags:
+ *       - Orders
+ *     summary: Получение метрик для административной панели
+ *     description: Возвращает комплексные метрики системы (доступно только администраторам)
+ *     responses:
+ *       200:
+ *         description: Успешный запрос метрик
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 cargoAnalytics:
+ *                   type: object
+ *                   properties:
+ *                     weightCategories:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                         properties:
+ *                           weight_category:
+ *                             type: string
+ *                             example: "1-5 тонн"
+ *                           orders_count:
+ *                             type: integer
+ *                             example: 15
+ *                           avg_delivery_days:
+ *                             type: number
+ *                             format: float
+ *                             example: 3.5
+ *                           min_weight:
+ *                             type: number
+ *                             format: float
+ *                             example: 1000
+ *                           max_weight:
+ *                             type: number
+ *                             format: float
+ *                             example: 5000
+ *                           avg_weight:
+ *                             type: number
+ *                             format: float
+ *                             example: 2500.75
+ *                     volumeCategories:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                         properties:
+ *                           volume_category:
+ *                             type: string
+ *                             example: "Крупногабаритный"
+ *                           orders_count:
+ *                             type: integer
+ *                             example: 8
+ *                           avg_volume:
+ *                             type: number
+ *                             format: float
+ *                             example: 1201029738221.2
+ *                           min_volume:
+ *                             type: number
+ *                             format: float
+ *                             example: 33076161
+ *                           max_volume:
+ *                             type: number
+ *                             format: float
+ *                             example: 6000000000000
+ *                 temporalAnalytics:
+ *                   type: object
+ *                   properties:
+ *                     stuckOrders:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                         properties:
+ *                           time_range:
+ *                             type: string
+ *                             example: "До 7 дней"
+ *                           orders_count:
+ *                             type: integer
+ *                             example: 4
+ *                           avg_weight:
+ *                             type: number
+ *                             format: float
+ *                             example: 5488.25
+ *                           avg_volume:
+ *                             type: number
+ *                             format: float
+ *                             example: 1500030117838.4998
+ *                 statusAnalytics:
+ *                   type: object
+ *                   properties:
+ *                     totalWeight:
+ *                       type: number
+ *                       format: float
+ *                       example: 4732
+ *                     avgVolume:
+ *                       type: number
+ *                       format: float
+ *                       example: 857879.7719891429
+ *                     avgDeliveryTime:
+ *                       type: string
+ *                       example: "69.5714"
+ *                     oversizedRatio:
+ *                       type: object
+ *                       properties:
+ *                         standardCargoCount:
+ *                           type: integer
+ *                           example: 2
+ *                         oversizedCargoCount:
+ *                           type: integer
+ *                           example: 5
+ *                         oversizedPercentage:
+ *                           type: string
+ *                           example: "71.4286"
+ *                     topUser:
+ *                       type: object
+ *                       properties:
+ *                         id:
+ *                           type: integer
+ *                           example: 1
+ *                         email:
+ *                           type: string
+ *                           example: "user@example.com"
+ *                         orders_count:
+ *                           type: integer
+ *                           example: 2
+ *                         total_weight:
+ *                           type: number
+ *                           format: float
+ *                           example: 20321
+ *                         avg_weight:
+ *                           type: number
+ *                           format: float
+ *                           example: 10160.5
+ *                 businessKPI:
+ *                   type: object
+ *                   properties:
+ *                     extremeParameters:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                         properties:
+ *                           category:
+ *                             type: string
+ *                             example: "Топ по весу"
+ *                           id:
+ *                             type: integer
+ *                             example: 11
+ *                           from:
+ *                             type: string
+ *                             example: "Ростов-на-Дону"
+ *                           to:
+ *                             type: string
+ *                             example: "Москва"
+ *                           weight:
+ *                             type: number
+ *                             format: float
+ *                             example: 20000
+ *                           length:
+ *                             type: number
+ *                             format: float
+ *                             example: 10000
+ *                           width:
+ *                             type: number
+ *                             format: float
+ *                             example: 20000
+ *                           height:
+ *                             type: number
+ *                             format: float
+ *                             example: 30000
+ *                           delivery_days:
+ *                             type: integer
+ *                             example: 1
+ *                 complexMetrics:
+ *                   type: object
+ *                   description: Дополнительные комплексные метрики
+ *       403:
+ *         description: Доступ запрещен
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Доступ запрещен
+ *       500:
+ *         description: Ошибка сервера
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Server Error
+ */
+
+router.get('/metrics', authenticateToken, OrderController.getDashboardMetrics);
 router.get('/', authenticateToken, OrderController.getOrders);
 router.get('/:id', authenticateToken, OrderController.getOrderById);
 router.post('/', uploadFiles, authenticateToken, OrderController.createOrder);
@@ -641,6 +942,11 @@ router.get(
     '/user/:userId',
     authenticateToken,
     OrderController.getOrdersByUserId,
+);
+router.get(
+    '/user/:userId/active',
+    authenticateToken,
+    OrderController.getActiveOrdersByUserId,
 );
 
 export default router;

@@ -4,6 +4,7 @@ import styles from "./adminMenu.module.scss";
 import {
   UnorderedListOutlined,
   TeamOutlined,
+  FundOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import { Tooltip } from "antd";
@@ -26,6 +27,14 @@ export const AdminMenu = (): React.JSX.Element => {
               <Link to="/admin/users">
                 <li>
                   <TeamOutlined />
+                </li>
+              </Link>
+            </Tooltip>
+
+            <Tooltip placement="right" title="Аналитика">
+              <Link to="/admin/analytics">
+                <li>
+                  <FundOutlined />
                 </li>
               </Link>
             </Tooltip>

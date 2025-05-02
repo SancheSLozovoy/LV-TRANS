@@ -111,6 +111,30 @@ export async function getOrdersByUserId(userId, limit = 8, offset = 0) {
     return { orders: rows, total };
 }
 
+export async function getActiveOrdersByUserId(userId, limit = 8, offset = 0) {
+    const [rows] = await pool.query(
+        `SELECT * FROM orders 
+         WHERE user_id = ? 
+         AND status_id != 4 
+         ORDER BY create_at DESC 
+         LIMIT ? OFFSET ?`,
+        [userId, limit, offset],
+    );
+
+    const [[{ total }]] = await pool.query(
+        `SELECT COUNT(*) as total 
+         FROM orders 
+         WHERE user_id = ? 
+         AND status_id != 4`,
+        [userId],
+    );
+
+    return {
+        orders: rows,
+        total: Number(total),
+    };
+}
+
 export async function updateStatus(id, status_id) {
     const [result] = await pool.query(
         'UPDATE orders SET status_id = ? WHERE id = ?',
