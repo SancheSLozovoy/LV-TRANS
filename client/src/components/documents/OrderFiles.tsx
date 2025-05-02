@@ -80,7 +80,7 @@ export const OrderFiles: React.FC = () => {
       }, 100);
     } catch (error) {
       console.error("Download error:", error);
-      messageApi.error(error.message);
+      messageApi.error((error as Error).message);
     }
   };
 
@@ -98,7 +98,7 @@ export const OrderFiles: React.FC = () => {
       await fetchFiles();
     } catch (error) {
       console.error("Upload error:", error);
-      messageApi.error(error.message);
+      messageApi.error((error as Error).message);
     } finally {
       setUploading(false);
     }
@@ -139,7 +139,7 @@ export const OrderFiles: React.FC = () => {
       setFiles((prev) => prev.filter((f) => f.id !== fileToDelete.id));
     } catch (err) {
       console.error("Delete error:", err);
-      messageApi.error(err.message);
+      messageApi.error((err as Error).message);
     } finally {
       setDeleteModalVisible(false);
       setFileToDelete(null);

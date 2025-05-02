@@ -33,12 +33,12 @@ export const OrdersTable = () => {
       setLoading(true);
       const data = await fetchData(
         `/orders?page=${currentPage}&limit=${pageSize}`,
-        "GET",
+        "GET"
       );
       setOrders(data.orders);
       setTotal(data.total);
     } catch (error) {
-      messageApi.error(error.message);
+      messageApi.error((error as Error).message);
     } finally {
       setLoading(false);
     }
@@ -55,7 +55,7 @@ export const OrdersTable = () => {
   const handleStatusChange = async (
     orderId: number,
     statusId: number,
-    email: string,
+    email: string
   ) => {
     try {
       const res = await fetchData(`/orders/${orderId}/status`, "PUT", {
@@ -67,7 +67,7 @@ export const OrdersTable = () => {
 
       fetchOrders();
     } catch (error) {
-      messageApi.error(error.message);
+      messageApi.error((error as Error).message);
     }
   };
 
@@ -78,7 +78,7 @@ export const OrdersTable = () => {
       messageApi.success(res.message);
       fetchOrders();
     } catch (error) {
-      messageApi.error(error.message);
+      messageApi.error((error as Error).message);
     } finally {
       setConfirmOpen(false);
       setSelectedOrderId(null);

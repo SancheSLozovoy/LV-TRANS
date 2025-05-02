@@ -41,7 +41,7 @@ export const EditUserForm: React.FC = () => {
       messageApi.success(res.message);
     } catch (error) {
       console.error("Update user error", error);
-      messageApi.error(error.message);
+      messageApi.error((error as Error).message);
     } finally {
       setLoading(false);
     }

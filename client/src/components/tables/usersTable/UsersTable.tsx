@@ -31,12 +31,12 @@ export const UsersTable = () => {
       setLoading(true);
       const data = await fetchData(
         `/users?page=${currentPage}&limit=${pageSize}`,
-        "GET",
+        "GET"
       );
       setUsers(data.users);
       setTotal(data.total);
     } catch (error) {
-      messageApi.error(error.message);
+      messageApi.error((error as Error).message);
     } finally {
       setLoading(false);
     }
@@ -49,7 +49,7 @@ export const UsersTable = () => {
       messageApi.success(res.message);
       fetchUsers();
     } catch (error) {
-      messageApi.error(error.message);
+      messageApi.error((error as Error).message);
     }
   };
 
@@ -60,7 +60,7 @@ export const UsersTable = () => {
       messageApi.success(res.message);
       fetchUsers();
     } catch (error) {
-      messageApi.error(error.message);
+      messageApi.error((error as Error).message);
     } finally {
       setConfirmOpen(false);
       setSelectedUserId(null);

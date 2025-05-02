@@ -47,7 +47,7 @@ export const EditOrderForm: React.FC = () => {
         });
       } catch (error) {
         console.error("Fetch order data error", error);
-        messageApi.error(error.message);
+        messageApi.error((error as Error).message);
       }
     };
 
@@ -82,7 +82,7 @@ export const EditOrderForm: React.FC = () => {
       setIsEditing(false);
     } catch (error) {
       console.error("Update order error", error);
-      messageApi.error(error.message);
+      messageApi.error((error as Error).message);
     } finally {
       setLoading(false);
     }

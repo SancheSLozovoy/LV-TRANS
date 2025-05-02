@@ -77,7 +77,7 @@ export const CreateOrderForm: React.FC = () => {
       setFileList([]);
     } catch (error) {
       console.error("Create order error", error);
-      messageApi.error(error.message);
+      messageApi.error((error as Error).message);
     } finally {
       setLoading(false);
     }

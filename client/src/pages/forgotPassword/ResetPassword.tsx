@@ -31,7 +31,7 @@ export function ResetPassword() {
         .then(() => navigate("/login"));
     } catch (error) {
       console.log(error);
-      messageApi.error(error.message);
+      messageApi.error((error as Error).message);
     } finally {
       setLoading(false);
     }

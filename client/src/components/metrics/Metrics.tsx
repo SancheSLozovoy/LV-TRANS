@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Card,
   Row,
@@ -25,13 +25,20 @@ import {
   ClockCircleOutlined,
 } from "@ant-design/icons";
 import useFetch from "../../composables/useFetch.ts";
+import type { ColumnsType } from "antd/es/table";
+import {
+  ExtremeParameter,
+  MetricsData,
+  StuckOrder,
+  WeightCategory,
+} from "../../models/metrics.ts";
 
 const { Title, Text } = Typography;
 
 export const AnalyticsDashboard = () => {
-  const [analyticsData, setAnalyticsData] = useState(null);
+  const [analyticsData, setAnalyticsData] = useState<MetricsData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   const { fetchData } = useFetch();
 
@@ -42,7 +49,7 @@ export const AnalyticsDashboard = () => {
         const data = await fetchData("/orders/metrics", "GET");
         setAnalyticsData(data);
       } catch (err) {
-        setError(err.message);
+        setError(err instanceof Error ? err.message : "Unknown error");
         console.error("Failed to fetch analytics:", err);
       } finally {
         setLoading(false);
@@ -73,7 +80,7 @@ export const AnalyticsDashboard = () => {
     temporalAnalytics,
   } = analyticsData;
 
-  const weightColumns = [
+  const weightColumns: ColumnsType<WeightCategory> = [
     {
       title: "Весовая категория",
       dataIndex: "weight_category",
@@ -89,13 +96,13 @@ export const AnalyticsDashboard = () => {
       title: "Ср. время доставки",
       dataIndex: "avg_delivery_days",
       key: "avg_delivery_days",
-      render: (text) => text,
+      render: (text: string) => text,
       align: "center",
     },
     {
       title: "Вес (мин/ср/макс)",
       key: "weight_range",
-      render: (_, record) => (
+      render: (_: any, record: WeightCategory) => (
         <>
           <Text>{record.min_weight} кг</Text>
           <Divider type="vertical" />
@@ -108,7 +115,7 @@ export const AnalyticsDashboard = () => {
     },
   ];
 
-  const extremeColumns = [
+  const extremeColumns: ColumnsType<ExtremeParameter> = [
     {
       title: "Категория",
       dataIndex: "category",
@@ -123,7 +130,7 @@ export const AnalyticsDashboard = () => {
     {
       title: "Маршрут",
       key: "route",
-      render: (_, record) => (
+      render: (_: any, record: ExtremeParameter) => (
         <Text>
           {record.from} → {record.to}
         </Text>
@@ -133,7 +140,7 @@ export const AnalyticsDashboard = () => {
       title: "Параметры",
       key: "params",
       width: 500,
-      render: (_, record) => (
+      render: (_: any, record: ExtremeParameter) => (
         <Descriptions size="small" column={1}>
           <Descriptions.Item label="Вес">{record.weight} кг</Descriptions.Item>
           <Descriptions.Item label="Длина">
@@ -152,12 +159,12 @@ export const AnalyticsDashboard = () => {
       title: "Время доставки",
       dataIndex: "delivery_days",
       key: "delivery_days",
-      render: (text) => text,
+      render: (text: number) => text,
       align: "center",
     },
   ];
 
-  const stuckColumns = [
+  const stuckColumns: ColumnsType<StuckOrder> = [
     {
       title: "Дней с момента загрузки",
       dataIndex: "time_range",
@@ -173,7 +180,6 @@ export const AnalyticsDashboard = () => {
 
   return (
     <div>
-      {/* Ключевые показатели */}
       <Title level={3} style={{ marginBottom: 24 }}>
         <DashboardOutlined /> Ключевые показатели
       </Title>
@@ -183,7 +189,7 @@ export const AnalyticsDashboard = () => {
           <Card>
             <Statistic
               title="Общий перевезенный вес"
-              value={businessKPI?.totalWeight || ""}
+              value={businessKPI.totalWeight}
               precision={0}
               suffix="кг"
               prefix={<BoxPlotOutlined />}
@@ -205,7 +211,7 @@ export const AnalyticsDashboard = () => {
           <Card>
             <Statistic
               title="Среднее время доставки"
-              value={businessKPI.avgDeliveryTime || ""}
+              value={businessKPI.avgDeliveryTime}
               precision={1}
               suffix="дней"
               prefix={<CalendarOutlined />}
@@ -218,9 +224,9 @@ export const AnalyticsDashboard = () => {
               <Text strong>Соотношение грузов:</Text>
             </div>
             <Progress
-              percent={
-                parseFloat(businessKPI.oversizedRatio?.oversizedPercentage) || 0
-              }
+              percent={parseFloat(
+                businessKPI.oversizedRatio.oversizedPercentage
+              )}
               success={{ percent: 0 }}
               format={(percent) => <Text strong>{percent}% негабаритных</Text>}
             />
@@ -234,17 +240,11 @@ export const AnalyticsDashboard = () => {
               >
                 <Badge
                   status="default"
-                  text={
-                    `${businessKPI.oversizedRatio?.standardCargoCount} стандартных` ||
-                    ""
-                  }
+                  text={`${businessKPI.oversizedRatio.standardCargoCount} стандартных`}
                 />{" "}
                 <Badge
                   status="processing"
-                  text={
-                    `${businessKPI.oversizedRatio?.oversizedCargoCount} негабаритных` ||
-                    ""
-                  }
+                  text={`${businessKPI.oversizedRatio.oversizedCargoCount} негабаритных`}
                 />
               </Text>
             </div>
@@ -260,23 +260,22 @@ export const AnalyticsDashboard = () => {
           >
             <Descriptions column={1}>
               <Descriptions.Item label="Email">
-                <Text strong>{businessKPI?.topUser?.email || ""}</Text>
+                <Text strong>{businessKPI.topUser.email}</Text>
               </Descriptions.Item>
               <Descriptions.Item label="Кол-во заказов">
-                {businessKPI?.topUser?.orders_count || ""}
+                {businessKPI.topUser.orders_count}
               </Descriptions.Item>
               <Descriptions.Item label="Общий вес">
-                {businessKPI?.topUser?.total_weight || ""} кг
+                {businessKPI.topUser.total_weight} кг
               </Descriptions.Item>
               <Descriptions.Item label="Средний вес">
-                {businessKPI?.topUser?.avg_weight || ""} кг
+                {businessKPI.topUser.avg_weight} кг
               </Descriptions.Item>
             </Descriptions>
           </Card>
         </Col>
       </Row>
 
-      {/* Аналитика по весу и объему */}
       <Card
         style={{ marginBottom: 24 }}
         title={
@@ -287,7 +286,7 @@ export const AnalyticsDashboard = () => {
       >
         <Table
           columns={weightColumns}
-          dataSource={cargoAnalytics?.weightCategories || []}
+          dataSource={cargoAnalytics.weightCategories}
           pagination={false}
           scroll={{ x: 1050 }}
           size="small"
@@ -297,7 +296,6 @@ export const AnalyticsDashboard = () => {
         />
       </Card>
 
-      {/* Новый блок: Заказы в процессе */}
       <Card
         style={{ marginBottom: 24 }}
         title={
@@ -308,7 +306,7 @@ export const AnalyticsDashboard = () => {
       >
         <Table
           columns={stuckColumns}
-          dataSource={statusAnalytics.stuckOrders || []}
+          dataSource={statusAnalytics.stuckOrders}
           pagination={false}
           size="small"
           scroll={{ x: 650 }}
@@ -318,7 +316,6 @@ export const AnalyticsDashboard = () => {
         />
       </Card>
 
-      {/* Статусы и сезонность */}
       <Card
         style={{ marginBottom: 24 }}
         title={
@@ -334,7 +331,7 @@ export const AnalyticsDashboard = () => {
               title: "Месяц",
               dataIndex: "month",
               key: "month",
-              render: (month) => {
+              render: (month: number) => {
                 const months = [
                   "Январь",
                   "Февраль",
@@ -362,18 +359,18 @@ export const AnalyticsDashboard = () => {
               title: "Общий вес",
               dataIndex: "total_weight",
               key: "total_weight",
-              render: (text) => `${text} кг`,
+              render: (text: number) => `${text} кг`,
               align: "center",
             },
             {
               title: "Ср. вес",
               dataIndex: "avg_weight",
               key: "avg_weight",
-              render: (text) => `${text} кг`,
+              render: (text: number) => `${text} кг`,
               align: "center",
             },
           ]}
-          dataSource={temporalAnalytics.seasonalDistribution || []}
+          dataSource={temporalAnalytics.seasonalDistribution}
           pagination={false}
           size="small"
           locale={{
@@ -392,7 +389,7 @@ export const AnalyticsDashboard = () => {
         <Table
           scroll={{ x: 1050 }}
           columns={extremeColumns}
-          dataSource={complexMetrics.extremeParameters || []}
+          dataSource={complexMetrics.extremeParameters}
           pagination={false}
           size="small"
           locale={{
