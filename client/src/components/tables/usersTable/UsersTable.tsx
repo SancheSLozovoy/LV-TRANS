@@ -16,6 +16,7 @@ export const UsersTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [pageSize, setPageSize] = useState(10);
+  const [messageApi, contextHolder] = message.useMessage();
 
   const { user: currentUser, token } = useAuth();
 
@@ -30,12 +31,12 @@ export const UsersTable = () => {
       setLoading(true);
       const data = await fetchData(
         `/users?page=${currentPage}&limit=${pageSize}`,
-        "GET",
+        "GET"
       );
       setUsers(data.users);
       setTotal(data.total);
     } catch (error) {
-      message.error("Ошибка при загрузке пользователей");
+      messageApi.error((error as Error).message);
     } finally {
       setLoading(false);
     }
@@ -44,22 +45,22 @@ export const UsersTable = () => {
   const toggleRole = async (user: User) => {
     const role_id = user.role_id === 1 ? 2 : 1;
     try {
-      await fetchData(`/users/${user.id}/role`, "PUT", { role_id });
-      message.success("Роль изменена");
+      const res = await fetchData(`/users/${user.id}/role`, "PUT", { role_id });
+      messageApi.success(res.message);
       fetchUsers();
-    } catch {
-      message.error("Ошибка при смене роли");
+    } catch (error) {
+      messageApi.error((error as Error).message);
     }
   };
 
   const handleDelete = async () => {
     if (!selectedUserId) return;
     try {
-      await fetchData(`/users/${selectedUserId}`, "DELETE");
-      message.success("Пользователь удалён");
+      const res = await fetchData(`/users/${selectedUserId}`, "DELETE");
+      messageApi.success(res.message);
       fetchUsers();
-    } catch {
-      message.error("Ошибка при удалении");
+    } catch (error) {
+      messageApi.error((error as Error).message);
     } finally {
       setConfirmOpen(false);
       setSelectedUserId(null);
@@ -121,6 +122,7 @@ export const UsersTable = () => {
 
   return (
     <div>
+      {contextHolder}
       <h1 className="title">Список пользователей</h1>
       <Table
         dataSource={users}

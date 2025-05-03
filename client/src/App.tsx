@@ -18,6 +18,7 @@ import { OrderTabs } from "./components/tabs/OrderTabs.tsx";
 import { EditUserForm } from "./components/forms/editProfileForn/EditUserForm.tsx";
 import { ForgotPassword } from "./pages/forgotPassword/ForgotPassword.tsx";
 import { ResetPassword } from "./pages/forgotPassword/ResetPassword.tsx";
+import { AnalyticsDashboard } from "./components/metrics/Metrics.tsx";
 
 export default function App(): JSX.Element {
   return (
@@ -41,6 +42,7 @@ export default function App(): JSX.Element {
             <Route path="profile" element={<ProfileForm />} />
             <Route path="user" element={<EditUserForm />} />
             <Route path="orders/:id" element={<OrderTabs />} />
+            <Route path="analytics" element={<AnalyticsDashboard />} />
           </Route>
         </Route>
 

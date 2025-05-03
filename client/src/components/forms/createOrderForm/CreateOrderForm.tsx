@@ -68,15 +68,16 @@ export const CreateOrderForm: React.FC = () => {
       }
 
       const formData = createFormData(values);
-      await submitOrder(formData);
+      const res = await submitOrder(formData);
 
-      messageApi.success("Заказ создан");
+      messageApi.success(res.message);
+
       setIsSuccess(true);
       form.resetFields();
       setFileList([]);
     } catch (error) {
       console.error("Create order error", error);
-      messageApi.error("Не удалось создать заказ");
+      messageApi.error((error as Error).message);
     } finally {
       setLoading(false);
     }
@@ -109,7 +110,7 @@ export const CreateOrderForm: React.FC = () => {
   };
 
   const submitOrder = async (formData: FormData) => {
-    await fetchData("/orders", "POST", formData, {
+    return await fetchData("/orders", "POST", formData, {
       "Content-Type": "multipart/form-data",
     });
   };
@@ -134,7 +135,12 @@ export const CreateOrderForm: React.FC = () => {
   };
 
   if (isSuccess) {
-    return <CreateSuccess type={Type.create} />;
+    return (
+      <>
+        {contextHolder}
+        <CreateSuccess type={Type.create} />
+      </>
+    );
   }
 
   return (

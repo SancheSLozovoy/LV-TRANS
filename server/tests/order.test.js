@@ -32,7 +32,7 @@ describe("Order API", () => {
         .attach("files", testImage)
         .expect(201);
 
-      expect(res.body.message).toBe("Order created with files");
+      expect(res.body.message).toBe("Заказ создан");
       orderId = res.body.orderId;
     });
 
@@ -52,7 +52,7 @@ describe("Order API", () => {
         .field("user_id", 2)
         .expect(400);
 
-      expect(res.body.message).toBe("No files uploaded");
+      expect(res.body.message).toBe("Не заполнены обязательные поля");
     });
   });
 
@@ -73,7 +73,7 @@ describe("Order API", () => {
         .set("Authorization", `Bearer ${userToken}`)
         .expect(403);
 
-      expect(res.body.message).toBe("Access denied");
+      expect(res.body.message).toBe("Доступ запрещен");
     });
 
     it("should return 404 if no orders", async () => {
@@ -86,7 +86,7 @@ describe("Order API", () => {
         .set("Authorization", `Bearer ${adminToken}`)
         .expect(404);
 
-      expect(res.body.message).toBe("No orders found");
+      expect(res.body.message).toBe("Заказы не найдены");
     });
   });
 
@@ -117,7 +117,7 @@ describe("Order API", () => {
         .set("Authorization", `Bearer ${anotherUserToken}`)
         .expect(403);
 
-      expect(res.body.message).toBe("Access denied");
+      expect(res.body.message).toBe("Доступ запрещен");
     });
 
     it("should return 400 for invalid ID", async () => {
@@ -126,7 +126,7 @@ describe("Order API", () => {
         .set("Authorization", `Bearer ${adminToken}`)
         .expect(400);
 
-      expect(res.body.message).toBe("Invalid order ID");
+      expect(res.body.message).toBe("Недопустимый идентификатор заказа");
     });
   });
 
@@ -150,7 +150,7 @@ describe("Order API", () => {
         })
         .expect(200);
 
-      expect(res.body.message).toBe("Order updated");
+      expect(res.body.message).toBe("Заказ обновлен");
     });
 
     it("should return 403 for non-owner user", async () => {
@@ -174,7 +174,7 @@ describe("Order API", () => {
         })
         .expect(403);
 
-      expect(res.body.message).toBe("Access denied");
+      expect(res.body.message).toBe("Доступ запрещен");
     });
   });
 
@@ -194,7 +194,7 @@ describe("Order API", () => {
         .set("Authorization", `Bearer ${userToken}`)
         .expect(403);
 
-      expect(res.body.message).toBe("Access denied");
+      expect(res.body.message).toBe("Доступ запрещен");
     });
   });
 
@@ -205,7 +205,7 @@ describe("Order API", () => {
         .set("Authorization", `Bearer ${userToken}`)
         .expect(200);
 
-      expect(res.body.message).toBe("Order deleted");
+      expect(res.body.message).toBe("Заказ удален");
     });
 
     it("should return 404 for nonexistent order", async () => {
@@ -214,7 +214,7 @@ describe("Order API", () => {
         .set("Authorization", `Bearer ${adminToken}`)
         .expect(404);
 
-      expect(res.body.message).toBe("Order not found");
+      expect(res.body.message).toBe("Заказ не найден");
     });
   });
 });

@@ -69,7 +69,7 @@ describe("File API", () => {
         .set("Authorization", `Bearer ${strangerToken}`)
         .expect(403);
 
-      expect(res.body.message).toBe("Access denied");
+      expect(res.body.message).toBe("Доступ запрещен");
     });
 
     it("should return 404 if order not found", async () => {
@@ -78,7 +78,7 @@ describe("File API", () => {
         .set("Authorization", `Bearer ${adminToken}`)
         .expect(404);
 
-      expect(res.body.message).toBe("Order not found");
+      expect(res.body.message).toBe("Заказ не найден");
     });
 
     it("should return 404 if no files", async () => {
@@ -107,7 +107,7 @@ describe("File API", () => {
         .set("Authorization", `Bearer ${userToken}`)
         .expect(404);
 
-      expect(res.body.message).toBe("No files found for this order");
+      expect(res.body.message).toBe("Файлы для этого заказа не найдены");
     });
   });
 
@@ -137,7 +137,7 @@ describe("File API", () => {
         .set("Authorization", `Bearer ${strangerToken}`)
         .expect(403);
 
-      expect(res.body.message).toBe("Access denied");
+      expect(res.body.message).toBe("Доступ запрещен");
     });
 
     it("should return 404 for unknown file", async () => {
@@ -146,7 +146,7 @@ describe("File API", () => {
         .set("Authorization", `Bearer ${adminToken}`)
         .expect(404);
 
-      expect(res.body.message).toBe("File not found");
+      expect(res.body.message).toBe("Файл не найден");
     });
   });
 });

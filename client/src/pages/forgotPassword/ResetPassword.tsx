@@ -27,11 +27,11 @@ export function ResetPassword() {
         token,
         password: values.password,
       })
-        .then(() => messageApi.success("Пароль успешно обновлен"))
+        .then((res) => messageApi.success(res.message))
         .then(() => navigate("/login"));
     } catch (error) {
       console.log(error);
-      messageApi.error("Ошибка при обновлении пароля");
+      messageApi.error((error as Error).message);
     } finally {
       setLoading(false);
     }

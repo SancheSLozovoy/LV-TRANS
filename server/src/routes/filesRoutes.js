@@ -11,9 +11,7 @@ const router = express.Router();
  *   get:
  *     summary: Получение файлов заказа по ID
  *     tags:
- *       - Orders
- *     security:
- *       - bearerAuth: []
+ *       - Files
  *     parameters:
  *       - in: path
  *         name: orderId
@@ -56,7 +54,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Access denied
+ *                   example: Доступ запрещен
  *       404:
  *         description: Заказ или файлы не найдены
  *         content:
@@ -66,7 +64,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: No files found for this order
+ *                   example: Файлы для этого заказа не найдены
  *       500:
  *         description: Ошибка сервера
  *         content:
@@ -76,7 +74,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Error getting files
+ *                   example: Ошибка сервера
  *                 error:
  *                   type: string
  *                   example: Error message details
@@ -88,9 +86,7 @@ const router = express.Router();
  *   get:
  *     summary: Загрузка одного файла по ID
  *     tags:
- *       - Orders
- *     security:
- *       - bearerAuth: []
+ *       - Files
  *     parameters:
  *       - in: path
  *         name: id
@@ -128,7 +124,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Access denied
+ *                   example: Доступ запрещен
  *       404:
  *         description: Файл не найден
  *         content:
@@ -138,7 +134,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: File not found
+ *                   example: Файл не найден
  *       500:
  *         description: Ошибка сервера
  *         content:
@@ -148,7 +144,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: File download failed
+ *                   example: Ошибка сервера
  *                 error:
  *                   type: string
  *                   example: Error message details
@@ -160,7 +156,7 @@ const router = express.Router();
  *   post:
  *     summary: Подгрузка файла заказу
  *     tags:
- *       - Orders
+ *       - Files
  *     parameters:
  *       - in: path
  *         name: id
@@ -178,7 +174,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: File uploaded
+ *                   example: Файл загружен
  *       403:
  *         description: Доступ запрещён
  *         content:
@@ -188,7 +184,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Access denied
+ *                   example: Доступ запрещен
  *       404:
  *         description: Заказ не найден
  *         content:
@@ -198,7 +194,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Order not found
+ *                   example: Заказ не найден
  *       500:
  *         description: Ошибка сервера
  *         content:
@@ -208,7 +204,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Error file upload
+ *                   example: Ошибка сервера
  *                 error:
  *                   type: string
  *                   example: Error message details
@@ -220,7 +216,7 @@ const router = express.Router();
  *   delete:
  *     summary: Удаление файлов
  *     tags:
- *       - Orders
+ *       - Files
  *     parameters:
  *       - in: path
  *         name: id
@@ -238,7 +234,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: File deleted successfully
+ *                   example: Файл успешно удален
  *       403:
  *         description: Доступ запрещён
  *         content:
@@ -248,7 +244,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Access denied
+ *                   example: Доступ запрещен
  *       404:
  *         description: Файл не найден
  *         content:
@@ -258,7 +254,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: File not found
+ *                   example: Файл не найден
  *       500:
  *         description: Ошибка сервера
  *         content:
@@ -268,7 +264,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: File deletion failed
+ *                   example: Ошибка сервера
  *                 error:
  *                   type: string
  *                   example: Error message details

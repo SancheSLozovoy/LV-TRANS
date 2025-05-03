@@ -156,6 +156,7 @@ export const UserTable = () => {
           setPageSize(pageSize);
         }}
         style={{ marginBottom: "20px" }}
+        showSizeChanger={false}
       />
 
       {modalData && orderToCancel !== null && (

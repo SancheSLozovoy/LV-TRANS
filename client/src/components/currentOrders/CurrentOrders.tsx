@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Badge, Pagination } from "antd";
+import { Badge, Pagination, Spin } from "antd";
 import "./currentOrders.scss";
 import { Order } from "../../models/orderModels.ts";
 import useFetch from "../../composables/useFetch.ts";
@@ -13,6 +13,8 @@ const PAGE_SIZE = 8;
 export const CurrentOrders = () => {
   const [activeOrders, setActiveOrders] = useState<Order[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalOrders, setTotalOrders] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   const { user } = useAuth();
   const { fetchData } = useFetch();
@@ -21,32 +23,35 @@ export const CurrentOrders = () => {
   const fetchOrders = async () => {
     if (!user?.id) return;
 
-    const response = await fetchData(`/orders/user/${user.id}`, "GET");
-
-    if (response?.orders) {
-      const filtered = response.orders.filter(
-        (order: Order) => order.status_id !== 4,
+    setLoading(true);
+    try {
+      const response = await fetchData(
+        `/orders/user/${user.id}/active?page=${currentPage}&limit=${PAGE_SIZE}`,
+        "GET",
       );
-      setActiveOrders(filtered);
+
+      if (response && response.orders) {
+        setActiveOrders(response.orders);
+        setTotalOrders(response.total || 0);
+      }
+    } catch (error) {
+      console.error("Ошибка при загрузке заказов:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     fetchOrders();
-  }, []);
+  }, [currentPage, user?.id]);
 
-  const paginatedOrders = activeOrders.slice(
-    (currentPage - 1) * PAGE_SIZE,
-    currentPage * PAGE_SIZE,
-  );
+  if (loading) {
+    return <Spin size="large" />;
+  }
 
   if (activeOrders.length === 0) {
     return null;
   }
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
 
   const handleOrderClick = (id: number) => {
     navigate(`/orders/${id}`);
@@ -61,7 +66,7 @@ export const CurrentOrders = () => {
       <Container>
         <h2 className="current-orders__title">Текущие заказы</h2>
         <div className="current-orders__list">
-          {paginatedOrders.map((order) => (
+          {activeOrders.map((order) => (
             <div
               key={order.id}
               className="current-orders__item"
@@ -85,15 +90,16 @@ export const CurrentOrders = () => {
         </div>
 
         <div className="current-orders__pagination">
-          {activeOrders.length > PAGE_SIZE && (
-            <Pagination
-              current={currentPage}
-              pageSize={PAGE_SIZE}
-              total={activeOrders.length}
-              onChange={handlePageChange}
-              showSizeChanger={false}
-              hideOnSinglePage
-            />
+          {totalOrders > PAGE_SIZE && (
+            <div className="current-orders__pagination">
+              <Pagination
+                current={currentPage}
+                pageSize={PAGE_SIZE}
+                total={totalOrders}
+                onChange={(page) => setCurrentPage(page)}
+                showSizeChanger={false}
+              />
+            </div>
           )}
         </div>
       </Container>
