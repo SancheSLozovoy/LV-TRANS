@@ -59,7 +59,7 @@ export const AnalyticsDashboard = () => {
     loadAnalytics();
   }, []);
 
-  if (loading) return <Spin size="large" />;
+  if (loading) return <Spin size="large" data-testid="loading-spinner" />;
   if (error)
     return (
       <Alert
@@ -225,7 +225,7 @@ export const AnalyticsDashboard = () => {
             </div>
             <Progress
               percent={parseFloat(
-                businessKPI.oversizedRatio.oversizedPercentage
+                businessKPI.oversizedRatio.oversizedPercentage,
               )}
               success={{ percent: 0 }}
               format={(percent) => <Text strong>{percent}% негабаритных</Text>}

@@ -7,17 +7,8 @@ export interface WeightCategory {
   avg_weight: number;
 }
 
-export interface VolumeCategory {
-  volume_category: string;
-  orders_count: number;
-  avg_volume: number;
-  min_volume: number;
-  max_volume: number;
-}
-
 export interface CargoAnalytics {
   weightCategories: WeightCategory[];
-  volumeCategories: VolumeCategory[];
 }
 
 export interface SeasonalDistribution {
@@ -34,7 +25,6 @@ export interface StuckOrder {
 
 export interface TemporalAnalytics {
   seasonalDistribution: SeasonalDistribution[];
-  stuckOrders: StuckOrder[];
 }
 
 export interface OversizedRatio {

@@ -13,7 +13,7 @@ export async function getFilesByOrderId(req, res) {
         const order = await OrderModel.getOrderById(orderId);
 
         if (order.length === 0) {
-            return res.status(404).json({ message: 'Order not found' });
+            return res.status(404).json({ message: 'Заказ не найден' });
         }
 
         const orderDetails = order[0];

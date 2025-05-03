@@ -52,7 +52,7 @@ describe("Order API", () => {
         .field("user_id", 2)
         .expect(400);
 
-      expect(res.body.message).toBe("Файлы не были загружены");
+      expect(res.body.message).toBe("Не заполнены обязательные поля");
     });
   });
 
