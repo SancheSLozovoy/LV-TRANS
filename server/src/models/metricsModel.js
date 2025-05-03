@@ -96,7 +96,8 @@ export async function getBusinessKPI() {
     const [[{ avg_volume_cm3 }]] = await pool.query(
         `SELECT 
         AVG(length * width * height) as avg_volume_cm3
-    FROM orders`,
+    FROM orders
+    WHERE status_id = 4`,
     );
 
     const avg_volume_m3 = avg_volume_cm3 / 1000000;
@@ -106,7 +107,7 @@ export async function getBusinessKPI() {
         `SELECT 
             AVG(DATEDIFF(date_end, date_start)) as avg_delivery_time
         FROM orders
-        WHERE date_start IS NOT NULL AND date_end IS NOT NULL`,
+        WHERE date_start IS NOT NULL AND date_end IS NOT NULL AND status_id = 4`,
     );
 
     // Соотношение габаритных и негабаритных грузов
