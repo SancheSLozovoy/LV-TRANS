@@ -33,7 +33,7 @@ export const OrdersTable = () => {
       setLoading(true);
       const data = await fetchData(
         `/orders?page=${currentPage}&limit=${pageSize}`,
-        "GET"
+        "GET",
       );
       setOrders(data.orders);
       setTotal(data.total);
@@ -55,7 +55,7 @@ export const OrdersTable = () => {
   const handleStatusChange = async (
     orderId: number,
     statusId: number,
-    email: string
+    email: string,
   ) => {
     try {
       const res = await fetchData(`/orders/${orderId}/status`, "PUT", {
@@ -189,6 +189,7 @@ export const OrdersTable = () => {
           setPageSize(pageSize);
         }}
         style={{ marginTop: "20px" }}
+        showSizeChanger={false}
       />
 
       <ConfirmModal
