@@ -67,9 +67,7 @@ export const Home = () => {
       <section id="advantages" className="advantages">
         <Container>
           <div className="advantages__content">
-            <div className="advantages__title">
-              <h1>Наши преимущества</h1>
-            </div>
+            <div className="advantages__title">Наши преимущества</div>
             <div className="advantages__blocks">
               <AdvantagesBlock
                 text="Безупречная репутация

@@ -104,11 +104,11 @@ export const AnalyticsDashboard = () => {
       key: "weight_range",
       render: (_: any, record: WeightCategory) => (
         <>
-          <Text>{record.min_weight} кг</Text>
+          <Text>{record.min_weight || 0} кг</Text>
           <Divider type="vertical" />
-          <Text strong>{record.avg_weight} кг</Text>
+          <Text strong>{record.avg_weight || 0} кг</Text>
           <Divider type="vertical" />
-          <Text>{record.max_weight} кг</Text>
+          <Text>{record.max_weight || 0} кг</Text>
         </>
       ),
       align: "center",
@@ -132,7 +132,7 @@ export const AnalyticsDashboard = () => {
       key: "route",
       render: (_: any, record: ExtremeParameter) => (
         <Text>
-          {record.from} → {record.to}
+          {record.from || ""} → {record.to || ""}
         </Text>
       ),
     },
@@ -142,15 +142,17 @@ export const AnalyticsDashboard = () => {
       width: 500,
       render: (_: any, record: ExtremeParameter) => (
         <Descriptions size="small" column={1}>
-          <Descriptions.Item label="Вес">{record.weight} кг</Descriptions.Item>
+          <Descriptions.Item label="Вес">
+            {record.weight || 0} кг
+          </Descriptions.Item>
           <Descriptions.Item label="Длина">
-            {record.length} см
+            {record.length || 0} см
           </Descriptions.Item>
           <Descriptions.Item label="Ширина">
-            {record.width} см
+            {record.width || 0} см
           </Descriptions.Item>
           <Descriptions.Item label="Высота">
-            {record.height} см
+            {record.height || 0} см
           </Descriptions.Item>
         </Descriptions>
       ),
@@ -189,7 +191,7 @@ export const AnalyticsDashboard = () => {
           <Card>
             <Statistic
               title="Общий перевезенный вес"
-              value={businessKPI.totalWeight}
+              value={businessKPI.totalWeight || 0}
               precision={0}
               suffix="кг"
               prefix={<BoxPlotOutlined />}
@@ -200,7 +202,7 @@ export const AnalyticsDashboard = () => {
           <Card>
             <Statistic
               title="Средний объем груза"
-              value={businessKPI.avgVolume}
+              value={businessKPI.avgVolume || 0}
               precision={2}
               suffix="м³"
               prefix={<ProfileOutlined />}
@@ -211,7 +213,7 @@ export const AnalyticsDashboard = () => {
           <Card>
             <Statistic
               title="Среднее время доставки"
-              value={businessKPI.avgDeliveryTime}
+              value={businessKPI.avgDeliveryTime || 0}
               precision={1}
               suffix="дней"
               prefix={<CalendarOutlined />}
@@ -224,9 +226,9 @@ export const AnalyticsDashboard = () => {
               <Text strong>Соотношение грузов:</Text>
             </div>
             <Progress
-              percent={parseFloat(
-                businessKPI.oversizedRatio.oversizedPercentage,
-              )}
+              percent={
+                parseFloat(businessKPI.oversizedRatio.oversizedPercentage) || 0
+              }
               success={{ percent: 0 }}
               format={(percent) => <Text strong>{percent}% негабаритных</Text>}
             />
@@ -240,11 +242,11 @@ export const AnalyticsDashboard = () => {
               >
                 <Badge
                   status="default"
-                  text={`${businessKPI.oversizedRatio.standardCargoCount} стандартных`}
+                  text={`${businessKPI.oversizedRatio.standardCargoCount || 0} стандартных`}
                 />{" "}
                 <Badge
                   status="processing"
-                  text={`${businessKPI.oversizedRatio.oversizedCargoCount} негабаритных`}
+                  text={`${businessKPI.oversizedRatio.oversizedCargoCount || 0} негабаритных`}
                 />
               </Text>
             </div>
@@ -258,20 +260,26 @@ export const AnalyticsDashboard = () => {
               </>
             }
           >
-            <Descriptions column={1}>
-              <Descriptions.Item label="Email">
-                <Text strong>{businessKPI.topUser.email}</Text>
-              </Descriptions.Item>
-              <Descriptions.Item label="Кол-во заказов">
-                {businessKPI.topUser.orders_count}
-              </Descriptions.Item>
-              <Descriptions.Item label="Общий вес">
-                {businessKPI.topUser.total_weight} кг
-              </Descriptions.Item>
-              <Descriptions.Item label="Средний вес">
-                {businessKPI.topUser.avg_weight} кг
-              </Descriptions.Item>
-            </Descriptions>
+            <>
+              {businessKPI.topUser ? (
+                <Descriptions column={1}>
+                  <Descriptions.Item label="Email">
+                    <Text strong>{businessKPI.topUser.email || ""}</Text>
+                  </Descriptions.Item>
+                  <Descriptions.Item label="Кол-во заказов">
+                    {businessKPI.topUser.orders_count || ""}
+                  </Descriptions.Item>
+                  <Descriptions.Item label="Общий вес">
+                    {businessKPI.topUser.total_weight || ""} кг
+                  </Descriptions.Item>
+                  <Descriptions.Item label="Средний вес">
+                    {businessKPI.topUser.avg_weight || ""} кг
+                  </Descriptions.Item>
+                </Descriptions>
+              ) : (
+                <Text type="secondary">Нет данных по пользователю</Text>
+              )}
+            </>
           </Card>
         </Col>
       </Row>
@@ -286,7 +294,7 @@ export const AnalyticsDashboard = () => {
       >
         <Table
           columns={weightColumns}
-          dataSource={cargoAnalytics.weightCategories}
+          dataSource={cargoAnalytics.weightCategories || []}
           pagination={false}
           scroll={{ x: 1050 }}
           size="small"
@@ -306,7 +314,7 @@ export const AnalyticsDashboard = () => {
       >
         <Table
           columns={stuckColumns}
-          dataSource={statusAnalytics.stuckOrders}
+          dataSource={statusAnalytics.stuckOrders || []}
           pagination={false}
           size="small"
           scroll={{ x: 650 }}
@@ -370,7 +378,7 @@ export const AnalyticsDashboard = () => {
               align: "center",
             },
           ]}
-          dataSource={temporalAnalytics.seasonalDistribution}
+          dataSource={temporalAnalytics.seasonalDistribution || []}
           pagination={false}
           size="small"
           locale={{
@@ -389,7 +397,7 @@ export const AnalyticsDashboard = () => {
         <Table
           scroll={{ x: 1050 }}
           columns={extremeColumns}
-          dataSource={complexMetrics.extremeParameters}
+          dataSource={complexMetrics.extremeParameters || []}
           pagination={false}
           size="small"
           locale={{

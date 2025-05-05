@@ -12,7 +12,7 @@ import { FileData } from "../../models/file.ts";
 import { useAuth } from "../../composables/useAuth.ts";
 import ButtonSubmit from "../button/Button.tsx";
 import { getFileIconColor } from "../../composables/getFileIconColor.ts";
-import styles from "./OrderFiles.module.scss";
+import styles from "./orderFiles.module.scss";
 import { ConfirmModal } from "../confirmModal/ConfirmModal.tsx";
 
 export const OrderFiles: React.FC = () => {

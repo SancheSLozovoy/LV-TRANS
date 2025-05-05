@@ -21,19 +21,22 @@ export async function up(knex) {
   const saltRounds = 10;
   const password = "65843asdfG";
 
-  const hashedPassword = await bcrypt.hash(password, saltRounds);
+  const adminHashedPassword = await bcrypt.hash(
+    process.env.ADMIN_PASSWORD,
+    saltRounds,
+  );
 
   await knex("users").insert([
     {
-      email: "alex.lozovoy05@bk.ru",
-      phone: "1234567890",
-      password: hashedPassword,
+      email: process.env.ADMIN_EMAIL,
+      phone: process.env.ADMIN_PHONE,
+      password: adminHashedPassword,
       role_id: 1,
     },
     {
       email: "user@example.com",
       phone: "2222222222",
-      password: hashedPassword,
+      password: adminHashedPassword,
       role_id: 2,
     },
   ]);

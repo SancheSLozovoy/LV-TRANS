@@ -98,11 +98,7 @@
     line-height: 1.2;
     text-transform: uppercase;
     max-width: 400px;
-    margin-bottom: 80px;
-
-    @media (max-width: 1800px) {
-      font-size: 2.222vw;
-    }
+    margin-bottom: 60px;
 
     @media (max-width: 768px) {
       font-size: 28px;
