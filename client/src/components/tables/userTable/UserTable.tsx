@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Badge, Button, Pagination, Space, Table } from "antd";
+import { Badge, Button, Empty, Pagination, Space, Table } from "antd";
 import useFetch from "../../../composables/useFetch.ts";
 import { useAuth } from "../../../composables/useAuth.ts";
 import { reformDate } from "../../../composables/reformDate.ts";
@@ -145,6 +145,9 @@ export const UserTable = () => {
         style={{ marginBottom: "20px" }}
         scroll={{ x: 782 }}
         onRow={handleRowClick}
+        locale={{
+          emptyText: <Empty description="Заказов нет" />,
+        }}
       />
 
       <Pagination
