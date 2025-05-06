@@ -22,14 +22,14 @@ app.use(
     }),
 );
 
-app.use('/users', userRoutes);
-app.use('/orders', orderRoutes, filesRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/orders', orderRoutes, filesRoutes);
 
 app.get('/api', (req, res) => {
     res.send('Сервер работает!');
 });
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use('/api/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 if (process.env.NODE_ENV !== 'test') {
     app.listen(PORT, () => {
