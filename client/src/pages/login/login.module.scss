@@ -1,0 +1,159 @@
+.login {
+  display: flex;
+  align-items: center;
+  height: 100vh;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    height: auto;
+    min-height: 100vh;
+  }
+}
+
+.login__left {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--brown);
+  height: 100%;
+  color: var(--white);
+  width: 50%;
+  padding: 15px;
+  overflow: hidden;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    height: auto;
+    padding: 40px 20px;
+    min-height: 300px;
+  }
+}
+
+.background__image {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  left: 30%;
+  transform: translate(-50%, -50%) scale(1.5);
+  opacity: 0.5;
+  width: 100%;
+  max-width: 600px;
+  pointer-events: none;
+
+  img {
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0px 50px 10px rgba(0, 0, 0, 0.25));
+  }
+
+  @media (max-width: 1800px) {
+    transform: translate(-50%, -50%) scale(1.3);
+  }
+
+  @media (max-width: 1200px) {
+    transform: translate(-50%, -50%) scale(1.1);
+    opacity: 0.5;
+  }
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+}
+
+.left__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 51px;
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  padding: 20px;
+
+  @media (max-width: 1800px) {
+    gap: 2.833vw;
+  }
+
+  @media (max-width: 768px) {
+    gap: 30px;
+    padding: 10px;
+  }
+}
+
+.left__logo {
+  img {
+    @media (max-width: 768px) {
+      max-width: 150px;
+    }
+  }
+}
+
+.left__title {
+  font-weight: 450;
+  font-size: 40px;
+
+  @media (max-width: 1800px) {
+    font-size: 2.222vw;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 28px;
+  }
+}
+
+.left__text {
+  font-size: 30px;
+  line-height: 41.02px;
+  text-align: center;
+
+  @media (max-width: 1800px) {
+    font-size: 1.667vw;
+    line-height: 2.278vw;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 18px;
+    line-height: 24px;
+  }
+}
+
+.left__text_link {
+  text-decoration: underline;
+  color: var(--yellow);
+}
+
+.login__right {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 90px;
+  padding: 20px;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    padding: 40px 20px;
+    gap: 40px;
+  }
+}
+
+.right__title {
+  font-weight: 450;
+  font-size: 40px;
+  line-height: 51.28px;
+  text-align: center;
+  color: var(--brown);
+
+  @media (max-width: 1800px) {
+    font-size: 2.222vw;
+    line-height: 2.849vw;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 28px;
+    line-height: 32px;
+  }
+}

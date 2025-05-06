@@ -1,0 +1,138 @@
+.form {
+  background-color: var(--white);
+  display: flex;
+  flex-direction: column;
+  gap: 23px;
+  padding: 22px;
+  border-radius: 20px;
+  box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.25);
+  min-width: 344px;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  margin-bottom: 20px;
+
+  &__title {
+    font-weight: 500;
+    font-size: 32px;
+    line-height: 48px;
+    text-align: center;
+    margin-bottom: 21px;
+  }
+
+  & > * {
+    margin: 0;
+  }
+
+  @media (max-width: 1800px) {
+    gap: 1.597vw;
+    padding: 1.528vw;
+    margin-bottom: 1.389vw;
+    min-width: auto;
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    padding: 20px;
+    gap: 15px;
+    box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+  }
+}
+
+.form__item {
+
+  .ant-input-affix-wrapper {
+    border-radius: 20px !important;
+
+    @media (max-width: 768px) {
+      border-radius: 15px !important;
+    }
+  }
+}
+
+.form__input {
+  height: 50px;
+  border-radius: 20px;
+  background-color: var(--beige);
+  font-size: 16px;
+
+  @media (max-width: 1800px) {
+    height: 3.472vw;
+    font-size: 1.111vw;
+  }
+
+  @media (max-width: 768px) {
+    height: 45px;
+    border-radius: 15px;
+    font-size: 14px;
+  }
+}
+
+.ant-input-prefix {
+  margin-right: 8px;
+}
+
+.form__item__bottom {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.form__text {
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 1.2;
+  text-align: center;
+  color: var(--brown);
+
+  @media (max-width: 1800px) {
+    font-size: 1.111vw;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 14px;
+  }
+}
+
+.form__link {
+  color: #ab812a;
+  font-size: 16px;
+  transition: color 0.2s;
+
+  &:hover {
+    color: var(--hover);
+  }
+
+  @media (max-width: 1800px) {
+    font-size: 1.111vw;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 14px;
+  }
+}
+
+.ant-checkbox-wrapper {
+  font-size: 16px;
+  color: var(--brown);
+  align-items: center;
+
+  @media (max-width: 1800px) {
+    font-size: 1.111vw;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 14px;
+  }
+}
+
+.ant-form-item {
+  .ant-flex {
+    gap: 23px;
+
+    @media (max-width: 768px) {
+      gap: 15px;
+    }
+  }
+}
