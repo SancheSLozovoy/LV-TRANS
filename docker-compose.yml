@@ -44,6 +44,7 @@ services:
       - server
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - /etc/ssl/lv-trans-app.ru:/etc/ssl/lv-trans-app.ru:ro
 
