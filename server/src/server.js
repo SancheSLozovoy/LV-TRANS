@@ -25,7 +25,7 @@ app.use(
 app.use('/users', userRoutes);
 app.use('/orders', orderRoutes, filesRoutes);
 
-app.get('/', (req, res) => {
+app.get('/api', (req, res) => {
     res.send('Сервер работает!');
 });
 
