@@ -32,8 +32,6 @@ services:
     build: ./client
     depends_on:
       - server
-    ports:
-      - "5173:80"
     environment:
       - NODE_ENV=production
 
