@@ -42,8 +42,10 @@ services:
       - server
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - ./nginx-proxy.conf:/etc/nginx/conf.d/default.conf
+      - /etc/letsencrypt:/etc/letsencrypt:ro
 
 volumes:
   db_data:
