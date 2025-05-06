@@ -7,8 +7,6 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_DATABASE: ${DB_NAME}
-    ports:
-      - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql
 
@@ -24,18 +22,11 @@ services:
       ADMIN_EMAIL: ${ADMIN_EMAIL}
       ADMIN_PHONE: ${ADMIN_PHONE}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD}
-    ports:
-      - "5000:5000"
-    command: sh -c "sleep 10 && npx knex migrate:latest && npm start"
 
   frontend:
     build: ./client
     depends_on:
       - server
-    ports:
-      - "5173:80"
-    environment:
-      - NODE_ENV=production
 
   nginx-proxy:
     image: nginx:1.25-alpine
@@ -46,6 +37,7 @@ services:
       - "80:80"
       - "443:443"
     volumes:
+      - ./nginx-proxy.conf:/etc/nginx/conf.d/default.conf
       - /etc/ssl/lv-trans-app.ru:/etc/ssl/lv-trans-app.ru:ro
 
 volumes:
