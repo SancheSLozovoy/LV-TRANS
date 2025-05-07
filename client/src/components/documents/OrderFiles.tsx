@@ -26,6 +26,9 @@ export const OrderFiles: React.FC = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const [deleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
   const [fileToDelete, setFileToDelete] = useState<FileData | null>(null);
+  const [downloadingFileId, setDownloadingFileId] = useState<number | null>(
+    null,
+  );
 
   const { fetchData } = useFetch();
   const { id } = useParams();
@@ -57,6 +60,7 @@ export const OrderFiles: React.FC = () => {
 
   const handleDownload = async (file: FileData) => {
     try {
+      setDownloadingFileId(file.id);
       const response = await fetchData(`/orders/files/${file.id}`, "GET");
 
       if (!response?.file_base64) {
@@ -89,6 +93,8 @@ export const OrderFiles: React.FC = () => {
     } catch (error) {
       console.error("Download error:", error);
       messageApi.error((error as Error).message);
+    } finally {
+      setDownloadingFileId(null);
     }
   };
 
@@ -202,6 +208,7 @@ export const OrderFiles: React.FC = () => {
                   icon={<DownloadOutlined />}
                   onClick={() => handleDownload(file)}
                   className={styles.downloadButton}
+                  loading={downloadingFileId === file.id}
                 >
                   Скачать
                 </Button>,
