@@ -110,7 +110,7 @@ export async function createOrder(req, res) {
             user_id,
         );
 
-        if (files && files.length === 0) {
+        if (files && files.length !== 0) {
             for (const file of files) {
                 const decodedFileName = decodeURIComponent(
                     escape(file.originalname),
