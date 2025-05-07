@@ -37,8 +37,12 @@ const disabledDate: RangePickerProps["disabledDate"] = (current) => {
   return current && current < dayjs().startOf("day");
 };
 
+const MAX_FILE_SIZE_MB = 5;
+const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
+
 export const CreateOrderForm: React.FC = () => {
   const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const [totalSize, setTotalSize] = useState<number>(0);
   const [loading, setLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
@@ -55,6 +59,10 @@ export const CreateOrderForm: React.FC = () => {
     form.setFieldsValue({ from, to });
   }, [form, from, to]);
 
+  const calculateTotalSize = (files: UploadFile[]) => {
+    return files.reduce((sum, file) => sum + (file.size || 0), 0);
+  };
+
   const handleSubmit = async (values: OrderFormData) => {
     setLoading(true);
 
@@ -67,6 +75,12 @@ export const CreateOrderForm: React.FC = () => {
         throw new Error("User not found");
       }
 
+      if (totalSize > MAX_FILE_SIZE_BYTES) {
+        throw new Error(
+          `Общий размер файлов не должен превышать ${MAX_FILE_SIZE_MB} МБ`,
+        );
+      }
+
       const formData = createFormData(values);
       const res = await submitOrder(formData);
 
@@ -75,6 +89,7 @@ export const CreateOrderForm: React.FC = () => {
       setIsSuccess(true);
       form.resetFields();
       setFileList([]);
+      setTotalSize(0);
     } catch (error) {
       console.error("Create order error", error);
       messageApi.error((error as Error).message);
@@ -126,12 +141,23 @@ export const CreateOrderForm: React.FC = () => {
       return Upload.LIST_IGNORE;
     }
 
+    const newTotalSize = totalSize + file.size;
+    if (newTotalSize > MAX_FILE_SIZE_BYTES) {
+      messageApi.error(
+        `Общий размер файлов не должен превышать ${MAX_FILE_SIZE_MB} МБ`,
+      );
+      return Upload.LIST_IGNORE;
+    }
+
     setFileList((prev) => [...prev, { ...file, originFileObj: file }]);
+    setTotalSize(newTotalSize);
     return false;
   };
 
   const handleRemove: UploadProps["onRemove"] = (file) => {
-    setFileList((prev) => prev.filter((f) => f.uid !== file.uid));
+    const newFileList = fileList.filter((f) => f.uid !== file.uid);
+    setFileList(newFileList);
+    setTotalSize(calculateTotalSize(newFileList));
   };
 
   if (isSuccess) {
@@ -325,12 +351,13 @@ export const CreateOrderForm: React.FC = () => {
         </Form.Item>
 
         <Form.Item
-          tooltip="Фото, документы, таблицы и т.д. (Не более 5 файлов)"
+          tooltip={`Фото, документы, таблицы и т.д. (Не более 5 файлов, общий размер ≤ ${MAX_FILE_SIZE_MB} МБ)`}
           label="Загрузить файлы"
           name="files"
           valuePropName="fileList"
           getValueFromEvent={normFile}
           rules={[{ required: true, message: "Пожалуйста, загрузите файлы" }]}
+          extra={`Общий размер: ${(totalSize / (1024 * 1024)).toFixed(2)} МБ / ${MAX_FILE_SIZE_MB} МБ`}
         >
           <Upload
             listType="picture-card"

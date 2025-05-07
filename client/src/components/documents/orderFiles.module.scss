@@ -30,6 +30,13 @@
   font-size: 24px !important;
 }
 
+.uploadContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-end;
+}
+
 .uploadButton > * {
   min-width: 160px;
   height: 44px;

@@ -15,6 +15,10 @@ import { getFileIconColor } from "../../composables/getFileIconColor.ts";
 import styles from "./orderFiles.module.scss";
 import { ConfirmModal } from "../confirmModal/ConfirmModal.tsx";
 
+const MAX_TOTAL_SIZE_MB = 5;
+const MAX_TOTAL_SIZE_BYTES = MAX_TOTAL_SIZE_MB * 1024 * 1024;
+const MAX_FILE_COUNT = 5;
+
 export const OrderFiles: React.FC = () => {
   const [files, setFiles] = useState<FileData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -45,6 +49,10 @@ export const OrderFiles: React.FC = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const calculateTotalSize = (files: FileData[]) => {
+    return files.reduce((sum, file) => sum + Number(file.size || 0), 0);
   };
 
   const handleDownload = async (file: FileData) => {
@@ -110,14 +118,18 @@ export const OrderFiles: React.FC = () => {
     showUploadList: false,
     customRequest: handleUpload,
     beforeUpload: (file: File) => {
-      const isLt10M = file.size / 1024 / 1024 < 10;
-      if (!isLt10M) {
-        messageApi.error("Файл должен быть меньше 10MB!");
+      const currentTotalSize = calculateTotalSize(files);
+      const newTotalSize = currentTotalSize + file.size;
+
+      if (newTotalSize > MAX_TOTAL_SIZE_BYTES) {
+        messageApi.error(
+          `Общий размер файлов не должен превышать ${MAX_TOTAL_SIZE_MB}MB!`,
+        );
         return Upload.LIST_IGNORE;
       }
 
-      if (files.length >= 5) {
-        messageApi.error("Можно загрузить не более 5 файлов.");
+      if (files.length >= MAX_FILE_COUNT) {
+        messageApi.error(`Можно загрузить не более ${MAX_FILE_COUNT} файлов.`);
         return Upload.LIST_IGNORE;
       }
 
@@ -156,15 +168,22 @@ export const OrderFiles: React.FC = () => {
       {contextHolder}
       <div className={styles.wrapper}>
         <h1>Файлы заказа</h1>
-        <Upload {...uploadProps}>
-          <div className={styles.uploadButton}>
-            <ButtonSubmit
-              icon={<UploadOutlined />}
-              loading={uploading}
-              text="Загрузить файл"
-            />
+        <div className={styles.uploadContainer}>
+          <Upload {...uploadProps}>
+            <div className={styles.uploadButton}>
+              <ButtonSubmit
+                icon={<UploadOutlined />}
+                loading={uploading}
+                text="Загрузить файл"
+              />
+            </div>
+          </Upload>
+          <div>
+            Файлов: {files.length}/{MAX_FILE_COUNT} | Общий размер:{" "}
+            {(calculateTotalSize(files) / (1024 * 1024)).toFixed(2)}MB/
+            {MAX_TOTAL_SIZE_MB}MB
           </div>
-        </Upload>
+        </div>
       </div>
 
       {loading ? (
@@ -205,6 +224,7 @@ export const OrderFiles: React.FC = () => {
                 title={
                   <span className={styles.fileName}>{file.file_name}</span>
                 }
+                description={`${(Number(file.size) / (1024 * 1024)).toFixed(2)} MB`}
               />
             </List.Item>
           )}
