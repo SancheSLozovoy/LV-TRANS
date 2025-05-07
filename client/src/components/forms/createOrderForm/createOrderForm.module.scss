@@ -116,6 +116,20 @@
   }
 }
 
+.dimensions {
+  @media (max-width: 768px) {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+
+    & > * {
+      margin: 0 !important;
+      width: 100% !important;
+    }
+  }
+}
+
+
 .form__buttons {
   display: flex;
   justify-content: space-between;

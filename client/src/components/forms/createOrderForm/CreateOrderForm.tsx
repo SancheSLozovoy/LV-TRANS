@@ -216,7 +216,7 @@ export const CreateOrderForm: React.FC = () => {
           required={true}
           tooltip="Введите габариты вашего груза(длина, ширина, высота)"
         >
-          <Input.Group compact>
+          <Input.Group compact className={styles.dimensions}>
             <Form.Item
               name="length"
               noStyle
@@ -324,7 +324,7 @@ export const CreateOrderForm: React.FC = () => {
           <DatePicker
             format="DD-MM-YY"
             disabledDate={disabledDate}
-            placeholder="Дата загрузки"
+            placeholder="Выберите дату"
           />
         </Form.Item>
 
@@ -342,7 +342,7 @@ export const CreateOrderForm: React.FC = () => {
           <DatePicker
             format="DD-MM-YY"
             disabledDate={disabledDate}
-            placeholder="Дата выгрузки"
+            placeholder="Выберите дату"
           />
         </Form.Item>
 

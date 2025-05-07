@@ -157,7 +157,7 @@ export const EditOrderForm: React.FC = () => {
           required={true}
           tooltip="Введите габариты вашего груза(длина, ширина, высота)"
         >
-          <Input.Group compact>
+          <Input.Group compact className={styles.dimensions}>
             <Form.Item
               name="length"
               noStyle
@@ -265,7 +265,7 @@ export const EditOrderForm: React.FC = () => {
           <DatePicker
             format="DD-MM-YY"
             disabledDate={disabledDate}
-            placeholder="Дата загрузки"
+            placeholder="Выберите дату"
             disabled={!isEditing}
           />
         </Form.Item>
@@ -284,7 +284,7 @@ export const EditOrderForm: React.FC = () => {
           <DatePicker
             format="DD-MM-YY"
             disabledDate={disabledDate}
-            placeholder="Дата выгрузки"
+            placeholder="Выберите дату"
             disabled={!isEditing}
           />
         </Form.Item>
