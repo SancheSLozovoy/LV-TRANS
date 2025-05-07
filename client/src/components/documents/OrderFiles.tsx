@@ -178,7 +178,7 @@ export const OrderFiles: React.FC = () => {
               />
             </div>
           </Upload>
-          <div>
+          <div className={styles.filesText}>
             Файлов: {files.length}/{MAX_FILE_COUNT} | Общий размер:{" "}
             {(calculateTotalSize(files) / (1024 * 1024)).toFixed(2)}MB/
             {MAX_TOTAL_SIZE_MB}MB

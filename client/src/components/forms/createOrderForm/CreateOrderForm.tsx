@@ -67,12 +67,8 @@ export const CreateOrderForm: React.FC = () => {
     setLoading(true);
 
     try {
-      if (fileList.length === 0) {
-        throw new Error("No file upload");
-      }
-
       if (!user?.id) {
-        throw new Error("User not found");
+        throw new Error("Пользователь не найден");
       }
 
       if (totalSize > MAX_FILE_SIZE_BYTES) {
@@ -356,7 +352,6 @@ export const CreateOrderForm: React.FC = () => {
           name="files"
           valuePropName="fileList"
           getValueFromEvent={normFile}
-          rules={[{ required: true, message: "Пожалуйста, загрузите файлы" }]}
           extra={`Общий размер: ${(totalSize / (1024 * 1024)).toFixed(2)} МБ / ${MAX_FILE_SIZE_MB} МБ`}
         >
           <Upload

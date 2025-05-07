@@ -89,9 +89,7 @@ export async function createOrder(req, res) {
         !to ||
         !date_start ||
         !date_end ||
-        !user_id ||
-        !files ||
-        files.length === 0
+        !user_id
     ) {
         return res
             .status(400)
@@ -112,17 +110,19 @@ export async function createOrder(req, res) {
             user_id,
         );
 
-        for (const file of files) {
-            const decodedFileName = decodeURIComponent(
-                escape(file.originalname),
-            );
+        if (files && files.length === 0) {
+            for (const file of files) {
+                const decodedFileName = decodeURIComponent(
+                    escape(file.originalname),
+                );
 
-            await FilesModel.addFilesToOrder(
-                result.insertId,
-                file.buffer,
-                decodedFileName,
-                file.mimetype,
-            );
+                await FilesModel.addFilesToOrder(
+                    result.insertId,
+                    file.buffer,
+                    decodedFileName,
+                    file.mimetype,
+                );
+            }
         }
 
         res.status(201).json({
