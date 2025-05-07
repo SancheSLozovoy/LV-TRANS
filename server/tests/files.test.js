@@ -17,7 +17,7 @@ describe("File API", () => {
 
   beforeAll(async () => {
     const res = await request(app)
-      .post("/orders")
+      .post("/api/orders")
       .set("Authorization", `Bearer ${userToken}`)
       .field("info", "Order for file tests")
       .field("weight", 1234)
@@ -35,7 +35,7 @@ describe("File API", () => {
     orderId = res.body.orderId;
 
     const fileRes = await request(app)
-      .get(`/orders/${orderId}/files`)
+      .get(`/api/orders/${orderId}/files`)
       .set("Authorization", `Bearer ${userToken}`)
       .expect(200);
 
@@ -45,7 +45,7 @@ describe("File API", () => {
   describe("GET /orders/:orderId/files", () => {
     it("should return files for order (admin access)", async () => {
       const res = await request(app)
-        .get(`/orders/${orderId}/files`)
+        .get(`/api/orders/${orderId}/files`)
         .set("Authorization", `Bearer ${adminToken}`)
         .expect(200);
 
@@ -56,7 +56,7 @@ describe("File API", () => {
 
     it("should return files for order (owner access)", async () => {
       const res = await request(app)
-        .get(`/orders/${orderId}/files`)
+        .get(`/api/orders/${orderId}/files`)
         .set("Authorization", `Bearer ${userToken}`)
         .expect(200);
 
@@ -65,7 +65,7 @@ describe("File API", () => {
 
     it("should return 403 if not owner or admin", async () => {
       const res = await request(app)
-        .get(`/orders/${orderId}/files`)
+        .get(`/api/orders/${orderId}/files`)
         .set("Authorization", `Bearer ${strangerToken}`)
         .expect(403);
 
@@ -74,7 +74,7 @@ describe("File API", () => {
 
     it("should return 404 if order not found", async () => {
       const res = await request(app)
-        .get(`/orders/999999/files`)
+        .get(`/api/orders/999999/files`)
         .set("Authorization", `Bearer ${adminToken}`)
         .expect(404);
 
@@ -83,7 +83,7 @@ describe("File API", () => {
 
     it("should return 404 if no files", async () => {
       const newOrderRes = await request(app)
-        .post("/orders")
+        .post("/api/orders")
         .set("Authorization", `Bearer ${userToken}`)
         .field("info", "No files here")
         .field("weight", 123)
@@ -103,7 +103,7 @@ describe("File API", () => {
       await pool.query("DELETE FROM files WHERE order_id = ?", [newOrderId]);
 
       const res = await request(app)
-        .get(`/orders/${newOrderId}/files`)
+        .get(`/api/orders/${newOrderId}/files`)
         .set("Authorization", `Bearer ${userToken}`)
         .expect(404);
 
@@ -114,7 +114,7 @@ describe("File API", () => {
   describe("GET /orders/files/:id", () => {
     it("should download file (admin)", async () => {
       const res = await request(app)
-        .get(`/orders/files/${fileId}`)
+        .get(`/api/orders/files/${fileId}`)
         .set("Authorization", `Bearer ${adminToken}`)
         .expect(200);
 
@@ -124,7 +124,7 @@ describe("File API", () => {
 
     it("should download file (owner)", async () => {
       const res = await request(app)
-        .get(`/orders/files/${fileId}`)
+        .get(`/api/orders/files/${fileId}`)
         .set("Authorization", `Bearer ${userToken}`)
         .expect(200);
 
@@ -133,7 +133,7 @@ describe("File API", () => {
 
     it("should return 403 for stranger", async () => {
       const res = await request(app)
-        .get(`/orders/files/${fileId}`)
+        .get(`/api/orders/files/${fileId}`)
         .set("Authorization", `Bearer ${strangerToken}`)
         .expect(403);
 
@@ -142,7 +142,7 @@ describe("File API", () => {
 
     it("should return 404 for unknown file", async () => {
       const res = await request(app)
-        .get(`/orders/files/999999`)
+        .get(`/api/orders/files/999999`)
         .set("Authorization", `Bearer ${adminToken}`)
         .expect(404);
 

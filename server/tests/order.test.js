@@ -17,7 +17,7 @@ describe("Order API", () => {
   describe("POST /orders", () => {
     it("should create an order and return 201", async () => {
       const res = await request(app)
-        .post("/orders")
+        .post("/api/orders")
         .set("Authorization", `Bearer ${userToken}`)
         .field("info", "Test order")
         .field("weight", 10000)
@@ -38,7 +38,7 @@ describe("Order API", () => {
 
     it("should return 400 if no files uploaded", async () => {
       const res = await request(app)
-        .post("/orders")
+        .post("/api/orders")
         .set("Authorization", `Bearer ${userToken}`)
         .field("info", "Test order")
         .field("weight", 10000)
@@ -59,7 +59,7 @@ describe("Order API", () => {
   describe("GET /orders", () => {
     it("should return 200 and list of orders for admin", async () => {
       const res = await request(app)
-        .get("/orders")
+        .get("/api/orders")
         .set("Authorization", `Bearer ${adminToken}`)
         .expect(200);
 
@@ -69,7 +69,7 @@ describe("Order API", () => {
 
     it("should return 403 if not admin", async () => {
       const res = await request(app)
-        .get("/orders")
+        .get("/api/orders")
         .set("Authorization", `Bearer ${userToken}`)
         .expect(403);
 
@@ -82,7 +82,7 @@ describe("Order API", () => {
         .mockResolvedValue({ orders: [], total: 0 });
 
       const res = await request(app)
-        .get("/orders")
+        .get("/api/orders")
         .set("Authorization", `Bearer ${adminToken}`)
         .expect(404);
 
@@ -93,7 +93,7 @@ describe("Order API", () => {
   describe("GET /orders/:id", () => {
     it("should return 200 for admin", async () => {
       const res = await request(app)
-        .get(`/orders/${orderId}`)
+        .get(`/api/orders/${orderId}`)
         .set("Authorization", `Bearer ${adminToken}`)
         .expect(200);
 
@@ -102,7 +102,7 @@ describe("Order API", () => {
 
     it("should return 200 for owner", async () => {
       const res = await request(app)
-        .get(`/orders/${orderId}`)
+        .get(`/api/orders/${orderId}`)
         .set("Authorization", `Bearer ${userToken}`)
         .expect(200);
 
@@ -113,7 +113,7 @@ describe("Order API", () => {
       const anotherUserToken = generateToken({ id: 999, role_id: 2 });
 
       const res = await request(app)
-        .get(`/orders/${orderId}`)
+        .get(`/api/orders/${orderId}`)
         .set("Authorization", `Bearer ${anotherUserToken}`)
         .expect(403);
 
@@ -122,7 +122,7 @@ describe("Order API", () => {
 
     it("should return 400 for invalid ID", async () => {
       const res = await request(app)
-        .get("/orders/abc")
+        .get("/api/orders/abc")
         .set("Authorization", `Bearer ${adminToken}`)
         .expect(400);
 
@@ -133,7 +133,7 @@ describe("Order API", () => {
   describe("PUT /orders/:id", () => {
     it("should update the order for admin", async () => {
       const res = await request(app)
-        .put(`/orders/${orderId}`)
+        .put(`/api/orders/${orderId}`)
         .set("Authorization", `Bearer ${adminToken}`)
         .send({
           info: "Updated",
@@ -157,7 +157,7 @@ describe("Order API", () => {
       const anotherUserToken = generateToken({ id: 999, role_id: 2 });
 
       const res = await request(app)
-        .put(`/orders/${orderId}`)
+        .put(`/api/orders/${orderId}`)
         .set("Authorization", `Bearer ${anotherUserToken}`)
         .send({
           info: "Try",
@@ -181,7 +181,7 @@ describe("Order API", () => {
   describe("GET /orders/user/:userId", () => {
     it("should return orders of current user", async () => {
       const res = await request(app)
-        .get("/orders/user/2")
+        .get("/api/orders/user/2")
         .set("Authorization", `Bearer ${userToken}`)
         .expect(200);
 
@@ -190,7 +190,7 @@ describe("Order API", () => {
 
     it("should return 403 if trying to access another user", async () => {
       const res = await request(app)
-        .get("/orders/user/3")
+        .get("/api/orders/user/3")
         .set("Authorization", `Bearer ${userToken}`)
         .expect(403);
 
@@ -201,7 +201,7 @@ describe("Order API", () => {
   describe("DELETE /orders/:id", () => {
     it("should delete order for owner", async () => {
       const res = await request(app)
-        .delete(`/orders/${orderId}`)
+        .delete(`/api/orders/${orderId}`)
         .set("Authorization", `Bearer ${userToken}`)
         .expect(200);
 
@@ -210,7 +210,7 @@ describe("Order API", () => {
 
     it("should return 404 for nonexistent order", async () => {
       const res = await request(app)
-        .delete(`/orders/99999`)
+        .delete(`/api/orders/99999`)
         .set("Authorization", `Bearer ${adminToken}`)
         .expect(404);
 

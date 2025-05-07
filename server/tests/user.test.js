@@ -47,7 +47,7 @@ describe("User API", () => {
     describe("POST /users", () => {
       it("should register a new user and return 201", async () => {
         const res = await request(app)
-          .post("/users")
+          .post("/api/users")
           .send({
             email: "newuser@test.com",
             phone: "89997778899",
@@ -66,14 +66,14 @@ describe("User API", () => {
 
       it("should return 400 for missing fields", async () => {
         await request(app)
-          .post("/users")
+          .post("/api/users")
           .send({ email: "incomplete@test.com" })
           .expect(400);
       });
 
       it("should return 400 for existing email", async () => {
         await request(app)
-          .post("/users")
+          .post("/api/users")
           .send({
             email: "user@test.com",
             phone: "89991112233",
@@ -86,7 +86,7 @@ describe("User API", () => {
     describe("POST /login", () => {
       it("should login user and return token", async () => {
         const res = await request(app)
-          .post("/users/login")
+          .post("/api/users/login")
           .send({
             email: "user@test.com",
             password: "user123",
@@ -100,7 +100,7 @@ describe("User API", () => {
 
       it("should return 400 for invalid credentials", async () => {
         await request(app)
-          .post("/users/login")
+          .post("/api/users/login")
           .send({
             email: "user@test.com",
             password: "wrongpass",
@@ -114,7 +114,7 @@ describe("User API", () => {
     describe("POST /forgot-password", () => {
       it("should send reset email for existing user", async () => {
         const res = await request(app)
-          .post("/users/forgot-password")
+          .post("/api/users/forgot-password")
           .send({ email: "user@test.com" })
           .expect(200);
 
@@ -132,7 +132,7 @@ describe("User API", () => {
 
       it("should return 200 even for non-existing email", async () => {
         await request(app)
-          .post("/users/forgot-password")
+          .post("/api/users/forgot-password")
           .send({ email: "nonexisting@test.com" })
           .expect(200);
       });
@@ -141,7 +141,7 @@ describe("User API", () => {
     describe("POST /reset-password", () => {
       it("should reset password with valid token", async () => {
         const res = await request(app)
-          .post("/users/reset-password")
+          .post("/api/users/reset-password")
           .send({
             token: resetToken,
             password: "newpassword123",
@@ -153,7 +153,7 @@ describe("User API", () => {
 
       it("should return 400 for invalid token", async () => {
         await request(app)
-          .post("/users/reset-password")
+          .post("/api/users/reset-password")
           .send({
             token: "invalid.token.here",
             password: "newpassword123",
@@ -167,14 +167,14 @@ describe("User API", () => {
     describe("GET /users", () => {
       it("should return 403 for non-admin users", async () => {
         await request(app)
-          .get("/users")
+          .get("/api/users")
           .set("Authorization", `Bearer ${userToken}`)
           .expect(403);
       });
 
       it("should return users list for admin", async () => {
         const res = await request(app)
-          .get("/users")
+          .get("/api/users")
           .set("Authorization", `Bearer ${adminToken}`)
           .expect(200);
 
@@ -186,7 +186,7 @@ describe("User API", () => {
     describe("GET /users/:id", () => {
       it("should return user data for owner", async () => {
         const res = await request(app)
-          .get(`/users/${userId}`)
+          .get(`/api/users/${userId}`)
           .set("Authorization", `Bearer ${userToken}`)
           .expect(200);
 
@@ -196,14 +196,14 @@ describe("User API", () => {
       it("should return 403 when accessing other user data", async () => {
         const otherUser = await UserModel.getUserByEmail("admin@test.com");
         await request(app)
-          .get(`/users/${otherUser.id}`)
+          .get(`/api/users/${otherUser.id}`)
           .set("Authorization", `Bearer ${userToken}`)
           .expect(403);
       });
 
       it("should allow admin to view any user", async () => {
         await request(app)
-          .get(`/users/${userId}`)
+          .get(`/api/users/${userId}`)
           .set("Authorization", `Bearer ${adminToken}`)
           .expect(200);
       });
@@ -212,7 +212,7 @@ describe("User API", () => {
     describe("PUT /users/:id", () => {
       it("should update user data for owner", async () => {
         await request(app)
-          .put(`/users/${userId}`)
+          .put(`/api/users/${userId}`)
           .set("Authorization", `Bearer ${userToken}`)
           .send({
             email: "updated@test.com",
@@ -225,7 +225,7 @@ describe("User API", () => {
 
       it("should prevent role change by non-admin", async () => {
         const res = await request(app)
-          .put(`/users/${userId}`)
+          .put(`/api/users/${userId}`)
           .set("Authorization", `Bearer ${userToken}`)
           .send({
             email: "updated@test.com",
@@ -240,7 +240,7 @@ describe("User API", () => {
     describe("PUT /users/:id/role", () => {
       it("should allow admin to change roles", async () => {
         await request(app)
-          .put(`/users/${userId}/role`)
+          .put(`/api/users/${userId}/role`)
           .set("Authorization", `Bearer ${adminToken}`)
           .send({ role_id: 1 })
           .expect(200);
@@ -248,7 +248,7 @@ describe("User API", () => {
 
       it("should prevent role change by non-admin", async () => {
         await request(app)
-          .put(`/users/${userId}/role`)
+          .put(`/api/users/${userId}/role`)
           .set("Authorization", `Bearer ${userToken}`)
           .send({ role_id: 1 })
           .expect(403);
@@ -258,7 +258,7 @@ describe("User API", () => {
     describe("DELETE /users/:id", () => {
       it("should allow user to delete own account", async () => {
         await request(app)
-          .delete(`/users/${userId}`)
+          .delete(`/api/users/${userId}`)
           .set("Authorization", `Bearer ${userToken}`)
           .expect(200);
       });
@@ -272,7 +272,7 @@ describe("User API", () => {
 
         const getOtherUser = await UserModel.getUserByEmail("other@test.com");
         await request(app)
-          .delete(`/users/${getOtherUser.id}`)
+          .delete(`/api/users/${getOtherUser.id}`)
           .set("Authorization", `Bearer ${userToken}`)
           .expect(403);
       });
