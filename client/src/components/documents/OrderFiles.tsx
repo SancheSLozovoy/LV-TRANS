@@ -134,11 +134,6 @@ export const OrderFiles: React.FC = () => {
         return Upload.LIST_IGNORE;
       }
 
-      if (files.length >= MAX_FILE_COUNT) {
-        messageApi.error(`Можно загрузить не более ${MAX_FILE_COUNT} файлов.`);
-        return Upload.LIST_IGNORE;
-      }
-
       return true;
     },
   };
@@ -185,7 +180,7 @@ export const OrderFiles: React.FC = () => {
             </div>
           </Upload>
           <div className={styles.filesText}>
-            Файлов: {files.length}/{MAX_FILE_COUNT} | Общий размер:{" "}
+            Файлов: {files.length} | Общий размер:{" "}
             {(calculateTotalSize(files) / (1024 * 1024)).toFixed(2)}MB/
             {MAX_TOTAL_SIZE_MB}MB
           </div>

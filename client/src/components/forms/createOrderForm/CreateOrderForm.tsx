@@ -156,6 +156,11 @@ export const CreateOrderForm: React.FC = () => {
     setTotalSize(calculateTotalSize(newFileList));
   };
 
+  const handleChange: UploadProps["onChange"] = ({ fileList: newFileList }) => {
+    setFileList(newFileList);
+    setTotalSize(calculateTotalSize(newFileList));
+  };
+
   if (isSuccess) {
     return (
       <>
@@ -347,7 +352,7 @@ export const CreateOrderForm: React.FC = () => {
         </Form.Item>
 
         <Form.Item
-          tooltip={`Фото, документы, таблицы и т.д. (Не более 5 файлов, общий размер ≤ ${MAX_FILE_SIZE_MB} МБ)`}
+          tooltip={`Фото, документы, таблицы и т.д. (Общий размер ≤ ${MAX_FILE_SIZE_MB} МБ)`}
           label="Загрузить файлы"
           name="files"
           valuePropName="fileList"
@@ -359,7 +364,7 @@ export const CreateOrderForm: React.FC = () => {
             fileList={fileList}
             beforeUpload={handleBeforeUpload}
             onRemove={handleRemove}
-            maxCount={5}
+            onChange={handleChange}
           >
             <button
               style={{
