@@ -17,7 +17,6 @@ import { ConfirmModal } from "../confirmModal/ConfirmModal.tsx";
 
 const MAX_TOTAL_SIZE_MB = 5;
 const MAX_TOTAL_SIZE_BYTES = MAX_TOTAL_SIZE_MB * 1024 * 1024;
-const MAX_FILE_COUNT = 5;
 
 export const OrderFiles: React.FC = () => {
   const [files, setFiles] = useState<FileData[]>([]);
