@@ -38,14 +38,6 @@ npm install
 
 Создайте файл `.env` в корне проекта и добавьте ваши данные согласно .env-example:
 
-```env
-DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=root
-DB_NAME=lvtrans
-PORT=5000
-```
-
 ### Запуск сервера
 
 Запустить сервер можно командой:

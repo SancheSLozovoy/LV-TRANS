@@ -35,25 +35,6 @@ describe("Order API", () => {
       expect(res.body.message).toBe("Заказ создан");
       orderId = res.body.orderId;
     });
-
-    it("should return 400 if no files uploaded", async () => {
-      const res = await request(app)
-        .post("/api/orders")
-        .set("Authorization", `Bearer ${userToken}`)
-        .field("info", "Test order")
-        .field("weight", 10000)
-        .field("length", 10000)
-        .field("width", 20000)
-        .field("height", 30000)
-        .field("from", "City A")
-        .field("to", "City B")
-        .field("date_start", "2024-01-01")
-        .field("date_end", "2024-01-10")
-        .field("user_id", 2)
-        .expect(400);
-
-      expect(res.body.message).toBe("Не заполнены обязательные поля");
-    });
   });
 
   describe("GET /orders", () => {
@@ -153,6 +134,28 @@ describe("Order API", () => {
       expect(res.body.message).toBe("Заказ обновлен");
     });
 
+    it("should update the order for owner", async () => {
+      const res = await request(app)
+        .put(`/api/orders/${orderId}`)
+        .set("Authorization", `Bearer ${userToken}`)
+        .send({
+          info: "Updated",
+          weight: 2000,
+          length: 10000,
+          width: 20000,
+          height: 30000,
+          from: "City A",
+          to: "City C",
+          date_start: "2024-02-01",
+          date_end: "2024-02-10",
+          status_id: 2,
+          user_id: 2,
+        })
+        .expect(200);
+
+      expect(res.body.message).toBe("Заказ обновлен");
+    });
+
     it("should return 403 for non-owner user", async () => {
       const anotherUserToken = generateToken({ id: 999, role_id: 2 });
 
@@ -171,6 +174,34 @@ describe("Order API", () => {
           date_end: "2024-02-10",
           status_id: 1,
           user_id: 2,
+        })
+        .expect(403);
+
+      expect(res.body.message).toBe("Доступ запрещен");
+    });
+  });
+
+  describe("PUT /orders/:id/status", () => {
+    it("should update the order status for admin and send message to user", async () => {
+      const res = await request(app)
+        .put(`/api/orders/${orderId}/status`)
+        .set("Authorization", `Bearer ${adminToken}`)
+        .send({
+          status_id: 3,
+          email: "somemail@bk.ru",
+        })
+        .expect(200);
+
+      expect(res.body.message).toBe("Статус обновлен");
+    });
+
+    it("should return 403 for user", async () => {
+      const res = await request(app)
+        .put(`/api/orders/${orderId}/status`)
+        .set("Authorization", `Bearer ${userToken}`)
+        .send({
+          status_id: 3,
+          email: "somemail@bk.ru",
         })
         .expect(403);
 

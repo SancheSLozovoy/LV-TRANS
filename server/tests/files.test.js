@@ -149,4 +149,126 @@ describe("File API", () => {
       expect(res.body.message).toBe("Файл не найден");
     });
   });
+
+  describe("POST /orders/:orderId/files", () => {
+    it("should upload file to order (owner access)", async () => {
+      const res = await request(app)
+        .post(`/api/orders/${orderId}/files`)
+        .set("Authorization", `Bearer ${userToken}`)
+        .attach("file", testImage)
+        .expect(201);
+
+      expect(res.body.message).toBe("Файл загружен");
+    });
+
+    it("should return 403 if user not owner", async () => {
+      const res = await request(app)
+        .post(`/api/orders/${orderId}/files`)
+        .set("Authorization", `Bearer ${strangerToken}`)
+        .attach("file", testImage)
+        .expect(403);
+
+      expect(res.body.message).toBe("Доступ запрещен");
+    });
+
+    it("should return 404 if order not found", async () => {
+      const res = await request(app)
+        .post(`/api/orders/999999/files`)
+        .set("Authorization", `Bearer ${adminToken}`)
+        .attach("file", testImage)
+        .expect(404);
+
+      expect(res.body.message).toBe("Заказ не найден");
+    });
+
+    it("should return 400 if no file provided", async () => {
+      const res = await request(app)
+        .post(`/api/orders/${orderId}/files`)
+        .set("Authorization", `Bearer ${userToken}`)
+        .expect(400);
+
+      expect(res.body.message).toBe("Файлы не были загружены");
+    });
+  });
+
+  describe("DELETE /files/:id", () => {
+    let fileToDeleteId;
+
+    beforeAll(async () => {
+      const uploadRes = await request(app)
+        .post(`/api/orders/${orderId}/files`)
+        .set("Authorization", `Bearer ${userToken}`)
+        .attach("file", testImage)
+        .expect(201);
+
+      const filesRes = await request(app)
+        .get(`/api/orders/${orderId}/files`)
+        .set("Authorization", `Bearer ${userToken}`)
+        .expect(200);
+
+      fileToDeleteId = filesRes.body.at(-1).id; // Последний загруженный
+    });
+
+    it("should delete file (admin access)", async () => {
+      const res = await request(app)
+        .delete(`/api/orders/files/${fileToDeleteId}`)
+        .set("Authorization", `Bearer ${adminToken}`)
+        .expect(200);
+
+      expect(res.body.message).toBe("Файл успешно удален");
+    });
+
+    it("should delete file (owner access)", async () => {
+      const uploadRes = await request(app)
+        .post(`/api/orders/${orderId}/files`)
+        .set("Authorization", `Bearer ${userToken}`)
+        .attach("file", testImage)
+        .expect(201);
+
+      const filesRes = await request(app)
+        .get(`/api/orders/${orderId}/files`)
+        .set("Authorization", `Bearer ${userToken}`)
+        .expect(200);
+
+      const ownerFileId = filesRes.body.at(-1).id;
+
+      const res = await request(app)
+        .delete(`/api/orders/files/${ownerFileId}`)
+        .set("Authorization", `Bearer ${userToken}`)
+        .expect(200);
+
+      expect(res.body.message).toBe("Файл успешно удален");
+    });
+
+    it("should return 403 if not owner or admin", async () => {
+      const uploadRes = await request(app)
+        .post(`/api/orders/${orderId}/files`)
+        .set("Authorization", `Bearer ${userToken}`)
+        .attach("file", testImage)
+        .expect(201);
+
+      const filesRes = await request(app)
+        .get(`/api/orders/${orderId}/files`)
+        .set("Authorization", `Bearer ${userToken}`)
+        .expect(200);
+
+      const fileId = filesRes.body.at(-1).id;
+
+      const res = await request(app)
+        .delete(`/api/orders/files/${fileId}`)
+        .set("Authorization", `Bearer ${strangerToken}`)
+        .expect(403);
+
+      expect(res.body.message).toBe("Доступ запрещен");
+    });
+
+    it("should return 404 for non-existing file", async () => {
+      const res = await request(app)
+        .delete(`/api/orders/files/999999`)
+        .set("Authorization", `Bearer ${adminToken}`)
+        .expect(404);
+
+      expect(res.body.message).toBe("Файл не найден");
+    });
+  });
 });
