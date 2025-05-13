@@ -8,9 +8,9 @@ export async function up(knex) {
     table.float("height").notNullable();
     table.string("from").notNullable();
     table.string("to").notNullable();
-    table.timestamp("create_at").defaultTo(knex.fn.now());
-    table.timestamp("date_start");
-    table.timestamp("date_end");
+    table.timestamp("create_at").defaultTo(knex.fn.now()).notNullable();
+    table.timestamp("date_start").notNullable();
+    table.timestamp("date_end").notNullable();
     table
       .integer("status_id")
       .unsigned()
