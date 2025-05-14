@@ -20,7 +20,7 @@ export const EditOrderForm: React.FC = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const [isSuccess, setIsSuccess] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [orderData, setOrderData] = useState<Order>(null);
+  const [orderData, setOrderData] = useState<Order>();
 
   const params = useParams();
   const { user, token } = useAuth();
@@ -32,7 +32,6 @@ export const EditOrderForm: React.FC = () => {
         const response = await fetchData(`/orders/${params.id}`, "GET");
         setOrderData(response);
         form.setFieldsValue({
-          user_id: 0,
           date_end: dayjs(response.date_end),
           date_start: dayjs(response.date_start),
           deliveryDates: [dayjs(response.date_start), dayjs(response.date_end)],
@@ -60,6 +59,10 @@ export const EditOrderForm: React.FC = () => {
     try {
       if (!user?.id) {
         throw new Error("User not found");
+      }
+
+      if (!orderData) {
+        throw new Error("Order not found");
       }
 
       const dto: OrderDto = {
