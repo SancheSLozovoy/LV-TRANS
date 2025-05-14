@@ -20,7 +20,7 @@ export const EditOrderForm: React.FC = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const [isSuccess, setIsSuccess] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [orderData, setOrderData] = useState<any>(null);
+  const [orderData, setOrderData] = useState<Order>(null);
 
   const params = useParams();
   const { user, token } = useAuth();
@@ -73,7 +73,7 @@ export const EditOrderForm: React.FC = () => {
         status_id: orderData.status_id,
         date_start: dayjs(values.date_start).format("YYYY-MM-DD"),
         date_end: dayjs(values.date_end).format("YYYY-MM-DD"),
-        user_id: user.id,
+        user_id: orderData.user_id,
       };
 
       const res = await fetchData(`/orders/${params.id}`, "PUT", dto);
