@@ -77,9 +77,8 @@ export async function login(req, res) {
 
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
-            return res
-                .status(400)
-                .json({ message: 'Неверный email или пароль' });
+            console.log(password);
+            return res.status(400).json({ message: 'Неверный пароль' });
         }
 
         const accessToken = generateAccessToken(user);
@@ -210,9 +209,9 @@ export async function deleteUserById(req, res) {
 
 export async function updateUser(req, res) {
     const { id } = req.params;
-    const { email, phone, password, role_id } = req.body;
+    const { email, phone, role_id } = req.body;
 
-    if (!id || isNaN(id) || !email || !phone || !password || !role_id) {
+    if (!id || isNaN(id) || !email || !phone || !role_id) {
         return res
             .status(400)
             .json({ message: 'Не заполнены обязательные поля' });
@@ -250,13 +249,7 @@ export async function updateUser(req, res) {
                 .json({ message: 'Обновление роли доступно администратору' });
         }
 
-        const result = await UserModel.updateUser(
-            id,
-            email,
-            phone,
-            password,
-            role_id,
-        );
+        const result = await UserModel.updateUser(id, email, phone, role_id);
 
         if (result.affectedRows === 0) {
             return res.status(404).json({ message: 'Пользователь не найден' });
@@ -367,14 +360,38 @@ export async function resetPassword(req, res) {
             return res.status(404).json({ message: 'Пользователь не найден' });
         }
 
-        const hashedPassword = await bcrypt.hash(password, 10);
-        await UserModel.updatePassword(user.id, hashedPassword);
+        await UserModel.updatePassword(user.id, password);
 
         res.status(200).json({ message: 'Пароль успешно обновлен' });
     } catch (err) {
-        console.error('Reset error:', err);
         return res
             .status(400)
             .json({ message: 'Неверный или просроченный токен' });
+    }
+}
+
+export async function updateUserPassword(req, res) {
+    const { password } = req.body;
+    const { id } = req.user;
+
+    if (!password) {
+        return res.status(400).json({ message: 'Некорректные данные запроса' });
+    }
+
+    try {
+        const user = await UserModel.getUserById(id);
+        console.log(user);
+        if (!user) {
+            return res.status(404).json({ message: 'Пользователь не найден' });
+        }
+
+        await UserModel.updatePassword(user[0].id, password);
+
+        res.status(200).json({ message: 'Пароль успешно обновлен' });
+    } catch (err) {
+        res.status(500).json({
+            message: 'Ошибка сервера',
+            error: err.message,
+        });
     }
 }

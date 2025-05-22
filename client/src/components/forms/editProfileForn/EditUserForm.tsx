@@ -21,7 +21,7 @@ export const EditUserForm: React.FC = () => {
 
   useEffect(() => {
     if (user?.id) {
-      fetchData(`users/${user.id}`, "GET").then((res) => {
+      fetchData(`/users/${user.id}`, "GET").then((res) => {
         setUserData(res);
         form.setFieldsValue(res);
       });
@@ -35,9 +35,13 @@ export const EditUserForm: React.FC = () => {
         throw new Error("User data not loaded");
       }
 
-      const dto: User = { ...userData, ...values };
+      const dto: Partial<User> = {
+        email: values.email,
+        phone: values.phone,
+        role_id: userData.role_id,
+      };
 
-      const res = await fetchData(`users/${user?.id}`, "PUT", dto);
+      const res = await fetchData(`/users/${user?.id}`, "PUT", dto);
       messageApi.success(res.message);
     } catch (error) {
       console.error("Update user error", error);
@@ -128,10 +132,8 @@ export const EditUserForm: React.FC = () => {
       </Form>
 
       <ChangePasswordModal
-        userData={userData}
         visible={isPasswordModalOpen}
         onClose={() => setPasswordModalOpen(false)}
-        onSuccess={setUserData}
       />
     </div>
   );

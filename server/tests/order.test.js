@@ -229,6 +229,26 @@ describe("Order API", () => {
     });
   });
 
+  describe("GET /orders/user/:userId/active", () => {
+    it("should return orders of current user", async () => {
+      const res = await request(app)
+        .get("/api/orders/user/2/active")
+        .set("Authorization", `Bearer ${userToken}`)
+        .expect(200);
+
+      expect(Array.isArray(res.body.orders)).toBe(true);
+    });
+
+    it("should return 403 if trying to access another user", async () => {
+      const res = await request(app)
+        .get("/api/orders/user/3/active")
+        .set("Authorization", `Bearer ${userToken}`)
+        .expect(403);
+
+      expect(res.body.message).toBe("Доступ запрещен");
+    });
+  });
+
   describe("DELETE /orders/:id", () => {
     it("should delete order for owner", async () => {
       const res = await request(app)

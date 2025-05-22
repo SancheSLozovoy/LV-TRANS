@@ -44,9 +44,7 @@ export async function deleteUserById(id) {
     return result;
 }
 
-export async function updateUser(id, email, phone, password, role_id) {
-    const hashedPassword = await bcrypt.hash(password, 10);
-
+export async function updateUser(id, email, phone, role_id) {
     const [roleExists] = await pool.query(
         'SELECT COUNT(*) AS count FROM roles WHERE id = ?',
         [role_id],
@@ -57,8 +55,8 @@ export async function updateUser(id, email, phone, password, role_id) {
     }
 
     const [result] = await pool.query(
-        'UPDATE users SET email = ?, phone = ?, password = ?, role_id = ? WHERE id = ?',
-        [email, phone, hashedPassword, role_id, id],
+        'UPDATE users SET email = ?, phone = ?, role_id = ? WHERE id = ?',
+        [email, phone, role_id, id],
     );
     return result;
 }
@@ -82,8 +80,9 @@ export async function updateUserRole(id, role_id) {
 }
 
 export async function updatePassword(userId, newPassword) {
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
     return await pool.query('UPDATE users SET password = ? WHERE id = ?', [
-        newPassword,
+        hashedPassword,
         userId,
     ]);
 }

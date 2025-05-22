@@ -54,10 +54,10 @@ export function statusChange(orderId, statusName) {
                         </tr>
                         <tr>
                             <td style="padding-top: 20px;">
-                                <a href="https://lv-trans.com" style="color: #7A6759; text-decoration: none; font-size: 12px;">
+                                <a href="https://lv-trans-app.ru" style="color: #7A6759; text-decoration: none; font-size: 12px;">
                                     Наш сайт
                                 </a> | 
-                                <a href="https://lv-trans.com/#contact" style="color: #7A6759; text-decoration: none; font-size: 12px;">
+                                <a href="https://lv-trans-app.ru/#contact" style="color: #7A6759; text-decoration: none; font-size: 12px;">
                                     Контакты
                                 </a>
                             </td>

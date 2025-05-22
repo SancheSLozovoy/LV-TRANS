@@ -1,20 +1,15 @@
 import React, { useState } from "react";
 import { Modal, Form, Input, message } from "antd";
-import { User } from "../../models/userModels.ts";
 import useFetch from "../../composables/useFetch.ts";
 
 interface ChangePasswordModalProps {
-  userData: User | null;
   visible: boolean;
   onClose: () => void;
-  onSuccess: (updatedUser: User) => void;
 }
 
 export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
-  userData,
   visible,
   onClose,
-  onSuccess,
 }) => {
   const { fetchData } = useFetch();
   const [form] = Form.useForm();
@@ -24,15 +19,14 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
   const handleSubmit = async () => {
     try {
       const values = await form.validateFields();
-      if (!userData) return;
 
       setLoading(true);
-      const updatedUser: User = { ...userData, password: values.password };
 
-      await fetchData(`users/${userData.id}`, "PUT", updatedUser);
-      messageApi.success("Пароль успешно обновлен");
+      const res = await fetchData("/users/update-password", "POST", {
+        password: values.password,
+      });
+      messageApi.success(res.message);
 
-      onSuccess(updatedUser);
       onClose();
     } catch (error) {
       console.error("Error updating password", error);

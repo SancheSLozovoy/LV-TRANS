@@ -24,9 +24,9 @@ const router = express.Router();
  *                   id:
  *                     type: integer
  *                     example: 3
- *                   login:
+ *                   email:
  *                     type: string
- *                     example: user123
+ *                     example: email
  *                   phone:
  *                     type: string
  *                     example: 89381000000
@@ -85,9 +85,9 @@ const router = express.Router();
  *           schema:
  *             type: object
  *             properties:
- *               login:
+ *               email:
  *                 type: string
- *                 description: Логин пользователя
+ *                 description: Email пользователя
  *               password:
  *                 type: string
  *                 description: Пароль пользователя
@@ -158,9 +158,9 @@ const router = express.Router();
  *                 id:
  *                    type: integer
  *                    example: 3
- *                 login:
+ *                 email:
  *                    type: string
- *                    example: Login
+ *                    example: email
  *                 phone:
  *                     type: string
  *                     example: 89381000000
@@ -229,9 +229,9 @@ const router = express.Router();
  *           schema:
  *             type: object
  *             properties:
- *               login:
+ *               email:
  *                 type: string
- *                 example: Login
+ *                 example: email
  *               phone:
  *                 type: string
  *                 example: 89381000000
@@ -398,15 +398,12 @@ const router = express.Router();
  *           schema:
  *             type: object
  *             properties:
- *               login:
+ *               email:
  *                  type: string
- *                  example: Login
+ *                  example: email
  *               phone:
  *                   type: string
  *                   example: 89381000000
- *               password:
- *                  type: string
- *                  example: 432rewfds432sdDsdsad!dew
  *               role_id:
  *                  type: integer
  *                  example: 1
@@ -698,6 +695,70 @@ const router = express.Router();
  *                   example: Ошибка сервера
  */
 
+/**
+ * @swagger
+ * /users/update-password:
+ *   post:
+ *     tags:
+ *       - Users
+ *     summary: Обновление пароля пользователя
+ *     description: Обновляет пароль текущего авторизованного пользователя.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - password
+ *             properties:
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 example: NewSecurePassword123
+ *     responses:
+ *       200:
+ *         description: Пароль успешно обновлен
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Пароль успешно обновлен
+ *       400:
+ *         description: Некорректные данные запроса
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Некорректные данные запроса
+ *       404:
+ *         description: Пользователь не найден
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Пользователь не найден
+ *       500:
+ *         description: Ошибка сервера
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Ошибка сервера
+ */
+
 router.get('/', authenticateToken, UserController.getUsers);
 router.get('/:id', authenticateToken, UserController.getUserById);
 router.post('/', UserController.register);
@@ -705,6 +766,11 @@ router.post('/login', UserController.login);
 router.delete('/:id', authenticateToken, UserController.deleteUserById);
 router.put('/:id', authenticateToken, UserController.updateUser);
 router.put('/:id/role', authenticateToken, UserController.updateUserRole);
+router.post(
+    '/update-password',
+    authenticateToken,
+    UserController.updateUserPassword,
+);
 router.post('/forgot-password', UserController.requestPasswordReset);
 router.post('/reset-password', UserController.resetPassword);
 router.post('/refresh-token', UserController.refreshToken);
