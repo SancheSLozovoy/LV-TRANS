@@ -21,14 +21,13 @@
 
   &__logo {
     width: 286px;
-    height: 70px;
 
     img {
       width: 100%;
       transition: transform 0.3s ease;
 
       &:hover {
-        transform: scale(1.05);
+        transform: scale(1.03);
       }
     }
   }
@@ -68,23 +67,11 @@
     }
   }
 
-  .anticon-user {
-    font-size: 30px;
-    color: var(--white);
-    transition: all 0.3s ease;
-
-    &:hover {
-      color: var(--yellow);
-      transform: scale(1.1);
-    }
-  }
-
   @media (max-width: 1800px) {
     height: 6vw;
 
     &__logo {
       width: 15.889vw;
-      height: 3.889vw;
     }
 
     &__nav_list {

@@ -292,33 +292,38 @@ export const EditOrderForm: React.FC = () => {
           />
         </Form.Item>
 
-        <Form.Item>
-          <div className={styles.form__buttons}>
-            {isEditing ? (
-              <>
+        {(user?.role_id === 1 ||
+          (user?.role_id === 2 &&
+            orderData?.status_id !== 3 &&
+            orderData?.status_id !== 4)) && (
+          <Form.Item>
+            <div className={styles.form__buttons}>
+              {isEditing ? (
+                <>
+                  <ButtonSubmit
+                    htmlType="button"
+                    onClick={onReset}
+                    text="Отмена"
+                    icon={<CloseOutlined />}
+                  />
+                  <ButtonSubmit
+                    htmlType="submit"
+                    loading={loading}
+                    text="Сохранить"
+                    icon={<CheckOutlined />}
+                  />
+                </>
+              ) : (
                 <ButtonSubmit
                   htmlType="button"
-                  onClick={onReset}
-                  text="Отмена"
-                  icon={<CloseOutlined />}
+                  onClick={() => setIsEditing(true)}
+                  text="Редактировать"
+                  icon={<EditOutlined />}
                 />
-                <ButtonSubmit
-                  htmlType="submit"
-                  loading={loading}
-                  text="Сохранить"
-                  icon={<CheckOutlined />}
-                />
-              </>
-            ) : (
-              <ButtonSubmit
-                htmlType="button"
-                onClick={() => setIsEditing(true)}
-                text="Редактировать"
-                icon={<EditOutlined />}
-              />
-            )}
-          </div>
-        </Form.Item>
+              )}
+            </div>
+          </Form.Item>
+        )}
       </Form>
     </div>
   );

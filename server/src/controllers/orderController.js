@@ -139,6 +139,9 @@ export async function createOrder(req, res) {
 
 export async function deleteOrderById(req, res) {
     const { id } = req.params;
+
+    const { role_id } = req.user;
+
     if (!id || isNaN(id)) {
         return res
             .status(400)
@@ -147,6 +150,17 @@ export async function deleteOrderById(req, res) {
 
     try {
         const order = await OrderModel.getOrderById(id);
+
+        if (
+            role_id !== 1 &&
+            (order[0]?.status_id === 3 || order[0]?.status_id === 4)
+        ) {
+            return res.status(403).json({
+                message:
+                    'Вы не можете удалить заказ, который уже в пути или доставлен',
+            });
+        }
+
         if (!order || order.length === 0) {
             return res.status(404).json({ message: 'Заказ не найден' });
         }
@@ -181,6 +195,8 @@ export async function updateOrder(req, res) {
         user_id,
     } = req.body;
 
+    const { role_id } = req.user;
+
     if (!id || isNaN(id)) {
         return res
             .status(400)
@@ -207,6 +223,17 @@ export async function updateOrder(req, res) {
 
     try {
         const order = await OrderModel.getOrderById(id);
+
+        if (
+            role_id !== 1 &&
+            (order[0]?.status_id === 3 || order[0]?.status_id === 4)
+        ) {
+            return res.status(403).json({
+                message:
+                    'Вы не можете изменить заказ, который уже в пути или доставлен',
+            });
+        }
+
         if (!order || order.length === 0) {
             return res.status(404).json({ message: 'Заказ не найден' });
         }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Badge, Button, Empty, Pagination, Space, Table } from "antd";
+import { Badge, Button, Empty, Pagination, Space, Table, Tooltip } from "antd";
 import useFetch from "../../../composables/useFetch.ts";
 import { useAuth } from "../../../composables/useAuth.ts";
 import { reformDate } from "../../../composables/reformDate.ts";
@@ -120,14 +120,23 @@ export const UserTable = () => {
       fixed: "right" as const,
       render: (_: any, record: Order) => (
         <Space size="middle">
-          <Button
-            danger
-            icon={<DeleteOutlined />}
-            onClick={(event) => {
-              event.stopPropagation();
-              openCancelModal(record.id);
-            }}
-          />
+          <Tooltip
+            title={
+              record.status_id === 3 || record.status_id === 4
+                ? "Удаление недоступно: заказ в пути или доставлен"
+                : ""
+            }
+          >
+            <Button
+              danger
+              icon={<DeleteOutlined />}
+              onClick={(event) => {
+                event.stopPropagation();
+                openCancelModal(record.id);
+              }}
+              disabled={record.status_id === 3 || record.status_id === 4}
+            />
+          </Tooltip>
         </Space>
       ),
     },

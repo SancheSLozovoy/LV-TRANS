@@ -77,8 +77,9 @@ export async function login(req, res) {
 
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
-            console.log(password);
-            return res.status(400).json({ message: 'Неверный пароль' });
+            return res
+                .status(400)
+                .json({ message: 'Неверный email или пароль' });
         }
 
         const accessToken = generateAccessToken(user);
